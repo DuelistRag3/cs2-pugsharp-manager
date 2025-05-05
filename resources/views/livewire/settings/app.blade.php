@@ -4,6 +4,7 @@ use Livewire\Volt\Component;
 use App\Models\Setting;
 
 new class extends Component {
+    
     public string $name = '';
     public string $locale = '';
 
@@ -29,7 +30,6 @@ new class extends Component {
         $this->dispatch('app-settings-updated', name: $this->name, locale: $this->locale);
     }
 }; 
-
 ?>
 
 <section class="w-full">
