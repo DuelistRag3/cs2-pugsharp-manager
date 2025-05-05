@@ -16,13 +16,19 @@ return [
     ],
 
     'settings' => [
-        'description' => 'Manage your application settings here.',
+        'description' => 'Manage your settings here.',
 
         'save' => 'Save',
 
         'app' => [
             'title' => 'Application Settings',
             'description' => 'Manage your app settings.',
+            'name' => 'App Name',
+            'language' => 'Language',
+            'languages' => [
+                'en' => 'English',
+                'de' => 'German',
+            ],
             'saved' => 'Settings saved successfully.',
         ],
 
