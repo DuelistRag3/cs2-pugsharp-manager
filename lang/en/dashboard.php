@@ -24,12 +24,14 @@ return [
             'title' => 'Application Settings',
             'description' => 'Manage your app settings.',
             'name' => 'App Name',
+            'url' => 'App URL',
             'language' => 'Language',
+            'language_description' => 'Select the primary language for the application (User still can select their own language).',
             'languages' => [
                 'en' => 'English',
                 'de' => 'German',
             ],
-            'saved' => 'Settings saved successfully.',
+            'saved' => 'Settings saved successfully. Full language change will take effect after reloading the page.',
         ],
 
         'profile' => [

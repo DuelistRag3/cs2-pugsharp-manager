@@ -25,11 +25,12 @@ return [
             'description' => 'Verwalte Deine App-Einstellungen.',
             'name' => 'App-Name',
             'language' => 'Sprache',
+            'language_description' => 'Wähle die Hauptsprache für die App (Benutzer können immer noch ihre eigene Sprache wählen).',
             'languages' => [
                 'en' => 'Englisch',
                 'de' => 'Deutsch',
             ],
-            'saved' => 'Einstellungen erfolgreich gespeichert.',
+            'saved' => 'Einstellungen erfolgreich gespeichert. Die vollständige Sprachänderung wird nach dem Neuladen der Seite wirksam.',
         ],
 
         'profile' => [

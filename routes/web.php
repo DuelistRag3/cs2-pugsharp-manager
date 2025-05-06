@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing');
 })->name('home');
 
 Route::get('/language/{lang}', function ($lang) {
@@ -12,17 +12,26 @@ Route::get('/language/{lang}', function ($lang) {
     return redirect()->back();
 })->name('language');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
+Route::middleware(['auth'])->name('admin.')->group(function () {
+
+    Route::view('dashboard', 'admin.dashboard')
     ->name('dashboard');
 
-Route::middleware(['auth'])->group(function () {
-    Route::redirect('settings', 'settings/app');
+    Route::view('server', 'admin.server')
+    ->name('server');
 
-    Volt::route('settings/app', 'settings.app')->name('settings.app');
-    Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
-    Volt::route('settings/password', 'settings.password')->name('settings.password');
-    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+    Route::view('tournaments', 'admin.tournaments')
+    ->name('tournaments');
+
+    Route::view('settings', 'admin.settings')
+    ->name('settings');
+
+    // Route::redirect('settings', 'settings/app')->name('settings');
+
+    // Volt::route('settings/app', 'settings.app')->name('settings.app');
+    // Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
+    // Volt::route('settings/password', 'settings.password')->name('settings.password');
+    // Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
 require __DIR__.'/auth.php';

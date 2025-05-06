@@ -13,13 +13,18 @@ class InstallationSeeder extends Seeder
     public function run(): void
     {
         Setting::create([
-            'key' => 'app.name',
+            'key' => 'app_name',
             'value' => 'CS2 Pugsharp Manager',
         ]);
 
         Setting::create([
-            'key' => 'app.language',
+            'key' => 'app_language',
             'value' => 'en',
+        ]);
+
+        Setting::create([
+            'key' => 'app_url',
+            'value' => 'https://cs2pugsharpmanager.com',
         ]);
     }
 }
