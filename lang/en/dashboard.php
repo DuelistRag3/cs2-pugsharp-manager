@@ -24,6 +24,7 @@ return [
             'title' => 'Application Settings',
             'description' => 'Manage your app settings.',
             'name' => 'App Name',
+            'url' => 'App URL',
             'language' => 'Language',
             'language_description' => 'Select the primary language for the application (User still can select their own language).',
             'languages' => [

@@ -21,5 +21,10 @@ class InstallationSeeder extends Seeder
             'key' => 'app_language',
             'value' => 'en',
         ]);
+
+        Setting::create([
+            'key' => 'app_url',
+            'value' => 'https://cs2pugsharpmanager.com',
+        ]);
     }
 }

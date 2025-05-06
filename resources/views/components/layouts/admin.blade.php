@@ -6,6 +6,8 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         {{ $slot }}
 
+        @include('components.admin.menu')
+
         @livewireScripts
     </body>
 </html>
