@@ -30,7 +30,7 @@ return [
                 'en' => 'English',
                 'de' => 'German',
             ],
-            'saved' => 'Settings saved successfully.',
+            'saved' => 'Settings saved successfully. Full language change will take effect after reloading the page.',
         ],
 
         'profile' => [

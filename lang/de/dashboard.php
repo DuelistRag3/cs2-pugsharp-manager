@@ -30,7 +30,7 @@ return [
                 'en' => 'Englisch',
                 'de' => 'Deutsch',
             ],
-            'saved' => 'Einstellungen erfolgreich gespeichert.',
+            'saved' => 'Einstellungen erfolgreich gespeichert. Die vollständige Sprachänderung wird nach dem Neuladen der Seite wirksam.',
         ],
 
         'profile' => [
