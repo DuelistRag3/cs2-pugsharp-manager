@@ -20,13 +20,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        config([
-            'settings' => Setting::all(['key', 'value'])
-            ->keyBy('key')
-            ->transform(function ($setting) {
-                return $setting->value;
-            })
-            ->toArray()
-        ]);
+        // Load settings from the database if the manager is installed
+        // and set them in the config
+        if (config('manager.installed')) {
+            config([
+                'settings' => Setting::all(['key', 'value'])
+                ->keyBy('key')
+                ->transform(function ($setting) {
+                    return $setting->value;
+                })
+                ->toArray()
+            ]);
+        }
     }
 }
