@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => config('settings.app_name', env('APP_NAME', 'Laravel')),
 
     /*
     |--------------------------------------------------------------------------
@@ -79,7 +79,7 @@ return [
     */
 
     // 'locale' => env('APP_LOCALE', 'en'),
-    'locale' => config('settings.app.language', env('APP_LOCALE', 'en')),
+    'locale' => config('settings.app_language', env('APP_LOCALE', 'en')),
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 

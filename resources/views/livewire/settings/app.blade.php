@@ -10,8 +10,8 @@ new class extends Component {
 
     public function mount(): void
     {
-        $this->name = Setting::where('key', 'app.name')->first()->value;
-        $this->locale = Setting::where('key', 'app.language')->first()->value;
+        $this->name = Setting::where('key', 'app_name')->first()->value;
+        $this->locale = Setting::where('key', 'app_language')->first()->value;
     }
 
     public function updateAppSettings(): void
@@ -21,15 +21,13 @@ new class extends Component {
             'locale' => ['required', 'string', 'in:en,de'],
         ]);
 
-
-
         Session::put('locale', $this->locale);
         app()->setLocale($this->locale);
-        Setting::where('key', 'app.name')->update(['value' => $this->name]);
-        Setting::where('key', 'app.language')->update(['value' => $this->locale]);
+        Setting::where('key', 'app_name')->update(['value' => $this->name]);
+        Setting::where('key', 'app_language')->update(['value' => $this->locale]);
         $this->dispatch('app-settings-updated', name: $this->name, locale: $this->locale);
     }
-}; 
+};
 ?>
 
 <section class="w-full">
@@ -42,6 +40,9 @@ new class extends Component {
                 <flux:radio value="en" label="{{ __('dashboard.settings.app.languages.en') }}" />
                 <flux:radio value="de" label="{{ __('dashboard.settings.app.languages.de') }}" />
             </flux:radio.group>
+            <p>
+                {{ __('dashboard.settings.app.language_description') }}
+            </p>
             <div class="flex items-center gap-4">
                 <div class="flex items-center justify-end">
                     <flux:button variant="primary" type="submit" class="w-full">{{ __('dashboard.settings.save') }}</flux:button>

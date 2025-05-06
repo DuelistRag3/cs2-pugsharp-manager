@@ -25,6 +25,7 @@ return [
             'description' => 'Manage your app settings.',
             'name' => 'App Name',
             'language' => 'Language',
+            'language_description' => 'Select the primary language for the application (User still can select their own language).',
             'languages' => [
                 'en' => 'English',
                 'de' => 'German',

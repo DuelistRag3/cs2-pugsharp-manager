@@ -18,7 +18,7 @@ class Localization
         if(session()->has('locale')) {
             app()->setLocale(session('locale'));
         } else {
-            app()->setLocale(config('settings.app.language'));
+            app()->setLocale(config('settings.app_language', env('APP_LOCALE', 'en')));
         }
 
         return $next($request);
