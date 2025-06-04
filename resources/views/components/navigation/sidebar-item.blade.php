@@ -1,7 +1,7 @@
 @php
 $classes = ($active ?? false)
-    ? 'bg-gray-100 dark:bg-gray-700'
-    : 'bg-red';
+    ? 'text-blue-700 dark:text-blue-500'
+    : 'text-gray-900 dark:text-white';
 @endphp
 
 <li>

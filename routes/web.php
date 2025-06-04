@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\Landing;
-Use App\Livewire\Admin\Login;
+use App\Livewire\Admin\Login;
 use App\Livewire\Admin\Dashboard;
 use Illuminate\Support\Facades\Route;
 
@@ -11,8 +11,13 @@ Route::get('/', Landing::class)
 Route::get('/tournaments', Landing::class)
     ->name('tournaments');
 
-Route::get('/admin', Dashboard::class)
-    ->name('admin.dashboard');
+Route::name('admin.')
+    ->prefix('admin')
+    ->middleware(['auth'])
+    ->group(function () {
+        Route::get('/dashboard', Dashboard::class)
+            ->name('dashboard');
+    });
 
 Route::get('/login', Login::class)
     ->name('login');
