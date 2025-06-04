@@ -7,7 +7,7 @@ use Livewire\Attributes\Layout;
 
 class Landing extends Component
 {
-    #[Layout('layouts.guest')]
+    #[Layout('components.layouts.guest')]
     public function render()
     {
         return view('livewire.landing');
