@@ -13,6 +13,24 @@ return new class extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('tournament_id')
+                ->constrained('tournaments')
+                ->onDelete('cascade');
+            $table->intger('match_number')->nullable(); // Unique match number within the tournament
+            $table->foreignId('team1_id')
+                ->constrained('teams')
+                ->onDelete('cascade');
+            $table->foreignId('team2_id')
+                ->constrained('teams')
+                ->onDelete('cascade');
+            $table->dateTime('scheduled_at')->nullable();
+            $table->dateTime('played_at')->nullable();
+            $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
+            $table->integer('team1_score')->default(0);
+            $table->integer('team2_score')->default(0);
+            $table->string('map')->nullable();
+            $table->string('result')->nullable(); // e.g., "2-0", "1-2", etc.
+            $table->text('notes')->nullable(); // Additional notes about the game
             $table->timestamps();
         });
     }
