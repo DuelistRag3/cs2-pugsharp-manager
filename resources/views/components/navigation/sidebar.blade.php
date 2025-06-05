@@ -14,6 +14,8 @@
     </a>
       <ul class="space-y-2 font-medium">
          <x-navigation.sidebar-item href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" icon="fa-solid fa-gauge-high">Dashboard</x-navigation.sidebar-item>
+         <x-navigation.sidebar-item href="{{ route('landing') }}" :active="request()->routeIs('landing')" icon="fa-solid fa-trophy">Turniere</x-navigation.sidebar-item>
+         <x-navigation.sidebar-item href="{{ route('landing') }}" :active="request()->routeIs('landing')" icon="fa-solid fa-server">Server</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('landing') }}" :active="request()->routeIs('landing')" icon="fa-solid fa-home">Startseite</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('logout') }}" :active="request()->routeIs('logout')" icon="fa-solid fa-right-from-bracket">Abmelden</x-navigation.sidebar-item>
       </ul>

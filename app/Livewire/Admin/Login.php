@@ -29,7 +29,7 @@ class Login extends Component
         // Attempt to log in the user
         if (auth()->attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             // Redirect to the intended page or dashboard
-            return redirect()->intended('/admin');
+            return redirect()->intended('/admin/dashboard');
         }
 
         // If login fails, add an error message
