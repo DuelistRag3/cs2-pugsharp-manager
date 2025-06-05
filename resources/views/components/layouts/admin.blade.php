@@ -12,13 +12,9 @@
     <link rel="icon" type="image/x-icon" href="{{ Vite::asset('resources/images/cs2logo.ico') }}">
 </head>
 <body class="dark:bg-gray-900">
-    <x-navigation.sidebar />
-
-    
-
-    <div class="container mx-auto px-4 py-8">
+    <x-navigation.sidebar>
         {{ $slot }}
-    </div>
+    </x-navigation.sidebar>
 
     @livewireScripts
 </body>
