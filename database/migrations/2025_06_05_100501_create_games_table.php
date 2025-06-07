@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('tournament_id')
                 ->constrained('tournaments')
                 ->onDelete('cascade');
-            $table->intger('match_number')->nullable(); // Unique match number within the tournament
+            $table->integer('match_number')->nullable(); // Unique match number within the tournament
             $table->foreignId('team1_id')
                 ->constrained('teams')
                 ->onDelete('cascade');
