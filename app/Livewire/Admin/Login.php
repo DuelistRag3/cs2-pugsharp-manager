@@ -23,7 +23,7 @@ class Login extends Component
         // For example, you might want to validate the input and authenticate the user
         $this->validate([
             'email' => 'required|email',
-            'password' => 'required|min:6',
+            'password' => 'required',
         ]);
 
         // Attempt to log in the user
