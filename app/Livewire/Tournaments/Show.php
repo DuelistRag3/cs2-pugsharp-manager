@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Tournaments;
 
+use App\Models\Team;
+use App\Models\Player;
 use Livewire\Component;
 use App\Models\Tournament;
 use Livewire\Attributes\Layout;
@@ -37,18 +39,35 @@ class Show extends Component
 
         if ($response->successful()) {
             $data = $response->json();
-            // $avatar = $data['response']['players'][0]['avatarfull'] ?? null;
-            LivewireAlert::error()->toast()->title('Registrierung erfolgreich')->show();
+            
+            $team = new Team([
+                'name' => $this->teamname,
+                'tag' => $this->teamtag,
+                'flag' => "DE"
+            ]);
+
+            $this->tournament->teams()->save($team);
+
+            foreach ($data['response']['players'] as $player) {
+                $player = new Player([
+                    'steam_id' => $player['steamid'],
+                    'steam_name' => $player['personaname'],
+                    'steam_avatar' => $player['avatarfull'],
+                    'steam_url' => $player['profileurl']
+                ]);
+
+                $team->players()->save($player);
+            }
+            LivewireAlert::success()->toast()->position('top-end')->title('Registrierung erfolgreich')->show();
             return;
         } else {
-            LivewireAlert::success()->toast()->title('Registrierung erfolgreich')->show();
+            $error =  $response->json();
+            LivewireAlert::error()->toast()->position('top-end')->title("Fehler")->show();
         }
 
-        return;
-
-        LivewireAlert::success()->title('Registrierung erfolgreich')->show();
-
         $this->dispatch('teamRegistered');
+
+        return;
     }
 
     #[Layout('components.layouts.guest')]
