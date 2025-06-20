@@ -7,13 +7,19 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                     <th scope="col" class="px-6 py-3">
-                        Nummer
+                        #
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Name
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Anmeldeschluss
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Startzeit
                     </th>
                     <th scope="col" class="px-6 py-3">
                         Teams / Max Teams
@@ -24,9 +30,9 @@
                 </tr>
             </thead>
             <tbody>
-                @if (!$tournaments)
+                @if ($tournaments->isEmpty())
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                        <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                        <td colspan="7" class="px-6 py-4 text-center text-gray-500">
                             Keine Turniere gefunden.
                         </td>
                     </tr>
@@ -45,31 +51,43 @@
                                     @case('scheduled')
                                         <span class="text-yellow-500">Geplant</span>
                                     @break
+
                                     @case('ongoing')
                                         <span class="text-blue-500">Laufend</span>
                                     @break
+
                                     @case('completed')
                                         <span class="text-green-500">Abgeschlossen</span>
                                     @break
+
                                     @case('cancelled')
                                         <span class="text-red-500">Abgebrochen</span>
                                     @break
+
                                     @default
                                         <span class="text-gray-500">Unbekannt</span>
                                 @endswitch
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $tournament->registration_deadline ? new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') : 'Turnierstart' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                {{ $tournament->start_date ? new DateTime($tournament->start_date)->format('d.m.Y H:i') : 'Nicht festgelegt' }}
                             </td>
                             <td class="px-6 py-4">
                                 {{ $tournament->teams_count ?? 0 }} / {{ $tournament->max_teams }}
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">
-                                    <a href="{{-- route('admin.tournaments.show', $tournament->id) --}}"
-                                        class="text-blue-600 hover:text-blue-900 dark:text-blue-500 dark:hover:text-blue-700">
-                                        <i class="fa-solid fa-eye"></i> Details
+                                    <a href="{{ route('admin.tournaments.show', $tournament->id) }}"
+                                        class="text-white text-xs bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        <i class="fa-solid fa-eye"></i>
+                                        <span class="sr-only">Ansehen</span>
                                     </a>
                                     <button wire:click="delete({{ $tournament->id }})"
-                                        class="text-red-600 hover:text-red-900 dark:text-red-500 dark:hover:text-red-700">
-                                        <i class="fa-solid fa-trash"></i> Löschen
+                                        class="cursor-pointer text-xs text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                        <i class="fa-solid fa-trash"></i>
+                                        <span class="sr-only">Löschen</span>
                                     </button>
                                 </div>
                             </td>
@@ -77,9 +95,9 @@
                     @endforeach
                 @endif
             </tbody>
-            
+
         </table>
-        @if($tournaments)
+        @if ($tournaments)
             {{ $tournaments->links() }}
         @endif
     </div>
@@ -98,7 +116,7 @@
                     </h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-hide="default-modal">
+                        data-modal-hide="create-modal">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -127,15 +145,16 @@
                         </div>
                         <div class="mb-5">
                             <label for="registration_deadline"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anmeldeschluss</label>
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anmeldeschluss (Optional)</label>
                             <input wire:model='registration_deadline' type="datetime-local" id="registration_deadline"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Anmeldeschluss" />
+                                <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Wenn nicht angegeben endet die Registrierung mit Turnierbeginn.</p>
                         </div>
                         <div class="mb-5">
                             <label for="start_date"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Startdatum</label>
-                            <input wire:model='start_date' type="datetime-local" id="start_date"    
+                            <input wire:model='start_date' type="datetime-local" id="start_date"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Startdatum" required />
                         </div>
@@ -150,8 +169,7 @@
                         <div class="mb-5">
                             <label for="matchup_rounds"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Matchup-Runden</label>
-                            <select wire:model='matchup_rounds'
-                                id="matchup_rounds"
+                            <select wire:model='matchup_rounds' id="matchup_rounds"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="0">Best of 1</option>
                                 <option value="1">Best of 3</option>
@@ -161,8 +179,7 @@
                         <div class="mb-5">
                             <label for="final_rounds"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Final-Runden</label>
-                            <select wire:model='final_rounds'
-                                id="final_rounds"
+                            <select wire:model='final_rounds' id="final_rounds"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="0">Best of 1</option>
                                 <option value="1">Best of 3</option>
@@ -182,3 +199,17 @@
         </div>
     </div>
 </div>
+
+@script
+    <script>
+        $wire.on('tournamentCreated', () => {
+            const modal = new Modal(document.getElementById('create-modal'));
+            if (modal) {
+                modal.hide();
+                document.querySelector("body > div[modal-backdrop]")?.remove();
+            }
+            // Optionally, you can refresh the tournaments list or show a success message
+            // Livewire.emit('refreshTournaments');
+        });
+    </script>
+@endscript

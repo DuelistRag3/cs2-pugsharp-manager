@@ -14,7 +14,7 @@
 <body class="dark:bg-gray-900">
     <x-navigation.navbar />
 
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8 min-h-screen">
         {{ $slot }}
     </div>
 

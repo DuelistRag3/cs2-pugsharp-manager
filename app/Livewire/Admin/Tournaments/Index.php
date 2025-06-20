@@ -41,13 +41,36 @@ class Index extends Component
         $tournament->final_rounds = $this->final_rounds;
         $tournament->status = $this->status;
         $tournament->save();
-        // Logic to create a new tournament
-        // This could involve redirecting to a form or opening a modal
+        
         LivewireAlert::title('Turnier erstellen')
             ->success()
             ->toast()
             ->position('top-end')
             ->show();
+
+        $this->reset(['name', 'description', 'registration_deadline', 'start_date', 'end_date', 'max_teams', 'matchup_rounds', 'final_rounds', 'status']);
+        $this->dispatch('tournamentCreated');
+    }
+
+    public function delete($id)
+    {
+        $tournament = Tournament::find($id);
+        if ($tournament) {
+            $tournament->delete();
+            LivewireAlert::title('Turnier gelöscht')
+                ->success()
+                ->toast()
+                ->position('top-end')
+                ->show();
+
+            $this->dispatch('tournamentDeleted');
+        } else {
+            LivewireAlert::title('Turnier nicht gefunden')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+        }
     }
 
     #[Layout('components.layouts.admin')]
