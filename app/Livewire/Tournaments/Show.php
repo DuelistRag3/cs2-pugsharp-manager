@@ -14,6 +14,7 @@ class Show extends Component
 {
 
     public string $teamname;
+    public string $teamtag;
     public string $player1Id;
     public string $player2Id;
     public string $player3Id;

@@ -7,6 +7,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Team extends Model
 {
+
+    protected $fillable = [
+        'name',
+        'tag',
+        'flag',
+    ];
+
     public function players(): HasMany
     {
         return $this->hasMany(Player::class);
