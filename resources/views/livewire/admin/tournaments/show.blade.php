@@ -32,17 +32,15 @@
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">Teams</h2>
-            @if(!$tournament->teams->isEmpty())
+            @if($tournament->teams->isEmpty())
                 <p>Bisher sind keine Teams registriert.</p>
             @else
-                <ul class="list-disc pl-5">
-                    @foreach($tournament->teams() as $team)
-                        <a href="#" class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center">{{ $team->name }}</a>
-                        <a href="#" class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center">Badge link</a>
+                <ul class="list-disc">
+                    @foreach($tournament->teams as $team)
+                        <button data-modal-target="team{{ $team->id }}-modal" data-modal-toggle="team{{ $team->id }}-modal" class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center">{{ $team->name }}</button>
                     @endforeach
                 </ul>
-                <button data-modal-target="team1-modal" data-modal-toggle="team1-modal" class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center cursor-pointer">Team 1</button>
-                <button data-modal-target="team2-modal" data-modal-toggle="team2-modal" class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center">Team 2</button>
+            
             @endif
         </div>
 
@@ -60,14 +58,16 @@
         </div>
 
 
-        <div id="team1-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+{{-- team modals --}}
+@foreach($tournament->teams as $team)
+        <div id="team{{ $team->id }}-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         {{-- <!-- Modal content --> --}}
         <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
             {{-- <!-- Modal header --> --}}
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Teamname
+                    {{ $team->name }} - {{ $team->tag }}
                 </h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="team1-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -79,7 +79,23 @@
             {{-- <!-- Modal body --> --}}
             <div class="p-4 md:p-5 space-y-4">
                 <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                    
+                    @foreach($team->players as $player)
+                    <li class="py-3 sm:py-4">
+                        <div class="flex items-center">
+                            <div class="shrink-0">
+                                <img class="w-8 h-8 rounded-full" src="{{ $player->steam_avatar }}" alt="{{ $player->name }}">
+                            </div>
+                            <div class="flex-1 min-w-0 ms-4">
+                                <p class="text-sm font-medium text-gray-900 truncate dark:text-blue-400">
+                                    <a href="{{ $player->steam_url }}" target="_blank">{{ $player->steam_name }}</a>
+                                </p>
+                                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                    Steam ID: {{ $player->steam_id }}
+                                </p>
+                            </div>
+                        </div>
+                    </li>
+                    @endforeach
                 </ul>
             </div>
             {{-- <!-- Modal footer --> --}}
@@ -90,6 +106,7 @@
         </div>
     </div>
 </div>
+@endforeach
 
     </div>    
 </div>
