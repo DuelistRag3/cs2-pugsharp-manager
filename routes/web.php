@@ -12,7 +12,6 @@ use App\Livewire\Tournaments\Show as TournamentShow;
 /* Tournaments Admin */
 use App\Livewire\Admin\Tournaments\Index as AdminTournamentsIndex;
 use App\Livewire\Admin\Tournaments\Show as AdminTournamentsShow;
-use App\Livewire\TournamentRounds;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', Landing::class)
@@ -39,6 +38,3 @@ Route::get('logout', function () {
     auth()->logout();
     return redirect()->route('landing');
 })->name('logout');
-
-Route::get('/tournaments/{tournament}/bracket', TournamentRounds::class)
-    ->name('tournaments.bracket');
