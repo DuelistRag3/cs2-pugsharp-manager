@@ -16,6 +16,12 @@ class Show extends Component
         $this->tournament = Tournament::findOrFail($id);
     }
 
+    public function createFirstRound()
+    {
+        $this->tournament->createFirstRound();
+        session()->flash('message', 'First round created successfully.');
+    }
+
     #[Layout('components.layouts.admin')]
     public function render()
     {
