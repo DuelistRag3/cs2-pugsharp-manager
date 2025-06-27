@@ -14,6 +14,9 @@ use App\Livewire\Admin\Tournaments\Index as AdminTournamentsIndex;
 use App\Livewire\Admin\Tournaments\Show as AdminTournamentsShow;
 use Illuminate\Support\Facades\Route;
 
+/* Server Admin */
+use App\Livewire\Admin\Server\Index as ServerIndex;
+
 Route::get('/', Landing::class)
     ->name('landing');
 
@@ -29,6 +32,9 @@ Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () 
     /* Tournament routes */
     Route::get('/tournaments/overview', AdminTournamentsIndex::class)->name('tournaments.index');
     Route::get('/tournaments/{id}', AdminTournamentsShow::class)->name('tournaments.show');
+
+    /* Server routes */
+    Route::get('/servers', ServerIndex::class)->name('server.index');
 });
 
 Route::get('/login', Login::class)

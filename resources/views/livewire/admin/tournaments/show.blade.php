@@ -53,7 +53,7 @@
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">Matches</h2>
-            @if($tournament->games->isEmpty())
+            {{-- @if($tournament->games->isEmpty())
             <p>Hier wird der Matchplan stehen.</p>
             @else
             <ul class="list-disc pl-5">
@@ -71,7 +71,9 @@
                 </div>
                 @endforeach
             </ul>
-            @endif
+            @endif --}}
+
+            
         </div>
 
 
