@@ -40,6 +40,9 @@ Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () 
 Route::get('/login', Login::class)
     ->name('login');
 
+Route::get('/configs/get/{id}', [App\Http\Controllers\GameController::class, 'generateMatchConfig'])
+    ->name('configs.get');
+
 Route::get('logout', function () {
     auth()->logout();
     return redirect()->route('landing');

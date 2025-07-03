@@ -75,7 +75,7 @@
                                 {{ $tournament->start_date ? new DateTime($tournament->start_date)->format('d.m.Y H:i') : 'Nicht festgelegt' }}
                             </td>
                             <td class="px-6 py-4">
-                                {{ $tournament->teams_count ?? 0 }} / {{ $tournament->max_teams }}
+                                {{ $tournament->teams->count() ?? 0 }} / {{ $tournament->max_teams }}
                             </td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center space-x-2">

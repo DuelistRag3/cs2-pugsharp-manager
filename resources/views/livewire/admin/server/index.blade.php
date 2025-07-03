@@ -10,9 +10,6 @@
                         #
                     </th>
                     <th scope="col" class="px-6 py-3">
-                        Name
-                    </th>
-                    <th scope="col" class="px-6 py-3">
                         IP-Adresse / Hostname
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -22,6 +19,12 @@
                         Status
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Hostname
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Player / Max Player
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Aktionen
                     </th>
                 </tr>
@@ -29,7 +32,7 @@
             <tbody>
                 @if ($servers->isEmpty())
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <td colspan="5" class="px-6 py-4 text-center text-gray-500">
+                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
                         Keine Server gefunden.
                     </td>
                 </tr>
@@ -40,29 +43,41 @@
                         {{ $server->id }}
                     </th>
                     <td class="px-6 py-4">
-                        {{ $server->name }}
-                    </td>
-                    <td class="px-6 py-4">
                         {{ $server->ip_address }}
                     </td>
                     <td class="px-6 py-4">
                         {{ $server->port }}
                     </td>
+                    <div wire:poll.60s>
+                        @php
+                            $serverInfo = $this->getServerStatus($server->id);
+                        @endphp
+                        <td class="px-6 py-4">
+                            @switch($serverInfo['status'])
+                            @case('unknown')
+                            <span class="text-gray-500">Unbekannt</span>
+                            @break
+                            @case('online')
+                            <span class="text-green-500">Online</span>
+                            @break
+                            @case('offline')
+                            <span class="text-red-500">Offline</span>
+                            @break
+                            @default
+                            <span class="text-gray-500">Unbekannt</span>
+                            @endswitch
+                        </td>
                     <td class="px-6 py-4">
-                        @switch($this->getServerStatus($server->id)['status'])
-                        @case('unknown')
-                        <span class="text-gray-500">Unbekannt</span>
-                        @break
-                        @case('online')
-                        <span class="text-green-500">Online</span>
-                        @break
-                        @case('offline')
-                        <span class="text-red-500">Offline</span>
-                        @break
-                        @default
-                        <span class="text-gray-500">Unbekannt</span>
-                        @endswitch
+                        {{ $serverInfo['name'] ?? 'N/A' }}
                     </td>
+                    <td class="px-6 py-4">
+                        @if (isset($serverInfo['players']) && isset($serverInfo['max_players']))
+                        {{ $serverInfo['players'] }} / {{ $serverInfo['max_players'] }}
+                        @else
+                        N/A
+                        @endif
+                    </td>
+                    </div>
                     <td class="px-6 py-4">
                         <button wire:click="delete({{ $server->id }})"
                             class="cursor-pointer text-xs text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
@@ -107,17 +122,10 @@
                 <!-- Modal body -->
                 <div class="p-4 md:p-5 space-y-4">
                     <form wire:submit="createServer" class="">
-
-                        <div class="mb-5">
-                            <label for="name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Servername</label>
-                            <input wire:model='name' type="text" id="name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Servername" required />
-                        </div>
                         <div class="mb-5">
                             <label for="ip"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">IP-Adresse / Hostname</label>
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">IP-Adresse /
+                                Hostname</label>
                             <input wire:model='ip' id="ip" type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="IP-Adresse / Hostname" required>
@@ -127,7 +135,7 @@
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Port</label>
                             <input wire:model='port' type="text" id="port"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Port" required/>
+                                placeholder="Port" required />
                         </div>
                 </div>
                 <!-- Modal footer -->

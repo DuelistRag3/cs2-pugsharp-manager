@@ -5,9 +5,10 @@ namespace App\Livewire\Admin\Server;
 use App\Models\Server;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-
 use xPaw\SourceQuery\SourceQuery;
+use Barryvdh\Debugbar\Facades\Debugbar;
+
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Index extends Component
 {
@@ -24,13 +25,11 @@ class Index extends Component
     public function createServer()
     {
         $this->validate([
-            'name' => 'required|string|max:255',
             'ip' => 'required|string|max:255',
             'port' => 'required|integer|min:1|max:65535',
         ]);
 
         Server::create([
-            'name' => $this->name,
             'ip_address' => $this->ip,
             'port' => $this->port,
         ]);
@@ -73,6 +72,8 @@ class Index extends Component
                 $info = $query->GetInfo();
                 $query->Disconnect();
 
+                Debugbar::info('Server status fetched successfully');
+
                 return [
                     'status' => 'online',
                     'name' => $info['HostName'],
@@ -80,9 +81,11 @@ class Index extends Component
                     'max_players' => $info['MaxPlayers'],
                 ];
             } catch (\Exception $e) {
+                Debugbar::error('Server status error: ' . $e->getMessage());
                 return ['status' => 'offline'];
             }
         } else {
+            Debugbar::warning('Server not found with ID: ' . $id);
             return ['status' => 'unknown'];
         }
     }

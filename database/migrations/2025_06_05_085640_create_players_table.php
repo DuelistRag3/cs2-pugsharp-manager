@@ -22,7 +22,7 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->timestamps();
 
-            $table->unique('steam_id', 'team_id'); // Ensure unique player per team
+            // $table->unique('steam_id', 'team_id'); // Ensure unique player per team [REENABLE AFTER TESTING]
         });
     }
 

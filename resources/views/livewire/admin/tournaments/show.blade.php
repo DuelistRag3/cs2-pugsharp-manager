@@ -53,27 +53,32 @@
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">Matches</h2>
-            {{-- @if($tournament->games->isEmpty())
+            @if($tournament->games->isEmpty())
             <p>Hier wird der Matchplan stehen.</p>
             @else
             <ul class="list-disc pl-5">
                 @foreach($tournament->games as $match)
+                <button wire:click="startMatch({{ $match->id }})"
+                    class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                    <i class="fa-solid fa-play"></i>
+                    <span class="sr-only">Starten</span>
+                </button>
                 <div
                     class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <a href="#" aria-current="true"
+                    <a aria-current="true" data-modal-target="team{{ $match->team1->id }}-modal"
+                        data-modal-toggle="team{{ $match->team1->id }}-modal"
                         class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                         {{ $match->team1->name }}
                     </a>
-                    <a href="#"
+                    <a data-modal-target="team{{ $match->team1->id }}-modal"
+                        data-modal-toggle="team{{ $match->team1->id }}-modal"
                         class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                         {{ $match->team2->name }}
                     </a>
                 </div>
                 @endforeach
             </ul>
-            @endif --}}
-
-            
+            @endif
         </div>
 
 

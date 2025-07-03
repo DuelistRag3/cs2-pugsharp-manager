@@ -15,15 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('ip_address'); // IP address / Hostname for the server
             $table->integer('port')->unsigned(); // Port number for the server
-            $table->string('name'); // Name of the server
-            $table->timestamps();
-        });
-
-        Schema::table('games', function (Blueprint $table) {
-            $table->foreignId('servers_id')
+            $table->foreignId('game_id')
                 ->nullable()
-                ->constrained('server')
-                ->onDelete('set null'); // Foreign key to the server table
+                ->default(null) // Nullable foreign key to the game table
+                ->constrained('games')
+                ->onDelete('set null'); // Foreign key to the game table
+            $table->timestamps();
         });
     }
 
