@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class GameController extends Controller
@@ -77,7 +78,7 @@ class GameController extends Controller
         $team2id = $match->team2->id;
 
         $api = config('app.url') . '/api/matchmaking';
-        $api_token = config('manager.api_bearer_token');
+        $api_token = User::first()->tokens->first()->token;
 
         $json = [
             'maplist' => [
