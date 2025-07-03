@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id();
-            $table->string('steam_id')->unique();
+            $table->string('steam_id');
             $table->string('steam_name');
             $table->string('steam_avatar');
             $table->string('steam_url');
@@ -21,6 +21,8 @@ return new class extends Migration
                 ->constrained('teams')
                 ->onDelete('cascade');
             $table->timestamps();
+
+            $table->unique('steam_id', 'team_id'); // Ensure unique player per team
         });
     }
 
