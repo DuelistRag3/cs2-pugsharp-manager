@@ -43,6 +43,19 @@ class Index extends Component
         $this->dispatch('serverCreated');
     }
 
+    public function clear($id)
+    {
+        $server = Server::find($id);
+
+        $server->game_id = null;
+        $server->save();
+        LivewireAlert::title('Server freigegeben')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
     public function delete($id)
     {
         $server = Server::find($id);

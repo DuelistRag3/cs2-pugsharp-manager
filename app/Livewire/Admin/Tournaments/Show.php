@@ -36,7 +36,7 @@ class Show extends Component
         $match = $this->tournament->games()->findOrFail($matchId);
         // $match->start();
 
-        $freeServer = Server::where('game_id', '>', 0)
+        $freeServer = Server::where('game_id', null)
             ->first();
 
         if (!isset($freeServer)) {

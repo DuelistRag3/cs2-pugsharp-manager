@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 /* Server Admin */
 use App\Livewire\Admin\Server\Index as ServerIndex;
 
+/* Profile Admin */
+use App\Livewire\Admin\Profile\Show as ProfileShow;
+
 Route::get('/', Landing::class)
     ->name('landing');
 
@@ -35,6 +38,9 @@ Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () 
 
     /* Server routes */
     Route::get('/servers', ServerIndex::class)->name('server.index');
+
+    /* Profile routes */
+    Route::get('/profile', ProfileShow::class)->name('profile');
 });
 
 Route::get('/login', Login::class)
@@ -47,3 +53,6 @@ Route::get('logout', function () {
     auth()->logout();
     return redirect()->route('landing');
 })->name('logout');
+
+
+include __DIR__ . '/api.php';

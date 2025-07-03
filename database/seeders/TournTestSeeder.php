@@ -39,13 +39,13 @@ class TournTestSeeder extends Seeder
 
         for ($i = 1; $i <= 5; $i++) {
             $team1->players()->create([
-                'steam_id' => '1234567890123456' . $i,
+                'steam_id' => '12345678901234569',
                 'steam_name' => 'Player Alpha ' . $i,
                 'steam_avatar' => 'https://example.com/avatar' . $i . '.png',
                 'steam_url' => 'https://example.com/profile' . $i,
             ]);
             $team2->players()->create([
-                'steam_id' => '1234567890123456' . ($i + 5),
+                'steam_id' => '12345678901234569',
                 'steam_name' => 'Player Beta ' . $i,
                 'steam_avatar' => 'https://example.com/avatar' . ($i + 5) . '.png',
                 'steam_url' => 'https://example.com/profile' . ($i + 5),

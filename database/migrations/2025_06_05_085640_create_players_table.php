@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('players', function (Blueprint $table) {
             $table->id();
-            $table->string('steam_id');
+            $table->integer('steam_id');
             $table->string('steam_name');
             $table->string('steam_avatar');
             $table->string('steam_url');

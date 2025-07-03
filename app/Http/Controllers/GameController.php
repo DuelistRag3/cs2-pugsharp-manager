@@ -70,8 +70,14 @@ class GameController extends Controller
             return response()->json(['error' => 'Match not found'], 404);
         }
 
-        $players_team1 = $match->team1->players->pluck('steam_id', 'steam_name')->toArray();
-        $players_team2 = $match->team2->players->pluck('steam_id', 'steam_name')->toArray();
+        $players_team1 = $match->team1->players->pluck('steam_name', 'steam_id')->toArray();
+        $players_team2 = $match->team2->players->pluck('steam_name', 'steam_id')->toArray();
+
+        $team1id = $match->team1->id;
+        $team2id = $match->team2->id;
+
+        $api = config('app.url') . '/api/matchmaking';
+        $api_token = config('manager.api_bearer_token');
 
         $json = [
             'maplist' => [
@@ -84,29 +90,29 @@ class GameController extends Controller
                 'de_ancient'
             ],
             'team1' => [
-                'id' => $match->team1->id,
+                'id' => "$team1id",
                 'name' => $match->team1->name,
                 'tag' => $match->team1->tag,
                 'flag' => 'DE',
                 'players' => $players_team1
             ],
             'team2' => [
-                'id' => $match->team2->id,
+                'id' => "$team2id",
                 'name' => $match->team2->name,
                 'tag' => $match->team2->tag,
                 'flag' => 'DE',
                 'players' => $players_team2
             ],
-            'matchid' => $match->match_number,
+            'matchid' => "$match->match_number",
             'num_maps' => $match->tournament->matchup_rounds,
             'players_per_team' => 5,
             'min_players_to_ready' => 5,
             'max_rounds' => 24,
             'max_overtime_rounds' => 6,
             'vote_timeout' => 60000,
-            'eventula_apistats_url' => 'https://dev.lan2play.de/api/matchmaking/40/',
-            'eventula_apistats_token' => 'Bearer S0XRU0UhIExFQ0tFUiEK',
-            'eventula_demo_upload_url' => 'https://dev.lan2play.de/api/matchmaking/40/demo',
+            'eventula_apistats_url' => "$api/40/",
+            'eventula_apistats_token' => "Bearer $api_token",
+            'eventula_demo_upload_url' => "$api/40/demo",
             'vote_map' => 'de_inferno',
             'server_locale' => 'de'
         ];
