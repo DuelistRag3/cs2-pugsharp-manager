@@ -7,6 +7,8 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
+use xPaw\SourceQuery\SourceQuery;
+
 class Index extends Component
 {
 
@@ -58,6 +60,30 @@ class Index extends Component
                 ->toast()
                 ->position('top-end')
                 ->show();
+        }
+    }
+
+    public function getServerStatus($id)
+    {
+        $server = Server::find($id);
+        if ($server) {
+            $query = new SourceQuery();
+            try {
+                $query->Connect($server->ip_address, $server->port, 1, SourceQuery::SOURCE);
+                $info = $query->GetInfo();
+                $query->Disconnect();
+
+                return [
+                    'status' => 'online',
+                    'name' => $info['HostName'],
+                    'players' => $info['Players'],
+                    'max_players' => $info['MaxPlayers'],
+                ];
+            } catch (\Exception $e) {
+                return ['status' => 'offline'];
+            }
+        } else {
+            return ['status' => 'unknown'];
         }
     }
 

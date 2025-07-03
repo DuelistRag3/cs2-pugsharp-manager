@@ -19,6 +19,9 @@
                         Port
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Aktionen
                     </th>
                 </tr>
@@ -44,6 +47,21 @@
                     </td>
                     <td class="px-6 py-4">
                         {{ $server->port }}
+                    </td>
+                    <td class="px-6 py-4">
+                        @switch($this->getServerStatus($server->id)['status'])
+                        @case('unknown')
+                        <span class="text-gray-500">Unbekannt</span>
+                        @break
+                        @case('online')
+                        <span class="text-green-500">Online</span>
+                        @break
+                        @case('offline')
+                        <span class="text-red-500">Offline</span>
+                        @break
+                        @default
+                        <span class="text-gray-500">Unbekannt</span>
+                        @endswitch
                     </td>
                     <td class="px-6 py-4">
                         <button wire:click="delete({{ $server->id }})"
