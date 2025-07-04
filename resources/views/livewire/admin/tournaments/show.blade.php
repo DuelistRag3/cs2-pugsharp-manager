@@ -25,8 +25,43 @@
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">Details</h2>
+            <p><strong>Anmeldeschluss:</strong>
+                @if ($tournament->registration_deadline)
+                    {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
+                @else
+                    {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
+                @endif
+            </p>
             <p><strong>Start Datum:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>End Datum:</strong> {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }}</p>
+            <p><strong>End Datum:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled') Turnier noch nicht vorbei @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif</p>
+            <p><strong>Maximale Teams:</strong> {{ $tournament->max_teams }}</p>
+            <p><strong>Team Größe:</strong> {{ $tournament->team_size }}</p>
+            <p><strong>Spieltyp:</strong>
+                @switch($tournament->matchup_rounds)
+                    @case(0)
+                        <span class="text-blue-500">Best Of 1</span>
+                        @break
+                    @case(1)
+                        <span class="text-blue-500">Best Of 3</span>
+                        @break
+                    @case(2)
+                        <span class="text-blue-500">Best Of 5</span>
+                        @break
+                @endswitch
+            </p>
+            <p><strong>Spieltyp (Finale):</strong>
+                @switch($tournament->final_rounds)
+                    @case(0)
+                        <span class="text-blue-500">Best Of 1</span>
+                        @break
+                    @case(1)
+                        <span class="text-blue-500">Best Of 3</span>
+                        @break
+                    @case(2)
+                        <span class="text-blue-500">Best Of 5</span>
+                        @break
+                @endswitch
+            </p>
             <p><strong>Status:</strong>
                 @switch($tournament->status)
                 @case('scheduled')

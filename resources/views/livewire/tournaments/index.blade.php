@@ -5,7 +5,16 @@
             <a href="#">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $tournament->name }}</h5>
             </a>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>Anmeldeschluss:<br></strong> {{ $tournament->registration_deadline ? new DateTime($tournament->start_date)->format('d.m.Y H:i') : 'Nicht festgelegt' }}</p>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
+                <strong>
+                    Anmeldeschluss:<br>
+                </strong>
+                @if ($tournament->registration_deadline)
+                    {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
+                @else
+                    {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
+                @endif
+            </p>
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>Start:<br></strong> {{ $tournament->start_date ? new DateTime($tournament->start_date)->format('d.m.Y H:i') : 'Nicht festgelegt' }}</p>
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>Teams:<br></strong> {{ $tournament->teams->count() ?? 0 }} / {{ $tournament->max_teams }}</p>
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>Status:<br></strong> 

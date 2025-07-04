@@ -2,7 +2,7 @@
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-white">Turnier: {{ $tournament->name }}</h1>
-            @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams)
+            @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams && now()->lessThan(new DateTime($tournament->registration_deadline ? $tornament->registration_deadline : $tournament->start_date)))
                 <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
                     class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">Anmelden</button>
                 @endif
@@ -10,8 +10,15 @@
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">Details</h2>
+            <p><strong>Anmeldeschluss:</strong>
+                @if ($tournament->registration_deadline)
+                    {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
+                @else
+                    {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
+                @endif
+            </p>
             <p><strong>Start Datum:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>End Datum:</strong> {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }}</p>
+            <p><strong>End Datum:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled') Turnier noch nicht vorbei @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif</p>
             <p><strong>Maximale Teams:</strong> {{ $tournament->max_teams }}</p>
             <p><strong>Team Größe:</strong> {{ $tournament->team_size }}</p>
             <p><strong>Spieltyp:</strong>
