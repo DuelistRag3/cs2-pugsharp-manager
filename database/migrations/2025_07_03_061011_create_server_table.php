@@ -20,6 +20,7 @@ return new class extends Migration
                 ->default(null) // Nullable foreign key to the game table
                 ->constrained('games')
                 ->onDelete('set null'); // Foreign key to the game table
+            $table->string('rcon_password')->nullable(); // RCON password for the server
             $table->timestamps();
         });
     }

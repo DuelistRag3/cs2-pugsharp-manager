@@ -28,8 +28,6 @@ return new class extends Migration
             $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
             $table->integer('team1_score')->default(0);
             $table->integer('team2_score')->default(0);
-            $table->string('map')->nullable();
-            $table->string('result')->nullable(); // e.g., "2-0", "1-2", etc.
             $table->integer('duration')->nullable(); // Duration in seconds
             $table->integer('matchup_count')->default(0); // Current game number, useful when multiple games played in a matchup
             $table->text('notes')->nullable(); // Additional notes about the game

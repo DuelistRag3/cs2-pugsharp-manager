@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('rounds', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('game_id')
+                ->constrained('games')
+                ->onDelete('cascade');
+            $table->integer('round_number'); // Unique round number within the game
+            $table->integer('team1_score')->default(0); // Score for Team 1 in this round
+            $table->integer('team2_score')->default(0); // Score for Team 2 in this round
             $table->timestamps();
         });
     }

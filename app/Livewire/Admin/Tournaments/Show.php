@@ -21,9 +21,89 @@ class Show extends Component
         $this->tournament = Tournament::findOrFail($id);
     }
 
-    public function createFirstRound()
+    public function startTournament($full = false)
     {
-        $this->tournament->createFirstRound();
+        if ($this->tournament->status !== 'scheduled') {
+            LivewireAlert::title('Turnier kann nicht gestartet werden')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+        if ($this->tournament->teams->count() < 2) {
+            LivewireAlert::title('Nicht genug Teams für das Turnier')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+        if ($this->tournament->teams->count() % 2 !== 0) {
+            LivewireAlert::title('Die Anzahl der Teams muss gerade sein')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+        if (!$full) {
+            if ($this->tournament->teams->count() == $this->tournament->max_teams) {
+                $full = true;
+            }
+        }
+
+        // Warn if torunament is not full
+        if (!$full) {
+            LivewireAlert::title('Turnier ist nicht voll')
+                ->text('Das Turnier hat nicht die maximale Anzahl an Teams. Möchtest du trotzdem starten?')
+                ->asConfirm()
+                ->withConfirmButton('Ja')
+                ->confirmButtonColor('green')
+                ->withDenyButton('Nein')
+                ->denyButtonColor('gray')
+                ->onConfirm('startTournament', ['full' => true])
+                ->show();
+            return;
+        }
+
+        $this->tournament->start();
+        LivewireAlert::title('Turnier gestartet')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
+    public function cancelTournament()
+    {
+        LivewireAlert::title('Turnier abbrechen?')
+            ->text('Bist du sicher, dass du das Turnier abbrechen möchtest? Dadurch werden alle Spiele sofort abgebrochen und das Turnier wird als abgebrochen markiert.')
+            ->asConfirm()
+            ->withConfirmButton('Ja')
+            ->confirmButtonColor('red')
+            ->withDenyButton('Nein')
+            ->denyButtonColor('gray')
+            ->onConfirm('cancelConfirmed')
+            ->show();
+    }
+
+    public function cancelConfirmed()
+    {
+        $this->tournament->cancel();
+        LivewireAlert::title('Turnier abgebrochen')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
+    public function generateMatchPlan()
+    {
+        $this->tournament->generateMatchPlan();
         LivewireAlert::title('Erste Runde erstellt')
             ->success()
             ->toast()
@@ -33,6 +113,19 @@ class Show extends Component
 
     public function startMatch($matchId)
     {
+
+        $token = config('manager.api_bearer_token');
+
+        if ($token == null || $token == '') {
+            LivewireAlert::title('Es ist kein API Token gesetzt')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+
         $match = $this->tournament->games()->findOrFail($matchId);
         // $match->start();
 
@@ -52,10 +145,9 @@ class Show extends Component
         try {
             $query->Connect($freeServer->ip_address, $freeServer->port, 1, SourceQuery::SOURCE);
             // $info = $query->GetInfo();
-            $query->SetRconPassword('7j)(3ihClc6f');
+            $query->SetRconPassword($freeServer->rcon_password);
 
-            $uri = config('app.url') . '/configs/get/' . $match->id;
-            Debugbar::info('Server config URI: ' . $uri);
+            $uri = route('api.matches.config', ['id' => $match->id]);
 
             $command = 'ps_loadconfig "'.$uri.'"';
 

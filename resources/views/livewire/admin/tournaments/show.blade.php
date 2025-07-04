@@ -3,12 +3,23 @@
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-white">Tournament: {{ $tournament->name }}</h1>
             <div class="right">
+                @if($tournament->status === 'ongoing' && $tournament->games->isEmpty())
+                <button wire:click='cancelTournament()' type="button"
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Turnier
+                    Abbrechen</button>
+                @if($tournament->games->isEmpty())
+                <button wire:click='generateMatchPlan()' type="button"
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Generiere Matchplan</button>
+                @endif
+                @endif
+                @if($tournament->status === 'scheduled')
                 <button type="button" data-modal-target="create-modal" data-modal-toggle="create-modal"
                     class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"><i
                         class="fa-solid fa-plus"></i> Bearbeiten</button>
-                <button wire:click='createFirstRound()' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Erste
-                    runde Starten</button>
+                <button wire:click='startTournament()' type="button"
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Turnier
+                    Starten</button>
+                @endif
             </div>
         </div>
 

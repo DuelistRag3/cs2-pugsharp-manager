@@ -18,23 +18,25 @@ class Index extends Component
     public $sortDirection = 'asc';
     public $perPage = 10;
 
-    public $name;
     public $ip;
     public $port;
+    public $rcon_password;
 
     public function createServer()
     {
         $this->validate([
             'ip' => 'required|string|max:255',
             'port' => 'required|integer|min:1|max:65535',
+            'rcon_password' => 'nullable|string|max:255',
         ]);
 
         Server::create([
             'ip_address' => $this->ip,
             'port' => $this->port,
+            'rcon_password' => $this->rcon_password ?? null,
         ]);
 
-        $this->reset(['name', 'ip', 'port']);
+        $this->reset(['ip', 'port', 'rcon_password']);
         LivewireAlert::title('Server hinzugefügt')
             ->success()
             ->toast()

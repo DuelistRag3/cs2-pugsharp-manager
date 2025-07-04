@@ -159,12 +159,24 @@
                                 placeholder="Startdatum" required />
                         </div>
                         <div class="mb-5">
+                            <label for="team_size"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teamgröße</label>
+                            <select wire:model='team_size' id="team_size"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="1">1 Spieler (1v1)</option>
+                                <option value="2">2 Spieler (2v2)</option>
+                                <option value="3">3 Spieler (3v3)</option>
+                                <option value="4">4 Spieler (4v4)</option>
+                                <option value="5" selected>5 Spieler (5v5)</option>
+                            </select>
+                        </div>
+                        <div class="mb-5">
                             <label for="max_teams"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Maximale
                                 Teams</label>
                             <input wire:model='max_teams' type="number" id="max_teams"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Maximale Teams" required />
+                                 required />
                         </div>
                         <div class="mb-5">
                             <label for="matchup_rounds"

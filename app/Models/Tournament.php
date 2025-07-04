@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -26,14 +27,52 @@ class Tournament extends Model
         return $this->hasMany(Team::class);
     }
 
-    public function createFirstRound()
+    public function start()
+    {
+        $this->status = 'ongoing';
+        $this->start_date = now(); // Set the start date to now
+        $this->save();
+    }
+
+    public function cancel()
+    {
+
+        $this->games()->each(function ($game) {
+
+            if($game->status === 'ongoing') {
+                // If the game is ongoing, we need to send the stop command to the server
+                $server = $game->server;
+                if ($server) {
+                    try {
+                        $query = new \xPaw\SourceQuery\SourceQuery();
+                        $query->Connect($server->ip_address, $server->port, 1, \xPaw\SourceQuery\SourceQuery::SOURCE);
+                        $query->SetRconPassword($server->rcon_password);
+                        $query->Rcon('ps_stopmatch');
+                        $query->Disconnect();
+                    } catch (\Exception $e) {
+                        Debugbar::error('Error stopping game: ' . $e->getMessage());
+                    }
+                }
+            }
+
+            $game->status = 'cancelled';
+            $game->save();
+        });
+        $this->status = 'cancelled';
+        $this->save();
+    }
+
+    public function generateMatchPlan()
     {
         // Logic to create the first round of the tournament
         // This could involve creating matches, assigning teams, etc.
         // For example:
         $teams = $this->teams()->get();
         $matches = [];
-        
+        if (count($teams) < 2) {
+            Debugbar::error('Not enough teams to create matches');
+            return;
+        }
         for ($i = 0; $i < count($teams); $i += 2) {
             if (isset($teams[$i + 1])) {
                 $matches[] = [

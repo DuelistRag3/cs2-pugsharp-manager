@@ -15,11 +15,11 @@ class Show extends Component
 
     public string $teamname;
     public string $teamtag;
-    public string $player1Id;
-    public string $player2Id;
-    public string $player3Id;
-    public string $player4Id;
-    public string $player5Id;
+    public string $player1Id = '';
+    public string $player2Id = '';
+    public string $player3Id = '';
+    public string $player4Id = '';
+    public string $player5Id = '';
 
     public Tournament $tournament;
 
@@ -32,10 +32,22 @@ class Show extends Component
     {
 
         // Get Players Data
+        $ids = '';
+
+        for ($i = 1; $i <= $this->tournament->team_size; $i++) {
+            $playerId = "player{$i}Id";
+            if (!empty($this->$playerId)) {
+                $ids .= $this->$playerId . ',';
+                if ($i == $this->tournament->team_size) {
+                    $ids = rtrim($ids, ','); // Remove trailing comma
+                }
+            }
+        }
+        // dd($ids);
 
         $response = Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", [
             'key' => config('manager.steam_api_key'),
-            'steamids' => "$this->player1Id,$this->player2Id,$this->player3Id,$this->player4Id,$this->player5Id",
+            'steamids' => $ids,
         ]);
 
         if ($response->successful()) {

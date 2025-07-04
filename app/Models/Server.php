@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Server extends Model
 {
     protected $fillable = [
-        'name',
         'ip_address',
         'port',
+        'rcon_password',
     ];
 
     /**

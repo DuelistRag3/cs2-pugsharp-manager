@@ -17,7 +17,6 @@
          <x-navigation.sidebar-item href="{{ route('admin.tournaments.index') }}" :active="request()->routeIs('admin.tournaments.index')" icon="fa-solid fa-trophy">Turniere</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('admin.server.index') }}" :active="request()->routeIs('admin.server.index')" icon="fa-solid fa-server">Server</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('landing') }}" :active="request()->routeIs('landing')" icon="fa-solid fa-home">Startseite</x-navigation.sidebar-item>
-         <x-navigation.sidebar-item href="{{ route('admin.profile') }}" :active="request()->routeIs('admin.profile')" icon="fa-solid fa-user">Profile</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('logout') }}" :active="request()->routeIs('logout')" icon="fa-solid fa-right-from-bracket">Abmelden</x-navigation.sidebar-item>
       </ul>
    </div>

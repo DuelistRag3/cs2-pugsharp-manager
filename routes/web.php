@@ -17,9 +17,6 @@ use Illuminate\Support\Facades\Route;
 /* Server Admin */
 use App\Livewire\Admin\Server\Index as ServerIndex;
 
-/* Profile Admin */
-use App\Livewire\Admin\Profile\Show as ProfileShow;
-
 Route::get('/', Landing::class)
     ->name('landing');
 
@@ -30,6 +27,7 @@ Route::get('/tournaments/{tournament}', TournamentShow::class)
     ->name('tournaments.show');
 
 Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () {
+    Route::redirect('/', '/admin/dashboard', 301);
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
     /* Tournament routes */
@@ -38,16 +36,10 @@ Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () 
 
     /* Server routes */
     Route::get('/servers', ServerIndex::class)->name('server.index');
-
-    /* Profile routes */
-    Route::get('/profile', ProfileShow::class)->name('profile');
 });
 
 Route::get('/login', Login::class)
     ->name('login');
-
-Route::get('/configs/get/{id}', [App\Http\Controllers\GameController::class, 'generateMatchConfig'])
-    ->name('configs.get');
 
 Route::get('logout', function () {
     auth()->logout();

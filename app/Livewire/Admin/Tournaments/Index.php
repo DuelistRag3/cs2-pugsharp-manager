@@ -23,7 +23,8 @@ class Index extends Component
     public $registration_deadline;
     public $start_date;
     public $end_date;
-    public $max_teams = 0;
+    public $team_size = 5; // Default team size for CS2
+    public $max_teams = 1;
     public $matchup_rounds = 0; // 0: BO1, 1: BO3, 2: BO5
     public $final_rounds = 0; // 0: BO1, 1: BO3, 2: BO5
     public $status = 'scheduled'; // scheduled, ongoing, completed, cancelled
@@ -36,6 +37,7 @@ class Index extends Component
         $tournament->registration_deadline = $this->registration_deadline;
         $tournament->start_date = $this->start_date;
         $tournament->end_date = $this->end_date;
+        $tournament->team_size = $this->team_size; // Default team size
         $tournament->max_teams = $this->max_teams;
         $tournament->matchup_rounds = $this->matchup_rounds;
         $tournament->final_rounds = $this->final_rounds;

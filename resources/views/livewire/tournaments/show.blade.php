@@ -2,44 +2,77 @@
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-white">Turnier: {{ $tournament->name }}</h1>
-            <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
-        class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">Anmelden</button>
+            @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams)
+                <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
+                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">Anmelden</button>
+                @endif
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">Details</h2>
             <p><strong>Start Datum:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
             <p><strong>End Datum:</strong> {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>Status:</strong> 
-            @switch($tournament->status)
+            <p><strong>Maximale Teams:</strong> {{ $tournament->max_teams }}</p>
+            <p><strong>Team Größe:</strong> {{ $tournament->team_size }}</p>
+            <p><strong>Spieltyp:</strong>
+                @switch($tournament->matchup_rounds)
+                    @case(0)
+                        <span class="text-blue-500">Best Of 1</span>
+                        @break
+                    @case(1)
+                        <span class="text-blue-500">Best Of 3</span>
+                        @break
+                    @case(2)
+                        <span class="text-blue-500">Best Of 5</span>
+                        @break
+                @endswitch
+            </p>
+            <p><strong>Spieltyp (Finale):</strong>
+                @switch($tournament->final_rounds)
+                    @case(0)
+                        <span class="text-blue-500">Best Of 1</span>
+                        @break
+                    @case(1)
+                        <span class="text-blue-500">Best Of 3</span>
+                        @break
+                    @case(2)
+                        <span class="text-blue-500">Best Of 5</span>
+                        @break
+                @endswitch
+            </p>
+            <p><strong>Status:</strong>
+                @switch($tournament->status)
                 @case('scheduled')
-                    <span class="text-yellow-500">Geplant</span>
-                    @break
+                <span class="text-yellow-500">Geplant</span>
+                @break
                 @case('ongoing')
-                    <span class="text-green-500">Läuft</span>
-                    @break
+                <span class="text-green-500">Läuft</span>
+                @break
                 @case('completed')
-                    <span class="text-gray-500">Abgeschlossen</span>
-                    @break
+                <span class="text-gray-500">Abgeschlossen</span>
+                @break
                 @case('cancelled')
-                    <span class="text-red-500">Abgebrochen</span>
+                <span class="text-red-500">Abgebrochen</span>
                 @default
-                    <span class="text-red-500">Unbekannt</span>
-            @endswitch
+                <span class="text-red-500">Unbekannt</span>
+                @endswitch
             </p>
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Teams</h2>
+            <h2 class="text-xl font-semibold mb-2">Teams: ({{ $tournament->teams->count() }}/{{ $tournament->max_teams
+                }})</h2>
             @if($tournament->teams->isEmpty())
-                <p>Bisher sind keine Teams registriert.</p>
+            <p>Bisher sind keine Teams registriert.</p>
             @else
-                <ul class="list-disc">
-                    @foreach($tournament->teams as $team)
-                        <button data-modal-target="team{{ $team->id }}-modal" data-modal-toggle="team{{ $team->id }}-modal" class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center mt-2">{{ $team->name }}</button>
-                    @endforeach
-                </ul>
-            
+            <ul class="list-disc">
+                @foreach($tournament->teams as $team)
+                <button data-modal-target="team{{ $team->id }}-modal" data-modal-toggle="team{{ $team->id }}-modal"
+                    class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-gray-700 dark:text-blue-400 border border-blue-400 inline-flex items-center justify-center mt-2">{{
+                    $team->name }}</button>
+                @endforeach
+            </ul>
+
             @endif
         </div>
 
@@ -52,11 +85,13 @@
                 @foreach($tournament->games as $match)
                 <div
                     class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <a aria-current="true" data-modal-target="team{{ $match->team1->id }}-modal" data-modal-toggle="team{{ $match->team1->id }}-modal"
+                    <a aria-current="true" data-modal-target="team{{ $match->team1->id }}-modal"
+                        data-modal-toggle="team{{ $match->team1->id }}-modal"
                         class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                         {{ $match->team1->name }}
                     </a>
-                    <a data-modal-target="team{{ $match->team1->id }}-modal" data-modal-toggle="team{{ $match->team1->id }}-modal"
+                    <a data-modal-target="team{{ $match->team1->id }}-modal"
+                        data-modal-toggle="team{{ $match->team1->id }}-modal"
                         class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                         {{ $match->team2->name }}
                     </a>
@@ -66,124 +101,189 @@
             @endif
         </div>
 
-{{-- team modals --}}
-@foreach($tournament->teams as $team)
-        <div id="team{{ $team->id }}-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-2xl max-h-full">
-        {{-- <!-- Modal content --> --}}
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-            {{-- <!-- Modal header --> --}}
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    {{ $team->name }} - {{ $team->tag }}
-                </h3>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="team1-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Schließen</span>
-                </button>
+        {{-- team modals --}}
+        @foreach($tournament->teams as $team)
+        <div id="team{{ $team->id }}-modal" tabindex="-1" aria-hidden="true"
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-2xl max-h-full">
+                {{--
+                <!-- Modal content --> --}}
+                <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                    {{--
+                    <!-- Modal header --> --}}
+                    <div
+                        class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                            {{ $team->name }} - {{ $team->tag }}
+                        </h3>
+                        <button type="button"
+                            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            data-modal-hide="team1-modal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                            </svg>
+                            <span class="sr-only">Schließen</span>
+                        </button>
+                    </div>
+                    {{--
+                    <!-- Modal body --> --}}
+                    <div class="p-4 md:p-5 space-y-4">
+                        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @foreach($team->players as $player)
+                            <li class="py-3 sm:py-4">
+                                <div class="flex items-center">
+                                    <div class="shrink-0">
+                                        <img class="w-8 h-8 rounded-full" src="{{ $player->steam_avatar }}"
+                                            alt="{{ $player->name }}">
+                                    </div>
+                                    <div class="flex-1 min-w-0 ms-4">
+                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-blue-400">
+                                            <a href="{{ $player->steam_url }}" target="_blank">{{ $player->steam_name
+                                                }}</a>
+                                        </p>
+                                        <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                            Steam ID: {{ $player->steam_id }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    {{--
+                    <!-- Modal footer --> --}}
+                    <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        <button data-modal-hide="team1-modal" type="button"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Schließen</button>
+
+                    </div>
+                </div>
             </div>
-            {{-- <!-- Modal body --> --}}
-            <div class="p-4 md:p-5 space-y-4">
-                <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                    @foreach($team->players as $player)
-                    <li class="py-3 sm:py-4">
-                        <div class="flex items-center">
-                            <div class="shrink-0">
-                                <img class="w-8 h-8 rounded-full" src="{{ $player->steam_avatar }}" alt="{{ $player->name }}">
-                            </div>
-                            <div class="flex-1 min-w-0 ms-4">
-                                <p class="text-sm font-medium text-gray-900 truncate dark:text-blue-400">
-                                    <a href="{{ $player->steam_url }}" target="_blank">{{ $player->steam_name }}</a>
-                                </p>
-                                <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                    Steam ID: {{ $player->steam_id }}
-                                </p>
-                            </div>
+        </div>
+        @endforeach
+
+        @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams)
+            <!-- Register modal -->
+            <div id="register-modal" tabindex="-1" aria-hidden="true"
+                class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div class="relative p-4 w-full max-w-md max-h-full">
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                        <!-- Modal header -->
+                        <div
+                            class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                Melde dich für das Turnier an
+                            </h3>
+                            <button type="button"
+                                class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                                data-modal-hide="register-modal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                </svg>
+                                <span class="sr-only">Schließen</span>
+                            </button>
                         </div>
-                    </li>
-                    @endforeach
-                </ul>
+                        <!-- Modal body -->
+                        <div class="p-4 md:p-5">
+                            <form wire:submit='registerTeam' class="space-y-4" action="#">
+                                <div>
+                                    <label for="teamname"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teamname</label>
+                                    <input wire:model='teamname' type="text" name="teamname" id="teamname"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                        placeholder="Teamname" required />
+                                </div>
+                                <div>
+                                    <label for="teamtag"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teamtag</label>
+                                    <input wire:model='teamtag' type="text" name="teamtag" id="teamtag"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                        placeholder="TeamTag" required />
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Bitte gib die Steam64 IDs der
+                                    Teammitglieder ein. Diese werden benötigt, um die Spieler zu identifizieren.</p>
+                                {{-- <div>
+                                    <label for="player1"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
+                                        von Spieler 1</label>
+                                    <input type="text" name="player1" id="player1" wire:model='player1Id'
+                                        placeholder="Steam ID von Spieler 1"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                        required />
+                                </div>
+                                <div>
+                                    <label for="player2"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
+                                        von Spieler 2</label>
+                                    <input type="text" name="player2" id="player2" wire:model='player2Id'
+                                        placeholder="Steam ID von Spieler 1"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                        required />
+                                </div>
+                                <div>
+                                    <label for="player3"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
+                                        von Spieler 3</label>
+                                    <input type="text" name="player3" id="player3" wire:model='player3Id'
+                                        placeholder="Steam ID von Spieler 1"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                        required />
+                                </div>
+                                <div>
+                                    <label for="player4"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
+                                        von Spieler 4</label>
+                                    <input type="text" name="player4" id="player4" wire:model='player4Id'
+                                        placeholder="Steam ID von Spieler 1"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                        required />
+                                </div>
+                                <div>
+                                    <label for="player5"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
+                                        von Spieler 5</label>
+                                    <input type="text" name="player5" id="player5" wire:model='player5Id'
+                                        placeholder="Steam ID von Spieler 1"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                        required />
+                                </div> --}}
+                                @for ($i = 1; $i <= $tournament->team_size; $i++)
+                                    <div>
+                                        <label for="player{{ $i }}"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam
+                                            ID von Spieler {{ $i }}</label>
+                                        <input type="text" name="player{{ $i }}" id="player{{ $i }}"
+                                            wire:model='player{{ $i }}Id' placeholder="Steam ID von Spieler {{ $i }}"
+                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                            required />
+                                    </div>
+                                    @endfor
+                                    <button type="submit"
+                                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Anmelden</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            {{-- <!-- Modal footer --> --}}
-            <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <button data-modal-hide="team1-modal" type="button" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Schließen</button>
-                
-            </div>
-        </div>
+            @endif
+
+
     </div>
-</div>
-@endforeach
-
-<!-- Register modal -->
-<div id="register-modal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-    <div class="relative p-4 w-full max-w-md max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-            <!-- Modal header -->
-            <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                    Melde dich für das Turnier an
-                </h3>
-                <button type="button" class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Schließen</span>
-                </button>
-            </div>
-            <!-- Modal body -->
-            <div class="p-4 md:p-5">
-                <form wire:submit='registerTeam' class="space-y-4" action="#">
-                    <div>
-                        <label for="teamname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teamname</label>
-                        <input wire:model='teamname' type="text" name="teamname" id="teamname" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Teamname" required />
-                    </div>
-                    <div>
-                        <label for="teamtag" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teamtag</label>
-                        <input wire:model='teamtag' type="text" name="teamtag" id="teamtag" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="TeamTag" required />
-                    </div>
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Bitte gib die Steam64 IDs der Teammitglieder ein. Diese werden benötigt, um die Spieler zu identifizieren.</p>
-                    <div>
-                        <label for="player1" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID von Spieler 1</label>
-                        <input type="text" name="player1" id="player1" wire:model='player1Id' placeholder="Steam ID von Spieler 1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
-                    </div>
-                    <div>
-                        <label for="player2" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID von Spieler 2</label>
-                        <input type="text" name="player2" id="player2" wire:model='player2Id' placeholder="Steam ID von Spieler 1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
-                    </div>
-                    <div>
-                        <label for="player3" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID von Spieler 3</label>
-                        <input type="text" name="player3" id="player3" wire:model='player3Id' placeholder="Steam ID von Spieler 1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
-                    </div>
-                    <div>
-                        <label for="player4" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID von Spieler 4</label>
-                        <input type="text" name="player4" id="player4" wire:model='player4Id' placeholder="Steam ID von Spieler 1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
-                    </div>
-                    <div>
-                        <label for="player5" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID von Spieler 5</label>
-                        <input type="text" name="player5" id="player5" wire:model='player5Id' placeholder="Steam ID von Spieler 1" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required />
-                    </div>
-                    <button type="submit" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Anmelden</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div> 
-
-
-    </div>    
 </div>
 
 @script
-    <script>
-        $wire.on('teamRegistered', () => {
+<script>
+    $wire.on('teamRegistered', () => {
             const modal = new Modal(document.getElementById('register-modal'));
             if (modal) {
                 modal.hide();
                 document.querySelector("body > div[modal-backdrop]")?.remove();
             }
         });
-    </script>
+</script>
 @endscript
