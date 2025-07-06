@@ -81,8 +81,8 @@ class Tournament extends Model
                     'team2_id' => $teams[$i + 1]->id,
                     'tournament_id' => $this->id,
                     'status' => 'scheduled',
-                    'team1_score' => null,
-                    'team2_score' => null,
+                    'team1_maps_won' => 0,
+                    'team2_maps_won' => 0,
                 ];
             }
         }

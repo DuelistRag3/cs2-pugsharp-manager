@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('max_teams')->default(0);
             $table->integer('matchup_rounds')->default(0)->comment('0: BO1, 1: BO3, 2: BO5'); // 0: BO1, 1: BO3, 2: BO5
             $table->integer('final_rounds')->default(0)->comment('0: BO1, 1: BO3, 2: BO5'); // 0: BO1, 1: BO3, 2: BO5
+            $table->integer('match_rounds')->default(24)->comment('Number of rounds per match, default is 24 for CS2'); // Number of rounds per match, default is 24 for CS2
+            $table->integer('overtime_rounds')->default(6)->comment('Number of overtime rounds, default is 6 for CS2'); // Number of overtime rounds, default is 6 for CS2
             $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
             $table->timestamps();
         });

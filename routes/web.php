@@ -26,7 +26,7 @@ Route::get('/tournaments', TournamentIndex::class)
 Route::get('/tournaments/{tournament}', TournamentShow::class)
     ->name('tournaments.show');
 
-Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () {
+Route::name('admin.')->prefix('admin')->middleware([])->group(function () {
     Route::redirect('/', '/admin/dashboard', 301);
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
@@ -45,6 +45,3 @@ Route::get('logout', function () {
     auth()->logout();
     return redirect()->route('landing');
 })->name('logout');
-
-
-include __DIR__ . '/api.php';

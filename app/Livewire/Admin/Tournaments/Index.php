@@ -26,8 +26,10 @@ class Index extends Component
     public $team_size = 5; // Default team size for CS2
     public $max_teams = 1;
     public $matchup_rounds = 0; // 0: BO1, 1: BO3, 2: BO5
+    public $match_rounds = 24; // Number of rounds per match, default is 24 for CS2
+    public $overtime_rounds = 6; // Number of overtime rounds, default is
     public $final_rounds = 0; // 0: BO1, 1: BO3, 2: BO5
-    public $status = 'scheduled'; // scheduled, ongoing, completed, cancelled
+    public $status = 'scheduled'; //a scheduled, ongoing, completed, cancelled
 
     public function create()
     {
@@ -40,6 +42,8 @@ class Index extends Component
         $tournament->team_size = $this->team_size; // Default team size
         $tournament->max_teams = $this->max_teams;
         $tournament->matchup_rounds = $this->matchup_rounds;
+        $tournament->match_rounds = $this->match_rounds; // Number of rounds per match
+        $tournament->overtime_rounds = $this->overtime_rounds; // Number of overtime rounds
         $tournament->final_rounds = $this->final_rounds;
         $tournament->status = $this->status;
         $tournament->save();

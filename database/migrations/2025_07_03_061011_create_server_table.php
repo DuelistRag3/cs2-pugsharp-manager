@@ -15,13 +15,17 @@ return new class extends Migration
             $table->id();
             $table->string('ip_address'); // IP address / Hostname for the server
             $table->integer('port')->unsigned(); // Port number for the server
-            $table->foreignId('game_id')
-                ->nullable()
-                ->default(null) // Nullable foreign key to the game table
-                ->constrained('games')
-                ->onDelete('set null'); // Foreign key to the game table
             $table->string('rcon_password')->nullable(); // RCON password for the server
+            $table->enum('status', ['free', 'occupied'])->default('free'); // Status of the server
             $table->timestamps();
+        });
+
+        Schema::table('games', function (Blueprint $table) {
+            $table->foreignId('server_id')
+                ->nullable()
+                ->constrained('servers')
+                ->onDelete('set null')
+                ->after('matchup_count'); // Set to null if the server is deleted
         });
     }
 

@@ -198,6 +198,23 @@
                                 <option value="2">Best of 5</option>
                             </select>
                         </div>
+                        <div class="mb-5">
+                            <label for="match_rounds"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Runden pro Match</label>
+                            <input wire:model='match_rounds' type="number" id="match_rounds"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Runden pro Match" required />
+                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Standardmäßig 24 Runden für CS2.</p>
+                        </div>
+                        <div class="mb-5">
+                            <label for="overtime_rounds"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Overtime-Runden</label>
+                            <input wire:model='overtime_rounds' type="number" id="overtime_rounds"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Overtime-Runden" required />
+                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Standardmäßig 6 Overtime-Runden für CS2.</p>
+                        </div>
+                        
                 </div>
                 <!-- Modal footer -->
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

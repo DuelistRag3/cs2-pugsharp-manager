@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Game extends Model
 {
@@ -16,18 +19,34 @@ class Game extends Model
         'status', // e.g., scheduled, completed, etc.
     ]; 
 
-    public function tournament()
+    public function tournament() : BelongsTo
     {
         return $this->belongsTo(Tournament::class);
     }
 
-    public function team1()
+    public function team1() : BelongsTo
     {
         return $this->belongsTo(Team::class, 'team1_id');
     }
 
-    public function team2()
+    public function team2() : BelongsTo
     {
         return $this->belongsTo(Team::class, 'team2_id');
+    }
+
+    public function server() : HasOne
+    {
+        return $this->hasOne(Server::class, 'id', 'server_id');
+    }
+
+    public function maps() : HasMany
+    {
+        return $this->hasMany(GameMap::class, 'game_id');
+    }
+
+    public function start()
+    {
+        $this->status = 'ongoing';
+        $this->save();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Server extends Model
 {
@@ -13,11 +14,20 @@ class Server extends Model
         'rcon_password',
     ];
 
-    /**
-     * Get the games associated with the server.
-     */
-    public function game() : BelongsTo
+    public function game(): HasOne
     {
-        return $this->belongsTo(Game::class, 'servers_id');
+        return $this->hasOne(Game::class, 'server_id', 'id');
+    }
+
+    public function block()
+    {
+        $this->status = 'occupied';
+        $this->save();
+    }
+
+    public function free()
+    {
+        $this->status = 'free';
+        $this->save();
     }
 }

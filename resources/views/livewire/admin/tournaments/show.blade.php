@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-white">Tournament: {{ $tournament->name }}</h1>
             <div class="right">
-                @if($tournament->status === 'ongoing' && $tournament->games->isEmpty())
+                @if($tournament->status === 'ongoing')
                 <button wire:click='cancelTournament()' type="button"
                     class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Turnier
                     Abbrechen</button>
@@ -104,11 +104,13 @@
             @else
             <ul class="list-disc pl-5">
                 @foreach($tournament->games as $match)
+                @if ($match->server == null)
                 <button wire:click="startMatch({{ $match->id }})"
                     class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
                     <i class="fa-solid fa-play"></i>
-                    <span class="sr-only">Starten</span>
+                    <span class="sr-only">Starten</span>    
                 </button>
+                @endif
                 <div
                     class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     <a aria-current="true" data-modal-target="team{{ $match->team1->id }}-modal"
@@ -145,7 +147,7 @@
                         </h3>
                         <button type="button"
                             class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            data-modal-hide="team1-modal">
+                            data-modal-hide="team{{ $team->id }}-modal">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                                 viewBox="0 0 14 14">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
@@ -182,7 +184,7 @@
                     {{--
                     <!-- Modal footer --> --}}
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button data-modal-hide="team1-modal" type="button"
+                        <button data-modal-hide="team{{ $team->id }}-modal" type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Schließen</button>
 
                     </div>

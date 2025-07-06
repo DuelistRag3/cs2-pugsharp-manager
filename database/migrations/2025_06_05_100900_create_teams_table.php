@@ -21,6 +21,27 @@ return new class extends Migration
                 ->onDelete('cascade');
             $table->timestamps();
         });
+
+        Schema::table('players', function (Blueprint $table) {
+            $table->foreignId('team_id')
+                ->nullable()
+                ->constrained('teams')
+                ->onDelete('set null')
+                ->after('id');
+        });
+
+        Schema::table('games', function (Blueprint $table) {
+            $table->foreignId('team1_id')
+                ->nullable()
+                ->constrained('teams')
+                ->onDelete('set null')
+                ->after('match_number');
+            $table->foreignId('team2_id')
+                ->nullable()
+                ->constrained('teams')
+                ->onDelete('set null')
+                ->after('team1_id');
+        });
     }
 
     /**

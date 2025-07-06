@@ -127,10 +127,10 @@ class Show extends Component
 
 
         $match = $this->tournament->games()->findOrFail($matchId);
-        // $match->start();
 
-        $freeServer = Server::where('game_id', null)
-            ->first();
+        $freeServer = Server::whereDoesntHave('game')->first();
+
+        // dd($freeServer);
 
         if (!isset($freeServer)) {
             LivewireAlert::title('Kein freier Server gefunden')
@@ -154,10 +154,11 @@ class Show extends Component
             $query->Rcon($command);
             $query->Disconnect();
 
-            Debugbar::info('Server config successfully sendet');
+            $freeServer->block($match->id);
 
-            $freeServer->game_id = $match->id;
-            $freeServer->save();
+            $match->status = 'ongoing';
+            $match->server_id = $freeServer->id;
+            $match->save();
 
             LivewireAlert::title('Match gestartet')
                 ->success()
@@ -165,9 +166,15 @@ class Show extends Component
                 ->position('top-end')
                 ->show();
 
+            Debugbar::info('Server config successfully sendet');
+
             return;
         } catch (\Exception $e) {
             Debugbar::error('Server status error: ' . $e->getMessage());
+            LivewireAlert::title('Fehler beim Starten des Matches')
+                ->text('Überprüfe ob der Server online ist und die RCON Einstellungen korrekt sind.')
+                ->error()
+                ->show();
             return;
         }
     }

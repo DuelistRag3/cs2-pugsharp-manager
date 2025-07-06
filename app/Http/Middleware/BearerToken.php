@@ -19,7 +19,7 @@ class BearerToken
         // Check if the request has a Bearer token
         if (!$token) {
             // If no Bearer token is present, return a 401 Unauthorized response
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'No Token'], 401);
         } else {
             if (config('manager.api_bearer_token') !== $token) {
                 // If the Bearer token does not match the expected token, return a 401 Unauthorized response

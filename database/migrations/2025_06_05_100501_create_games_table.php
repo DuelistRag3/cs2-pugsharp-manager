@@ -17,17 +17,11 @@ return new class extends Migration
                 ->constrained('tournaments')
                 ->onDelete('cascade');
             $table->integer('match_number')->nullable(); // Unique match number within the tournament
-            $table->foreignId('team1_id')
-                ->constrained('teams')
-                ->onDelete('cascade');
-            $table->foreignId('team2_id')
-                ->constrained('teams')
-                ->onDelete('cascade');
             $table->dateTime('scheduled_at')->nullable();
             $table->dateTime('played_at')->nullable();
             $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
-            $table->integer('team1_score')->default(0);
-            $table->integer('team2_score')->default(0);
+            $table->integer('team1_maps_won')->default(0);
+            $table->integer('team2_maps_won')->default(0);
             $table->integer('duration')->nullable(); // Duration in seconds
             $table->integer('matchup_count')->default(0); // Current game number, useful when multiple games played in a matchup
             $table->text('notes')->nullable(); // Additional notes about the game

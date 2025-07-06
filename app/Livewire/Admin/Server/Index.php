@@ -49,8 +49,36 @@ class Index extends Component
     {
         $server = Server::find($id);
 
-        $server->game_id = null;
-        $server->save();
+        if (!$server) {
+            LivewireAlert::title('Server nicht gefunden')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+        try {
+            $query = new SourceQuery();
+            $query->Connect($server->ip_address, $server->port, 1, SourceQuery::SOURCE);
+            $query->SetRconPassword($server->rcon_password);
+            $result = $query->Rcon('ps_stopmatch');
+
+            // dd($result);
+
+            if ($result == "Currently no Match is running\n")
+            {
+                // dd("Kein Match");
+            } else {
+                // dd("Match");
+            }
+            $query->Disconnect();
+        } catch (\Exception $e) {
+            Debugbar::error('Error disconnecting server: ' . $e->getMessage());
+        }
+
+        $server->free();
+
         LivewireAlert::title('Server freigegeben')
             ->success()
             ->toast()
@@ -111,10 +139,7 @@ class Index extends Component
         return view(
             'livewire.admin.server.index',
             [
-                'servers' => Server::where('name', 'like', '%' . $this->search . '%')
-                    ->orWhere('description', 'like', '%' . $this->search . '%')
-                    ->orderBy($this->sortField, $this->sortDirection)
-                    ->paginate($this->perPage),
+                'servers' => Server::paginate($this->perPage),
             ]
         );
     }
