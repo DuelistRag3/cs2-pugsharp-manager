@@ -2,7 +2,9 @@
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-white">Turnier: {{ $tournament->name }}</h1>
-            @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams && now()->lessThan(new DateTime($tournament->registration_deadline ? $tornament->registration_deadline : $tournament->start_date)))
+            @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams &&
+                now()->lessThan(new DateTime($tournament->registration_deadline ? $tornament->registration_deadline :
+                $tournament->start_date)))
                 <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
                     class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">Anmelden</button>
                 @endif
@@ -12,39 +14,41 @@
             <h2 class="text-xl font-semibold mb-2">Details</h2>
             <p><strong>Anmeldeschluss:</strong>
                 @if ($tournament->registration_deadline)
-                    {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
+                {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
                 @else
-                    {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
+                {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
                 @endif
             </p>
             <p><strong>Start Datum:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>End Datum:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled') Turnier noch nicht vorbei @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif</p>
+            <p><strong>End Datum:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled')
+                Turnier noch nicht vorbei @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif
+            </p>
             <p><strong>Maximale Teams:</strong> {{ $tournament->max_teams }}</p>
             <p><strong>Team Größe:</strong> {{ $tournament->team_size }}</p>
             <p><strong>Spieltyp:</strong>
                 @switch($tournament->matchup_rounds)
-                    @case(0)
-                        <span class="text-blue-500">Best Of 1</span>
-                        @break
-                    @case(1)
-                        <span class="text-blue-500">Best Of 3</span>
-                        @break
-                    @case(2)
-                        <span class="text-blue-500">Best Of 5</span>
-                        @break
+                @case(0)
+                <span class="text-blue-500">Best Of 1</span>
+                @break
+                @case(1)
+                <span class="text-blue-500">Best Of 3</span>
+                @break
+                @case(2)
+                <span class="text-blue-500">Best Of 5</span>
+                @break
                 @endswitch
             </p>
             <p><strong>Spieltyp (Finale):</strong>
                 @switch($tournament->final_rounds)
-                    @case(0)
-                        <span class="text-blue-500">Best Of 1</span>
-                        @break
-                    @case(1)
-                        <span class="text-blue-500">Best Of 3</span>
-                        @break
-                    @case(2)
-                        <span class="text-blue-500">Best Of 5</span>
-                        @break
+                @case(0)
+                <span class="text-blue-500">Best Of 1</span>
+                @break
+                @case(1)
+                <span class="text-blue-500">Best Of 3</span>
+                @break
+                @case(2)
+                <span class="text-blue-500">Best Of 5</span>
+                @break
                 @endswitch
             </p>
             <p><strong>Status:</strong>
@@ -84,27 +88,39 @@
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Matches</h2>
+            <h2 class="text-xl font-semibold mb-2">Turnierplan</h2>
+            {{-- 
+            Generate visuals for the generated Tournament matchplan.
+            All Matchups from a round will be displayed under each other
+            Calculate the number of rounds base on the number of matchups.
+            
+            etc
+            The next round will be displayed to the right of the round before.
+            Above the specific round there is a title like "Quarterfinals", "Semifinals", "Finals" etc.
+            The tiels for the first round will be visualy connected with a line to the corosponnding match for the next round, etc.
+            If a matchup doenst have a team or doesnt have both teams display "TDB" (To be determined) in the title.
+            If no matchups are available display "No matchups available" in the title.
+            Use tailwindcss with flowbite to create the visuals.
+            The matchups will be displayed as a button with the team names and the score.
+            --}}
             @if($tournament->games->isEmpty())
-            <p>Hier wird der Matchplan stehen.</p>
+            <p class="text-gray-500">Keine Matchups verfügbar.</p>
             @else
-            <ul class="list-disc pl-5">
-                @foreach($tournament->games as $match)
-                <div
-                    class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <a aria-current="true" data-modal-target="team{{ $match->team1->id }}-modal"
-                        data-modal-toggle="team{{ $match->team1->id }}-modal"
-                        class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                        {{ $match->team1->name }}
-                    </a>
-                    <a data-modal-target="team{{ $match->team1->id }}-modal"
-                        data-modal-toggle="team{{ $match->team1->id }}-modal"
-                        class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                        {{ $match->team2->name }}
-                    </a>
-                </div>
-                @endforeach
-            </ul>
+                {{-- Calculate Number of Rounds --}}
+                @php
+                $matchups = $tournament->games;
+                $numMatchups = $matchups->count();
+                $numRounds = (int) ceil(log($numMatchups, 2));
+                $rounds = [];
+                for ($i = 0; $i < $numRounds; $i++) {
+                    $rounds[$i] = [];
+                }
+                foreach ($matchups as $game) {
+                    $roundIndex = (int) log($game->id, 2);
+                    $rounds[$roundIndex][] = $game;
+                }
+                @endphp
+                {{-- Display each Round --}}
             @endif
         </div>
 
