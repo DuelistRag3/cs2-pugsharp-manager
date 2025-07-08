@@ -101,9 +101,9 @@ class Show extends Component
             ->show();
     }
 
-    public function generateMatchPlan()
+    public function generateMatchPlan($type)
     {
-        $this->tournament->generateMatchPlan();
+        $this->tournament->generateMatchPlan($type);
         LivewireAlert::title('Erste Runde erstellt')
             ->success()
             ->toast()

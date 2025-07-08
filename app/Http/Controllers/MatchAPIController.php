@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Game;
-use App\Models\Player;
 use App\Models\GameMap;
 use Illuminate\Http\Request;
 use App\Models\GameMapPlayerScore;

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
+            $table->integer('type')->comment('0: Bracket, 1: Round Robin')->nullable(); // 0: Bracket, 1: Round Robin
             $table->dateTime('registration_deadline')->nullable()->comment('if null, registration ends with tournament start'); // if null, registration ends with tournament start
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();

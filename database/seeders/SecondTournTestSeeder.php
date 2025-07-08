@@ -14,6 +14,7 @@ class SecondTournTestSeeder extends Seeder
      */
     public function run(): void
     {
+        $maxteams = 6; // Maximum number of teams for the tournament
         $tourn = Tournament::create([
             'name' => 'Test Tournament',
             'description' => 'This is a test tournament for seeding purposes.',
@@ -22,14 +23,14 @@ class SecondTournTestSeeder extends Seeder
             'matchup_rounds' => 0, // 0: BO1, 1: BO3, 2: BO5
             'final_rounds' => 0, // 0: BO1, 1: BO3, 2: BO5
             'map_rounds' => 24, // Number of rounds per map, default is 24 for CS2
-            'overtime_rounds' => 6, // Number of overtime rounds, default is 6
+            'overtime_rounds' => $maxteams, // Number of overtime rounds, default is 6
             'status' => 'ongoing', // e.g., scheduled, ongoing, completed
             'team_size' => 5, // 1 for testing purposes
-            'max_teams' => 16,
+            'max_teams' => 6,
         ]);
 
         // Create 16 teams with random names and tags
-        for ($i = 1; $i <= 16; $i++) {
+        for ($i = 1; $i <= $maxteams; $i++) {
             $team = $tourn->teams()->create([
                 'name' => 'Team ' . $i,
                 'tag' => 'T' . $i,
@@ -55,6 +56,6 @@ class SecondTournTestSeeder extends Seeder
             'rcon_password' => 'test',
         ]);
 
-        $tourn->generateMatchPlan();
+        // $tourn->generateMatchPlan();
     }
 }

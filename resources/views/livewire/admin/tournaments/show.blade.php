@@ -8,9 +8,12 @@
                     class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Turnier
                     Abbrechen</button>
                 @if($tournament->games->isEmpty())
-                <button wire:click='generateMatchPlan()' type="button"
+                <button wire:click='generateMatchPlan(0)' type="button"
                     class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Generiere
-                    Matchplan</button>
+                    Bracket Matchplan</button>
+                <button wire:click='generateMatchPlan(1)' type="button"
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Generiere
+                    Round Robin Matchplan</button>
                 @endif
                 @endif
                 @if($tournament->status === 'scheduled')
@@ -102,16 +105,12 @@
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">Turnierplan</h2>
+            @if($tournament->type === 0) {{-- Bracket style --}}
             @php
             $numberOfRounds = ceil(log($tournament->teams->count(), 2));
             $offset = 0;
             @endphp
             <div class="grid grid-rows-1 gap-4 grid-cols-{{ $numberOfRounds }}">
-
-                {{--
-                For each round place the generated games. To determine which games have to be displayed in each round
-                use Laravels limit and offset query builder functions, for example the first 8 games have to be placed
-                in the first round (round of 16) --}}
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
                     <h3 class="text-lg font-semibold mb-2">
                         @switch($round)
@@ -132,12 +131,16 @@
                         @endswitch
                     </h3>
                     <div class="h-full grid content-around">
+                        {{ $offset }}
                         @php
-                        $roundGames = $tournament->games()->offset($offset)->limit(pow(2, 4 - $round) / 2)->get();
+                        $roundGames = $tournament->games()->offset($offset)->limit(pow(2, $numberOfRounds - $round) / 2)->get();
                         $offset = $offset + $roundGames->count();
                         @endphp
+                        
                         @foreach($roundGames as $game)
+                        {{ $round }}
                         <div
+                        
                             class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                             <button class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
                                 <i class="fa-solid fa-wrench"></i>
@@ -173,6 +176,42 @@
                     </div>
             </div>
             @endfor
+            @elseif ($tournament->type === 1) {{-- Round Robin style --}}
+            <div class="grid grid-cols-1 gap-4">
+                @foreach($tournament->games as $game)
+                <div class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <button class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
+                        <i class="fa-solid fa-wrench"></i>
+                        <span class="sr-only">Menü</span>
+                    </button>
+                    @if($game->team1)
+                    <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
+                        data-modal-toggle="team{{ $game->team1->id }}-modal"
+                        class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                        {{ $game->team1->name }}
+                    </a>
+                    @else
+                    <a aria-current="true"
+                        class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                        TBD
+                    </a>
+                    @endif
+                    @if($game->team2)
+                    <a data-modal-target="team{{ $game->team1->id }}-modal"
+                        data-modal-toggle="team{{ $game->team1->id }}-modal"
+                        class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                        {{ $game->team2->name }}
+                    </a>
+                    @else
+                    <a
+                        class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                        TBD
+                    </a>
+                    @endif
+                </div>
+                @endforeach
+            </div>
+            @endif
         </div>
 
 
