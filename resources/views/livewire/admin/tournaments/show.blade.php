@@ -9,7 +9,8 @@
                     Abbrechen</button>
                 @if($tournament->games->isEmpty())
                 <button wire:click='generateMatchPlan()' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Generiere Matchplan</button>
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Generiere
+                    Matchplan</button>
                 @endif
                 @endif
                 @if($tournament->status === 'scheduled')
@@ -27,39 +28,41 @@
             <h2 class="text-xl font-semibold mb-2">Details</h2>
             <p><strong>Anmeldeschluss:</strong>
                 @if ($tournament->registration_deadline)
-                    {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
+                {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
                 @else
-                    {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
+                {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
                 @endif
             </p>
             <p><strong>Start Datum:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>End Datum:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled') Turnier noch nicht vorbei @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif</p>
+            <p><strong>End Datum:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled')
+                Turnier noch nicht vorbei @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif
+            </p>
             <p><strong>Maximale Teams:</strong> {{ $tournament->max_teams }}</p>
             <p><strong>Team Größe:</strong> {{ $tournament->team_size }}</p>
             <p><strong>Spieltyp:</strong>
                 @switch($tournament->matchup_rounds)
-                    @case(0)
-                        <span class="text-blue-500">Best Of 1</span>
-                        @break
-                    @case(1)
-                        <span class="text-blue-500">Best Of 3</span>
-                        @break
-                    @case(2)
-                        <span class="text-blue-500">Best Of 5</span>
-                        @break
+                @case(0)
+                <span class="text-blue-500">Best Of 1</span>
+                @break
+                @case(1)
+                <span class="text-blue-500">Best Of 3</span>
+                @break
+                @case(2)
+                <span class="text-blue-500">Best Of 5</span>
+                @break
                 @endswitch
             </p>
             <p><strong>Spieltyp (Finale):</strong>
                 @switch($tournament->final_rounds)
-                    @case(0)
-                        <span class="text-blue-500">Best Of 1</span>
-                        @break
-                    @case(1)
-                        <span class="text-blue-500">Best Of 3</span>
-                        @break
-                    @case(2)
-                        <span class="text-blue-500">Best Of 5</span>
-                        @break
+                @case(0)
+                <span class="text-blue-500">Best Of 1</span>
+                @break
+                @case(1)
+                <span class="text-blue-500">Best Of 3</span>
+                @break
+                @case(2)
+                <span class="text-blue-500">Best Of 5</span>
+                @break
                 @endswitch
             </p>
             <p><strong>Status:</strong>
@@ -98,35 +101,78 @@
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Matches</h2>
-            @if($tournament->games->isEmpty())
-            <p>Hier wird der Matchplan stehen.</p>
-            @else
-            <ul class="list-disc pl-5">
-                @foreach($tournament->games as $match)
-                @if ($match->server == null)
-                <button wire:click="startMatch({{ $match->id }})"
-                    class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
-                    <i class="fa-solid fa-play"></i>
-                    <span class="sr-only">Starten</span>    
-                </button>
-                @endif
-                <div
-                    class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <a aria-current="true" data-modal-target="team{{ $match->team1->id }}-modal"
-                        data-modal-toggle="team{{ $match->team1->id }}-modal"
-                        class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                        {{ $match->team1->name }}
-                    </a>
-                    <a data-modal-target="team{{ $match->team1->id }}-modal"
-                        data-modal-toggle="team{{ $match->team1->id }}-modal"
-                        class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                        {{ $match->team2->name }}
-                    </a>
-                </div>
-                @endforeach
-            </ul>
-            @endif
+            <h2 class="text-xl font-semibold mb-2">Turnierplan</h2>
+            @php
+            $numberOfRounds = ceil(log($tournament->teams->count(), 2));
+            $offset = 0;
+            @endphp
+            <div class="grid grid-rows-1 gap-4 grid-cols-{{ $numberOfRounds }}">
+
+                {{--
+                For each round place the generated games. To determine which games have to be displayed in each round
+                use Laravels limit and offset query builder functions, for example the first 8 games have to be placed
+                in the first round (round of 16) --}}
+                @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
+                    <h3 class="text-lg font-semibold mb-2">
+                        @switch($round)
+                        @case(0)
+                        Achtelfinale
+                        @break
+                        @case(1)
+                        Viertelfinale
+                        @break
+                        @case(2)
+                        Halbfinale
+                        @break
+                        @case(3)
+                        Finale
+                        @break
+                        @default
+                        Runde {{ $round + 1 }}
+                        @endswitch
+                    </h3>
+                    <div class="h-full grid content-around">
+                        @php
+                        $roundGames = $tournament->games()->offset($offset)->limit(pow(2, 4 - $round) / 2)->get();
+                        $offset = $offset + $roundGames->count();
+                        @endphp
+                        @foreach($roundGames as $game)
+                        <div
+                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            <button class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
+                                <i class="fa-solid fa-wrench"></i>
+                                <span class="sr-only">Menü</span>
+                            </button>
+                            @if($game->team1)
+                            <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
+                                data-modal-toggle="team{{ $game->team1->id }}-modal"
+                                class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                {{ $game->team1->name }}
+                            </a>
+                            @else
+                            <a aria-current="true"
+                                class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                TBD
+                            </a>
+                            @endif
+                            @if($game->team2)
+                            <a data-modal-target="team{{ $game->team1->id }}-modal"
+                                data-modal-toggle="team{{ $game->team1->id }}-modal"
+                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                {{ $game->team2->name }}
+                            </a>
+                            @else
+                            <a
+                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                TBD
+                            </a>
+                            @endif
+                            
+                        </div>
+                        @endforeach
+                    </div>
+            </div>
+            @endfor
         </div>
 
 
