@@ -90,6 +90,26 @@ class Tournament extends Model
         if ($type === 1) { // Round Robin style
             $this->type = 1; // Set the tournament type to Round Robin
             $this->save();
+            if ($numTeams < 2) {
+                Debugbar::warning('Not enough teams to generate match plan.');
+                return;
+            }
+
+            $numMatches = $numTeams * ($numTeams - 1) / 2; // Total matches in a round-robin tournament
+
+            $matchNumber = 1; // Initialize match number
+            for ($i = 0; $i < $numTeams; $i++) {
+                for ($j = $i + 1; $j < $numTeams; $j++) {
+                    $match = new Game();
+                    $match->tournament_id = $this->id;
+                    $match->match_number = $matchNumber++;
+                    $match->team1_id = null; // Initially set team1_id to null
+                    $match->team2_id = null; // Initially set team2_id to null
+                    $match->round = 1; // In round-robin, all matches are in the first round
+                    $match->status = 'scheduled'; // Set the status to scheduled
+                    $match->save();
+                }
+            }
         }
 
         return;
