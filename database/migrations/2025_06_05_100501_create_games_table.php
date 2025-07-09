@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('tournament_id')
                 ->constrained('tournaments')
                 ->onDelete('cascade');
+            $table->integer('round')->default(1); // Round number in the tournament
             $table->integer('match_number')->nullable(); // Unique match number within the tournament
             $table->dateTime('scheduled_at')->nullable();
             $table->dateTime('played_at')->nullable();

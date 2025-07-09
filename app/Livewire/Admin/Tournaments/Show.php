@@ -111,6 +111,36 @@ class Show extends Component
             ->show();
     }
 
+    public function addTeamsToMatchPlan()
+    {
+        $this->tournament->addTeamsToMatchPlan();
+        LivewireAlert::title('Teams zugewiesen')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
+    public function removeAllTeamsFromMatchPlan()
+    {
+        $this->tournament->removeAllTeamsFromMatchPlan();
+        LivewireAlert::title('Alle Teams aus dem Matchplan entfernt')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
+    public function resetMatchPlan()
+    {
+        $this->tournament->games()->delete();
+        LivewireAlert::title('Matchplan zurückgesetzt')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
     public function startMatch($matchId)
     {
 

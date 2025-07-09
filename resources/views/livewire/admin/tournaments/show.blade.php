@@ -1,4 +1,5 @@
-<div>
+<div
+    class="grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10">
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-white">Tournament: {{ $tournament->name }}</h1>
@@ -14,6 +15,16 @@
                 <button wire:click='generateMatchPlan(1)' type="button"
                     class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Generiere
                     Round Robin Matchplan</button>
+                @else
+                <button wire:click='resetMatchPlan()' type="button"
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Matchplan
+                    zurücksetzen</button>
+                <button wire:click='addTeamsToMatchPlan()' type="button"
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">
+                    Teams zufällig zuweisen
+                </button>
+                <button wire:click='removeAllTeamsFromMatchPlan()' type="button"
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Alle Spiele leeren</button>
                 @endif
                 @endif
                 @if($tournament->status === 'scheduled')
@@ -131,18 +142,17 @@
                         @endswitch
                     </h3>
                     <div class="h-full grid content-around">
-                        {{ $offset }}
                         @php
-                        $roundGames = $tournament->games()->offset($offset)->limit(pow(2, $numberOfRounds - $round) / 2)->get();
+                        $roundGames = $tournament->games()->where('round', ($round + 1))->get();
+                        // $roundGames = $tournament->games()->get();
                         $offset = $offset + $roundGames->count();
                         @endphp
-                        
+
                         @foreach($roundGames as $game)
-                        {{ $round }}
                         <div
-                        
                             class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                            <button class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
+                            <button
+                                class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
                                 <i class="fa-solid fa-wrench"></i>
                                 <span class="sr-only">Menü</span>
                             </button>
@@ -170,7 +180,7 @@
                                 TBD
                             </a>
                             @endif
-                            
+
                         </div>
                         @endforeach
                     </div>
@@ -179,8 +189,10 @@
             @elseif ($tournament->type === 1) {{-- Round Robin style --}}
             <div class="grid grid-cols-1 gap-4">
                 @foreach($tournament->games as $game)
-                <div class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <button class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
+                <div
+                    class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <button
+                        class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
                         <i class="fa-solid fa-wrench"></i>
                         <span class="sr-only">Menü</span>
                     </button>

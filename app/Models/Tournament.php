@@ -64,71 +64,83 @@ class Tournament extends Model
 
     public function generateMatchPlan($type)
     {
+        $numTeams = $this->teams()->count();
+
+        if ($numTeams < 2) {
+            Debugbar::warning('Not enough teams to generate match plan.');
+            return;
+        }
+
         if ($type === 0) { // Bracket style
             $this->type = 0; // Set tournament type to Bracket
-            $this->save();
-            Debugbar::info('Generating match plan for tournament: ' . $this->name);
-            $teams = $this->teams()->get();
-            $numTeams = $teams->count();
-            Debugbar::info('Number of teams: ' . $numTeams);
-            if ($numTeams < 2) {
-                Debugbar::warning('Not enough teams to generate match plan.');
-                return;
-            }
-            $rounds = ceil(log($numTeams, 2)); // Calculate the number of rounds needed
-            Debugbar::info('Number of rounds: ' . $rounds);
-            $matches = [];
-            for ($round = 0; $round < $rounds; $round++) {
-                $numMatches = ceil($numTeams / pow(2, $round + 1)); // Calculate the number of matches in this round
-                Debugbar::info('Round ' . ($round + 1) . ' has ' . $numMatches . ' matches.');
-                for ($match = 0; $match < $numMatches; $match++) {
-                    $matchup = new Game();
-                    $matchup->tournament_id = $this->id;
-                    $matchup->match_number = $match + 1; // Match number starts from 1
-                    $matchup->status = 'scheduled'; // Set initial status to scheduled
-                    $matchup->save();
-                    $matches[] = $matchup;
-                    Debugbar::info('Created match: ' . $matchup->id . ' for round ' . ($round + 1) . ', match number ' . ($match + 1));
-                }
-                // If there are not enough teams for the next round, break the loop
-                if ($numTeams < 2) {
-                    Debugbar::warning('Not enough teams for the next round, breaking the loop.');
-                    break;
-                }
-            }
+            $this->save(); // Save the tournament type
 
-            // Assign teams to the first round matches
-            $firstRoundMatches = array_slice($matches, 0, $numTeams / 2);
-            Debugbar::info('Assigning teams to first round matches.');
-            foreach ($firstRoundMatches as $index => $match) {
-                if (isset($teams[$index * 2]) && isset($teams[$index * 2 + 1])) {
-                    $match->team1_id = $teams[$index * 2]->id;
-                    $match->team2_id = $teams[$index * 2 + 1]->id;
-                    $match->save();
-                    Debugbar::info('Assigned teams: ' . $teams[$index * 2]->name . ' vs ' . $teams[$index * 2 + 1]->name . ' to match: ' . $match->id);
-                } else {
-                    Debugbar::warning('Not enough teams to assign to match: ' . $match->id);
-                }
-            }
+            $numMatches = $numTeams - 1; // In a single-elimination tournament, there are always one less match than the number of teams
 
-            Debugbar::info('Match plan generated successfully for tournament: ' . $this->name);
-            return $matches;
+            for ($i = 0; $i < $numMatches; $i++) {
+                $match = new Game();
+                $match->tournament_id = $this->id;
+                $match->match_number = $i + 1;
+                $match->round = (int) ceil(log($numTeams, 2)) - (int) floor(log($i + 1, 2)); // Calculate the round based on the match number
+                $match->status = 'scheduled';
+                $match->save();
+            }
         }
 
-        if($type === 1) { // Round Robin style
+        if ($type === 1) { // Round Robin style
             $this->type = 1; // Set the tournament type to Round Robin
             $this->save();
-            Debugbar::info('Generating round robin match plan for tournament: ' . $this->name);
-            $teams = $this->teams()->get();
-            $numTeams = $teams->count();
-            Debugbar::info('Number of teams: ' . $numTeams);
-            if ($numTeams < 2) {
-                Debugbar::warning('Not enough teams to generate match plan.');
-                return;
-            }
-            $matches = [];
-            
-            return $matches;
         }
+
+        return;
+    }
+
+    public function addTeamsToMatchPlan()
+    {
+        $teams = $this->teams()->get();
+
+        // Fill the rounds with teams, if the number of teams is not a power of 2, random teams will be given a bye
+        $teams = $teams->shuffle(); // Shuffle teams to randomize matchups
+
+        $numRounds = $this->games()->max('round') ?? 1; // Get the maximum round number or default to 1
+
+        // dd($numRounds);
+
+        // In the first round we will pair teams and cut them out of the remaining teams
+        for ($round = 1; $round <= $numRounds; $round++) {
+            $matchesInRound = $this->games()->where('round', $round)->get();
+            foreach ($matchesInRound as $match) {
+                if ($teams->count() == 0) {
+                    break; // Not enough teams to continue
+                }
+                if ($teams->count() >= 2) {
+                    $team1 = $teams->shift(); // Get the first team
+                    $team2 = $teams->shift(); // Get the second team
+                    $match->team1_id = $team1->id;
+                    $match->team2_id = $team2->id;
+                    $match->save();
+                } else if ($teams->count() == 1) {
+                    $team = $teams->shift(); // Get the next team
+                    $match->team1_id = $team->id; // Assign the team to team
+                    $match->team2_id = null; // Set the second team to null for now
+                    $match->save();
+                }
+            }
+        }
+    }
+
+    public function removeAllTeamsFromMatchPlan()
+    {
+        // Reset all games in the tournament
+        $this->games()->each(function ($game) {
+            $game->team1_id = null;
+            $game->team2_id = null;
+            $game->status = 'scheduled'; // Reset the status to scheduled
+            $game->save();
+        });
+
+        // Reset the status of the tournament
+        $this->status = 'scheduled';
+        $this->save();
     }
 }

@@ -120,7 +120,7 @@
                     </h3>
                     <div class="h-full grid content-around">
                         @php
-                        $roundGames = $tournament->games()->offset($offset)->limit(pow(2, 4 - $round) / 2)->get();
+                        $roundGames = $tournament->games()->where('round', ($round + 1))->get();
                         $offset = $offset + $roundGames->count();
                         @endphp
                         @foreach($roundGames as $game)
