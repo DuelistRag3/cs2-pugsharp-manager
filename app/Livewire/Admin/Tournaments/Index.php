@@ -2,9 +2,10 @@
 
 namespace App\Livewire\Admin\Tournaments;
 
-use App\Models\Tournament;
 use Livewire\Component;
+use App\Models\Tournament;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Index extends Component
@@ -18,34 +19,42 @@ class Index extends Component
     public $perPage = 10;
 
     // Form properties
+    #[Validate('required|string|max:255|unique:tournaments,name')]
     public $name;
+    #[Validate('required|string|max:255')]
     public $description;
+    #[Validate('required|date|before:start_date')]
     public $registration_deadline;
+    #[Validate('required|date|after:now')]
     public $start_date;
-    public $end_date;
+    #[Validate('integer|min:1|max:10')]
     public $team_size = 5; // Default team size for CS2
-    public $max_teams = 1;
-    public $matchup_rounds = 0; // 0: BO1, 1: BO3, 2: BO5
-    public $match_rounds = 24; // Number of rounds per match, default is 24 for CS2
-    public $overtime_rounds = 6; // Number of overtime rounds, default is
-    public $final_rounds = 0; // 0: BO1, 1: BO3, 2: BO5
-    public $status = 'scheduled'; //a scheduled, ongoing, completed, cancelled
+    #[Validate('integer|min:2')]
+    public $max_teams = 2;
+    #[Validate('integer|min:0|max:2')]
+    public $maps_each_game = 0; // 0: BO1, 1: BO3, 2: BO5
+    #[Validate('integer|min:0|max:2')]
+    public $maps_final_game = 0; // 0: BO1, 1: BO3, 2: BO5
+    #[Validate('integer|min:2')]
+    public $map_rounds = 24; // Number of rounds per match, default is 24 for CS2
+    #[Validate('integer|min:0')]
+    public $map_overtime_rounds = 6; // Number of overtime rounds, default is
 
     public function create()
     {
+        $this->validate();
+
         $tournament = new Tournament();
         $tournament->name = $this->name;
         $tournament->description = $this->description;
         $tournament->registration_deadline = $this->registration_deadline;
         $tournament->start_date = $this->start_date;
-        $tournament->end_date = $this->end_date;
-        $tournament->team_size = $this->team_size; // Default team size
+        $tournament->team_size = $this->team_size;
         $tournament->max_teams = $this->max_teams;
-        $tournament->matchup_rounds = $this->matchup_rounds;
-        $tournament->match_rounds = $this->match_rounds; // Number of rounds per match
-        $tournament->overtime_rounds = $this->overtime_rounds; // Number of overtime rounds
-        $tournament->final_rounds = $this->final_rounds;
-        $tournament->status = $this->status;
+        $tournament->maps_each_game = $this->maps_each_game;
+        $tournament->maps_final_game = $this->maps_final_game;
+        $tournament->map_rounds = $this->map_rounds;
+        $tournament->map_overtime_rounds = $this->map_overtime_rounds;
         $tournament->save();
         
         LivewireAlert::title('Turnier erstellen')
@@ -54,7 +63,7 @@ class Index extends Component
             ->position('top-end')
             ->show();
 
-        $this->reset(['name', 'description', 'registration_deadline', 'start_date', 'end_date', 'max_teams', 'matchup_rounds', 'final_rounds', 'status']);
+        $this->reset(['name', 'description', 'registration_deadline', 'start_date', 'team_size', 'max_teams', 'maps_each_game', 'maps_final_game', 'map_rounds', 'map_overtime_rounds']);
         $this->dispatch('tournamentCreated');
     }
 

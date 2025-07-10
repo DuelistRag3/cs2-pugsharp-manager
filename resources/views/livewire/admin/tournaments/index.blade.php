@@ -103,7 +103,7 @@
     </div>
 
     <!-- Create modal -->
-    <div id="create-modal" tabindex="-1" aria-hidden="true"
+    <div id="create-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
         class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-2xl max-h-full">
             <!-- Modal content -->
@@ -131,37 +131,38 @@
 
                         <div class="mb-5">
                             <label for="name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Turniername</label>
-                            <input wire:model='name' type="name" id="name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('name') dark:text-red-500! @enderror">Turniername @error('name') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='name' type="name" id="name"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Turniername" required />
+                            
                         </div>
                         <div class="mb-5">
                             <label for="description"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Beschreibung</label>
-                            <textarea wire:model='description' id="description"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white  @error('description') dark:text-red-500! @enderror">Beschreibung @error('description') ({{ $message }}) @enderror</label>
+                            <textarea wire:model.blur='description' id="description"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Beschreibung" required></textarea>
+                                placeholder="Beschreibung"></textarea>
                         </div>
                         <div class="mb-5">
                             <label for="registration_deadline"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Anmeldeschluss (Optional)</label>
-                            <input wire:model='registration_deadline' type="datetime-local" id="registration_deadline"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('registration_deadline') dark:text-red-500! @enderror">Anmeldeschluss (Optional) @error('registration_deadline') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='registration_deadline' type="datetime-local" id="registration_deadline"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Anmeldeschluss" />
                                 <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Wenn nicht angegeben endet die Registrierung mit Turnierbeginn.</p>
                         </div>
                         <div class="mb-5">
                             <label for="start_date"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Startdatum</label>
-                            <input wire:model='start_date' type="datetime-local" id="start_date"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('start_date') dark:text-red-500! @enderror">Startdatum @error('start_date') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='start_date' type="datetime-local" id="start_date"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Startdatum" required />
                         </div>
                         <div class="mb-5">
                             <label for="team_size"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teamgröße</label>
-                            <select wire:model='team_size' id="team_size"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('team_size') dark:text-red-500! @enderror">Teamgröße @error('team_size') ({{ $message }}) @enderror</label>
+                            <select wire:model.blur='team_size' id="team_size"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="1">1 Spieler (1v1)</option>
                                 <option value="2">2 Spieler (2v2)</option>
@@ -172,16 +173,16 @@
                         </div>
                         <div class="mb-5">
                             <label for="max_teams"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Maximale
-                                Teams</label>
-                            <input wire:model='max_teams' type="number" id="max_teams"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('max_teams') dark:text-red-500! @enderror">Maximale
+                                Teams @error('max_teams') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='max_teams' type="number" id="max_teams"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                  required />
                         </div>
                         <div class="mb-5">
-                            <label for="matchup_rounds"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Matchup-Runden</label>
-                            <select wire:model='matchup_rounds' id="matchup_rounds"
+                            <label for="maps_each_game"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('maps_each_game') dark:text-red-500! @enderror">Matchup-Runden @error('maps_each_game') ({{ $message }}) @enderror</label>
+                            <select wire:model.blur='maps_each_game' id="maps_each_game"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="0">Best of 1</option>
                                 <option value="1">Best of 3</option>
@@ -189,9 +190,9 @@
                             </select>
                         </div>
                         <div class="mb-5">
-                            <label for="final_rounds"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Final-Runden</label>
-                            <select wire:model='final_rounds' id="final_rounds"
+                            <label for="maps_final_game"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('maps_final_game') dark:text-red-500! @enderror">Final-Runden @error('maps_final_game') ({{ $message }}) @enderror</label>
+                            <select wire:model.blur='maps_final_game' id="maps_final_game"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                 <option value="0">Best of 1</option>
                                 <option value="1">Best of 3</option>
@@ -199,17 +200,17 @@
                             </select>
                         </div>
                         <div class="mb-5">
-                            <label for="match_rounds"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Runden pro Match</label>
-                            <input wire:model='match_rounds' type="number" id="match_rounds"
+                            <label for="map_rounds"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('map_rounds') dark:text-red-500! @enderror">Runden pro Match @error('map_rounds') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='map_rounds' type="number" id="map_rounds"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Runden pro Match" required />
                             <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Standardmäßig 24 Runden für CS2.</p>
                         </div>
                         <div class="mb-5">
-                            <label for="overtime_rounds"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Overtime-Runden</label>
-                            <input wire:model='overtime_rounds' type="number" id="overtime_rounds"
+                            <label for="map_overtime_rounds"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('map_overtime_rounds') dark:text-red-500! @enderror">Overtime-Runden @error('map_overtime_rounds') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='map_overtime_rounds' type="number" id="map_overtime_rounds"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Overtime-Runden" required />
                             <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Standardmäßig 6 Overtime-Runden für CS2.</p>

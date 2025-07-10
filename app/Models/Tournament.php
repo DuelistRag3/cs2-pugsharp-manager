@@ -12,10 +12,18 @@ class Tournament extends Model
 
     protected $fillable = [
         'name',
+        'description',
+        'type',
+        'registration_deadline',
         'start_date',
         'end_date',
-        'location',
-        'description',
+        'team_size',
+        'max_teams',
+        'maps_each_game',
+        'maps_final_game',
+        'map_rounds',
+        'map_overtime_rounds',
+        'status',
     ];
 
     public function games(): HasMany

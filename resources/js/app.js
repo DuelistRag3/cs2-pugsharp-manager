@@ -8,4 +8,8 @@ import.meta.glob([
   '../images/**',
 ]);
 
+document.addEventListener('livewire:navigated', () => {
+    initFlowbite();
+})
+
 window.Swal = Swal

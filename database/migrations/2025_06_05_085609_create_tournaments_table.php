@@ -20,11 +20,11 @@ return new class extends Migration
             $table->dateTime('start_date')->nullable();
             $table->dateTime('end_date')->nullable();
             $table->integer('team_size')->default(5)->comment('Default team size for CS2'); // Default team size for CS2
-            $table->integer('max_teams')->default(0);
-            $table->integer('matchup_rounds')->default(0)->comment('0: BO1, 1: BO3, 2: BO5'); // 0: BO1, 1: BO3, 2: BO5
-            $table->integer('final_rounds')->default(0)->comment('0: BO1, 1: BO3, 2: BO5'); // 0: BO1, 1: BO3, 2: BO5
+            $table->integer('max_teams')->default(2); // Minimum 2 teams
+            $table->integer('maps_each_game')->default(0)->comment('0: BO1, 1: BO3, 2: BO5'); // 0: BO1, 1: BO3, 2: BO5
+            $table->integer('maps_final_game')->default(0)->comment('0: BO1, 1: BO3, 2: BO5'); // 0: BO1, 1: BO3, 2: BO5
             $table->integer('map_rounds')->default(24)->comment('Number of rounds per match, default is 24 for CS2'); // Number of rounds per map, default is 24 for CS2
-            $table->integer('overtime_rounds')->default(6)->comment('Number of overtime rounds, default is 6 for CS2'); // Number of overtime rounds, default is 6 for CS2
+            $table->integer('map_overtime_rounds')->default(6)->comment('Number of overtime rounds, default is 6 for CS2'); // Number of overtime rounds, default is 6 for CS2
             $table->enum('status', ['scheduled', 'ongoing', 'completed', 'cancelled'])->default('scheduled');
             $table->timestamps();
         });
