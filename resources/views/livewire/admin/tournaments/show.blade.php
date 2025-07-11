@@ -122,7 +122,10 @@
             $numberOfRounds = ceil(log($tournament->teams->count(), 2));
             $offset = 0;
             @endphp
-            <div class="grid grid-rows-1 gap-4 grid-cols-{{ $numberOfRounds }}">
+            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}">
+                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;">
+                    <!-- Lines will be drawn here by JavaScript -->
+                </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
                     <h3 class="text-lg font-semibold mb-2">
                         @switch($round)
@@ -151,8 +154,8 @@
 
                         @foreach($roundGames as $game)
                         {{-- {{ $game->id }} -> {{ $game->next_game_id }}<br> --}}
-                        <div
-                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative">
+                        <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
+                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative" style="z-index: 2;">
                             <button
                                 class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
                                 <i class="fa-solid fa-wrench"></i>
@@ -316,3 +319,105 @@
 
     </div>
 </div>
+
+<script>
+// Function to draw bracket lines
+function drawBracketLines() {
+    const container = document.getElementById('bracket-container');
+    const svg = document.getElementById('bracket-lines');
+    
+    if (!container || !svg) return;
+    
+    // Clear existing lines
+    svg.innerHTML = '';
+    
+    // Get all game elements that have a next-game-id
+    const games = container.querySelectorAll('[next-game-id]:not([next-game-id=""])');
+    
+    games.forEach(game => {
+        const nextGameId = game.getAttribute('next-game-id');
+        if (!nextGameId) return;
+        
+        const targetGame = document.getElementById('game' + nextGameId);
+        if (!targetGame) return;
+        
+        drawLineBetweenGames(game, targetGame, svg, container);
+    });
+}
+
+function drawLineBetweenGames(sourceGame, targetGame, svg, container) {
+    const containerRect = container.getBoundingClientRect();
+    const sourceRect = sourceGame.getBoundingClientRect();
+    const targetRect = targetGame.getBoundingClientRect();
+    
+    // Calculate relative positions within the container
+    const sourceX = sourceRect.right - containerRect.left;
+    const sourceY = sourceRect.top + sourceRect.height / 2 - containerRect.top;
+    const targetX = targetRect.left - containerRect.left;
+    const targetY = targetRect.top + targetRect.height / 2 - containerRect.top;
+    
+    // Create path for right-angled line
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    
+    // Calculate the middle point for the right angle
+    const midX = sourceX + (targetX - sourceX) / 2;
+    
+    // Create path data for right-angled line: horizontal then vertical then horizontal
+    const pathData = `M ${sourceX} ${sourceY} L ${midX} ${sourceY} L ${midX} ${targetY} L ${targetX} ${targetY}`;
+    
+    path.setAttribute('d', pathData);
+    path.setAttribute('stroke', '#ffffff');
+    path.setAttribute('stroke-width', '2');
+    path.setAttribute('fill', 'none');
+    path.setAttribute('opacity', '0.8');
+    
+    svg.appendChild(path);
+}
+
+// Initialize on DOM load and setup all event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    @if($tournament->type === 0) {{-- Only for bracket style tournaments --}}
+    // Initial draw
+    setTimeout(drawBracketLines, 100);
+    
+    // MutationObserver to watch for DOM changes
+    const targetNode = document.getElementById('bracket-container');
+    if (targetNode) {
+        const observer = new MutationObserver(function(mutations) {
+            let shouldRedraw = false;
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                    shouldRedraw = true;
+                }
+            });
+            if (shouldRedraw) {
+                setTimeout(drawBracketLines, 100);
+            }
+        });
+        
+        observer.observe(targetNode, {
+            childList: true,
+            subtree: true
+        });
+    }
+    @endif
+});
+
+@if($tournament->type === 0)
+// Livewire 3.x events
+document.addEventListener('livewire:updated', function() {
+    setTimeout(drawBracketLines, 150);
+});
+
+document.addEventListener('livewire:navigated', function() {
+    setTimeout(drawBracketLines, 150);
+});
+@endif
+
+// Redraw lines when window is resized
+window.addEventListener('resize', function() {
+    @if($tournament->type === 0)
+    setTimeout(drawBracketLines, 50);
+    @endif
+});
+</script>
