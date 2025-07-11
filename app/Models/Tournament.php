@@ -157,6 +157,8 @@ class Tournament extends Model
 
     public function addTeamsToMatchPlan()
     {
+        // Empty teams from previous match plan
+        $this->removeAllTeamsFromMatchPlan();
         $teams = $this->teams()->get();
         $teams = $teams->shuffle(); // Shuffle teams to randomize matchups
 
@@ -278,10 +280,6 @@ class Tournament extends Model
             $game->status = 'scheduled'; // Reset the status to scheduled
             $game->save();
         });
-
-        // Reset the status of the tournament
-        $this->status = 'scheduled';
-        $this->save();
     }
 
     private function assignNextGameIds()

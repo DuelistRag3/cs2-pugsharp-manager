@@ -41,15 +41,6 @@ class Show extends Component
             return;
         }
 
-        if ($this->tournament->teams->count() % 2 !== 0) {
-            LivewireAlert::title('Die Anzahl der Teams muss gerade sein')
-                ->error()
-                ->toast()
-                ->position('top-end')
-                ->show();
-            return;
-        }
-
         if (!$full) {
             if ($this->tournament->teams->count() == $this->tournament->max_teams) {
                 $full = true;
