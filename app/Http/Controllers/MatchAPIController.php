@@ -261,48 +261,36 @@ class MatchAPIController extends Controller
 
         // Storage::disk('local')->put("match_{$id}_finalized.json", json_encode($request->all()));
 
-        $match = Game::find($id);
-        if (!$match) {
+        $game = Game::find($id);
+        if (!$game) {
             return response()->json("Match not found", 404);
         }
 
-        if($match->team1_maps_won > $match->team2_maps_won) {
-            $winner = $match->team1;
-        } elseif($match->team1_maps_won < $match->team2_maps_won) {
-            $winner = $match->team2;
+        if($game->team1_maps_won > $game->team2_maps_won) {
+            $winner = $game->team1;
+        } elseif($game->team1_maps_won < $game->team2_maps_won) {
+            $winner = $game->team2;
         }
 
         if (!$winner) {
             return response()->json("No winner determined", 400);
         }
 
-        $match->status = 'completed';
-        $match->played_at = now();
-        $match->save();
-        $match->server->free();
+        $game->status = 'completed';
+        $game->played_at = now();
+        $game->save();
+        $game->server->free();
 
-        $existingMatch = Game::where('team2_id', null)
-            ->where('status', 'scheduled')
-            ->first();
+        $next = $game->nextGame;
 
-        if ($existingMatch) {
-            // If a match with no team2 already exists, we can update it
-            $existingMatch->team2_id = $winner->id;
-            $existingMatch->save();
-            $match->server->free();
-            return response()->json("Matchup finalized", 200);
+        if(!$next->team1_id)
+        {
+            $next->team1_id = $winner->id;
+            $next->save();
+        } else {
+            $next->team2_id = $winner->id;
+            $next->save();
         }
-
-        $newMatch = new Game([
-            'team1_id' => $match->team1->id,
-            'team2_id' => null,
-            'tournament_id' => $match->tournament->id,
-            'status' => 'scheduled',
-            'team1_maps_won' => 0,
-            'team2_maps_won' => 0,
-        ]);
-
-        $newMatch->save();
 
         return response()->json("Matchup finalized", 200);
     }

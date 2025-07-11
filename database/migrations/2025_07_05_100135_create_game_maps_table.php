@@ -17,7 +17,7 @@ return new class extends Migration
                 ->constrained('games')
                 ->onDelete('cascade'); // Foreign key to the game table
             $table->integer('map_number')->unsigned(); // Map number in the matchup
-            $table->string('map_name'); // Map Name
+            $table->string('map_name')->nullable(); // Map Name
             $table->integer('team1_score')->default(0); // Score for team 1
             $table->integer('team2_score')->default(0); // Score for team 2
             $table->enum('status', ['scheduled', 'ongoing', 'completed', 'canceled'])

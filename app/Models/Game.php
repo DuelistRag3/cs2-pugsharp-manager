@@ -44,6 +44,11 @@ class Game extends Model
         return $this->hasMany(GameMap::class, 'game_id');
     }
 
+    public function nextGame() : HasOne
+    {
+        return $this->hasOne(Game::class, 'id', 'next_game_id');
+    }
+
     public function start()
     {
         $this->status = 'ongoing';

@@ -24,7 +24,8 @@
                     Teams zufällig zuweisen
                 </button>
                 <button wire:click='removeAllTeamsFromMatchPlan()' type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Alle Spiele leeren</button>
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Alle
+                    Spiele leeren</button>
                 @endif
                 @endif
                 @if($tournament->status === 'scheduled')
@@ -149,10 +150,11 @@
                         @endphp
 
                         @foreach($roundGames as $game)
+                        {{-- {{ $game->id }} -> {{ $game->next_game_id }}<br> --}}
                         <div
-                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative">
                             <button
-                                class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
+                                class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
                                 <i class="fa-solid fa-wrench"></i>
                                 <span class="sr-only">Menü</span>
                             </button>
@@ -161,6 +163,17 @@
                                 data-modal-toggle="team{{ $game->team1->id }}-modal"
                                 class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                                 {{ $game->team1->name }}
+                                <span class="float-end">
+                                @if($game->tournament->maps_each_game == 0)
+                                    @if($game->maps->isNotEmpty())
+                                        {{ $game->maps->first()->team1_score }}
+                                    @else
+                                    0
+                                    @endif
+                                @else
+                                    {{ $game->team1_maps_won }}
+                                @endif
+                                </span>
                             </a>
                             @else
                             <a aria-current="true"
@@ -173,6 +186,17 @@
                                 data-modal-toggle="team{{ $game->team1->id }}-modal"
                                 class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                                 {{ $game->team2->name }}
+                                <span class="float-end">
+                                @if($game->tournament->maps_each_game == 0)
+                                    @if($game->maps->isNotEmpty())
+                                        {{ $game->maps->first()->team2_score }}
+                                    @else
+                                    0
+                                    @endif
+                                @else
+                                    {{ $game->team2_maps_won }}
+                                @endif
+                                </span>
                             </a>
                             @else
                             <a
@@ -190,9 +214,9 @@
             <div class="grid grid-cols-1 gap-4">
                 @foreach($tournament->games as $game)
                 <div
-                    class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative">
                     <button
-                        class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute ml-36 mt-5">
+                        class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
                         <i class="fa-solid fa-wrench"></i>
                         <span class="sr-only">Menü</span>
                     </button>

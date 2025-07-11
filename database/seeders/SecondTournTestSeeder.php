@@ -20,14 +20,13 @@ class SecondTournTestSeeder extends Seeder
                 'name' => $p . ' Test Tournament',
                 'description' => 'This is a test tournament for seeding purposes.',
                 'start_date' => now()->addDays(7),
-                'end_date' => now()->addDays(14),
-                'matchup_rounds' => 0, // 0: BO1, 1: BO3, 2: BO5
-                'final_rounds' => 0, // 0: BO1, 1: BO3, 2: BO5
-                'map_rounds' => 24, // Number of rounds per map, default is 24 for CS2
-                'overtime_rounds' => 6, // Number of overtime rounds, default is 6
+                'team_size' => 5, // 0: BO1, 1: BO3, 2: BO5
+                'max_teams' => $teams, // 0: BO1, 1: BO3, 2: BO5
+                'maps_each_game' => 0, // Best of
+                'maps_final_game' => 0, // Best of
+                'map_rounds' => 24, // Number of rounds per match, default is 24 for CS2
+                'map_overtime_rounds' => 6, // Number of overtime rounds, default
                 'status' => 'ongoing', // e.g., scheduled, ongoing, completed
-                'team_size' => 5, // 1 for testing purposes
-                'max_teams' => $teams,
             ]);
 
             // Create 16 teams with random names and tags

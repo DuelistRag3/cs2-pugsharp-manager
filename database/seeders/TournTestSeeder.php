@@ -16,44 +16,38 @@ class TournTestSeeder extends Seeder
     public function run(): void
     {
         $tourn = Tournament::create([
-            'name' => 'Test Tournament',
+            'name' => ' Test Tournament',
             'description' => 'This is a test tournament for seeding purposes.',
             'start_date' => now()->addDays(7),
-            'end_date' => now()->addDays(14),
-            'matchup_rounds' => 0, // 0: BO1, 1: BO3, 2: BO5
-            'final_rounds' => 0, // 0: BO1, 1: BO3, 2: BO5
-            'map_rounds' => 6, // Number of rounds per map, default is 24 for CS2
-            'overtime_rounds' => 2, // Number of overtime rounds, default is 6
-            'status' => 'scheduled', // e.g., scheduled, ongoing, completed
-            'team_size' => 1, // 1 for testing purposes
-            'max_teams' => 2,
+            'team_size' => 5, // 0: BO1, 1: BO3, 2: BO5
+            'max_teams' => 16, // 0: BO1, 1: BO3, 2: BO5
+            'maps_each_game' => 0, // Best of
+            'maps_final_game' => 0, // Best of
+            'map_rounds' => 24, // Number of rounds per match, default is 24 for CS2
+            'map_overtime_rounds' => 6, // Number of overtime rounds, default
+            'status' => 'ongoing', // e.g., scheduled, ongoing, completed
         ]);
 
-        // $team1 = $tourn->teams()->create([
-        //     'name' => 'Team Lara',
-        //     'tag' => 'TN',
-        //     'flag' => 'DE',
-        // ]);
+        // Create 16 teams with random names and tags
+        for ($i = 1; $i <= 16; $i++) {
+            $team = $tourn->teams()->create([
+                'name' => 'Team ' . $i,
+                'tag' => 'T' . $i,
+                'flag' => 'DE', // Assuming all teams are from Germany for simplicity
+            ]);
+        };
 
-        // $team2 = $tourn->teams()->create([
-        //     'name' => 'Team Chris',
-        //     'tag' => 'TC',
-        //     'flag' => 'DE',
-        // ]);
-
-        // $team1->players()->create([
-        //     'steam_id' => '76561198105304560',
-        //     'steam_name' => 'Milkaa',
-        //     'steam_avatar' => 'https://avatars.steamstatic.com/8df3fbb9717a9433d4c709138700c25228676cb9_full.jpg',
-        //     'steam_url' => 'https://steamcommunity.com/id/betzog/',
-        // ]);
-
-        // $team2->players()->create([
-        //     'steam_id' => '76561198348669227',
-        //     'steam_name' => '[DTV] Duelist',
-        //     'steam_avatar' => 'https://avatars.steamstatic.com/3519cf1ee9d0451211ee467dc776a02b53830c68_full.jpg',
-        //     'steam_url' => 'https://steamcommunity.com/id/Duelist_DTV/',
-        // ]);
+        // Create players for each team
+        foreach ($tourn->teams as $team) {
+            for ($j = 1; $j <= 5; $j++) { // Assuming each team has 5 players
+                $team->players()->create([
+                    'steam_id' => '765611981053045' . str_pad($j, 2, '0', STR_PAD_LEFT),
+                    'steam_name' => 'Player ' . $j . ' of ' . $team->name,
+                    'steam_avatar' => 'https://avatars.steamstatic.com/8df3fbb9717a9433d4c709138700c25228676cb9_full.jpg',
+                    'steam_url' => 'https://steamcommunity.com/id/player' . $j . '_of_' . $team->name . '/',
+                ]);
+            }
+        };
 
         $server = Server::create([
             'ip_address' => '127.0.0.1',
@@ -61,6 +55,6 @@ class TournTestSeeder extends Seeder
             'rcon_password' => 'test',
         ]);
 
-        // $tourn->generateMatchPlan();
+        $tourn->generateMatchPlan(0);
     }
 }

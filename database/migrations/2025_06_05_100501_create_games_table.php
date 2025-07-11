@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('team2_maps_won')->default(0);
             $table->integer('duration')->nullable(); // Duration in seconds
             $table->integer('matchup_count')->default(0); // Current game number, useful when multiple games played in a matchup
+            $table->integer('next_game_id')->nullable(); // ID of the game where the winner will play next
             $table->text('notes')->nullable(); // Additional notes about the game
             $table->timestamps();
         });

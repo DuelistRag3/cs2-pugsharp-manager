@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('type')->comment('0: Bracket, 1: Round Robin')->nullable(); // 0: Bracket, 1: Round Robin
             $table->dateTime('registration_deadline')->nullable()->comment('if null, registration ends with tournament start'); // if null, registration ends with tournament start
             $table->dateTime('start_date')->nullable();
-            $table->dateTime('end_date')->nullable();
+            $table->dateTime('end_date')->nullable()->default(null);
             $table->integer('team_size')->default(5)->comment('Default team size for CS2'); // Default team size for CS2
             $table->integer('max_teams')->default(2); // Minimum 2 teams
             $table->integer('maps_each_game')->default(0)->comment('0: BO1, 1: BO3, 2: BO5'); // 0: BO1, 1: BO3, 2: BO5

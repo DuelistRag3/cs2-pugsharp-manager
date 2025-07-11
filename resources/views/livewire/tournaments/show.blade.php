@@ -3,7 +3,7 @@
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-white">Turnier: {{ $tournament->name }}</h1>
             @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams &&
-                now()->lessThan(new DateTime($tournament->registration_deadline ? $tornament->registration_deadline :
+                now()->lessThan(new DateTime($tournament->registration_deadline ? $tournament->registration_deadline :
                 $tournament->start_date)))
                 <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
                     class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">Anmelden</button>
