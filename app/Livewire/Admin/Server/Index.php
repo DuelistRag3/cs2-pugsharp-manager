@@ -8,6 +8,7 @@ use Livewire\Attributes\Layout;
 use xPaw\SourceQuery\SourceQuery;
 use Barryvdh\Debugbar\Facades\Debugbar;
 
+use App\Http\Controllers\RconController;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Index extends Component
@@ -58,24 +59,7 @@ class Index extends Component
             return;
         }
 
-        try {
-            $query = new SourceQuery();
-            $query->Connect($server->ip_address, $server->port, 1, SourceQuery::SOURCE);
-            $query->SetRconPassword($server->rcon_password);
-            $result = $query->Rcon('ps_stopmatch');
-
-            // dd($result);
-
-            if ($result == "Currently no Match is running\n")
-            {
-                // dd("Kein Match");
-            } else {
-                // dd("Match");
-            }
-            $query->Disconnect();
-        } catch (\Exception $e) {
-            Debugbar::error('Error disconnecting server: ' . $e->getMessage());
-        }
+        new RconController()->sendCommand($server->id, 'ps_stopmatch');
 
         $server->free();
 
@@ -107,30 +91,7 @@ class Index extends Component
 
     public function getServerStatus($id)
     {
-        $server = Server::find($id);
-        if ($server) {
-            $query = new SourceQuery();
-            try {
-                $query->Connect($server->ip_address, $server->port, 1, SourceQuery::SOURCE);
-                $info = $query->GetInfo();
-                $query->Disconnect();
-
-                Debugbar::info('Server status fetched successfully');
-
-                return [
-                    'status' => 'online',
-                    'name' => $info['HostName'],
-                    'players' => $info['Players'],
-                    'max_players' => $info['MaxPlayers'],
-                ];
-            } catch (\Exception $e) {
-                Debugbar::error('Server status error: ' . $e->getMessage());
-                return ['status' => 'offline'];
-            }
-        } else {
-            Debugbar::warning('Server not found with ID: ' . $id);
-            return ['status' => 'unknown'];
-        }
+        return new RconController()->getServerInfo($id);
     }
 
     #[Layout('components.layouts.admin')]

@@ -18,13 +18,6 @@ class AvailableMaps extends Model
      */
     public function getImageUrlAttribute()
     {
-        $client = new Client();
-        $response = $client->get("https://raw.githubusercontent.com/ghostcap-gaming/cs2-map-images/refs/heads/main/cs2/{$this->map_code}.png");
-
-        if ($response->getStatusCode() === 200) {
-            return asset("https://raw.githubusercontent.com/ghostcap-gaming/cs2-map-images/refs/heads/main/cs2/{$this->map_code}.png");
-        }
-
-        return asset('images/default-map-thumbnail.png');
+        return asset("https://raw.githubusercontent.com/ghostcap-gaming/cs2-map-images/refs/heads/main/cs2/{$this->map_code}.png");
     }
 }

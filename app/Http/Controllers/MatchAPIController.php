@@ -56,8 +56,12 @@ class MatchAPIController extends Controller
                 $rounds = 1; // Default to BO1 if not set
         }
 
+        foreach($game->tournament->maps as $map) {
+            $maplist[] = $map;
+        }
+
         $json = [
-            'maplist' => $game->tournament->maps,
+            'maplist' => $maplist,
             'team1' => [
                 'id' => "$team1->id",
                 'name' => $game->team1->name,

@@ -30,17 +30,25 @@ class Index extends Component
 
     public function add()
     {
-        // dd($this->mapThumbnail->getClientOriginalName());
-        $originalName = $this->mapThumbnail->getClientOriginalName();
+
+        // dd($this->mapThumbnail);
+        if($this->mapThumbnail != null) {
+            $originalName = $this->mapThumbnail->getClientOriginalName();
+
+            AvailableMaps::create([
+                'name' => $this->name,
+                'map_code' => $this->map_code,
+                'image_name' => $originalName,
+            ]);
+
+            $this->mapThumbnail->storePubliclyAs(path: 'maps_thumbnails', name: $originalName);
+        } else {
+            AvailableMaps::create([
+                'name' => $this->name,
+                'map_code' => $this->map_code,
+            ]);
+        }
         
-
-        $map = AvailableMaps::create([
-            'name' => $this->name,
-            'map_code' => $this->map_code,
-            'image_name' => $originalName,
-        ]);
-
-        $this->mapThumbnail->storePubliclyAs(path: 'maps_thumbnails', name: $originalName);
 
         // Reload maps
         $this->maps = AvailableMaps::all();

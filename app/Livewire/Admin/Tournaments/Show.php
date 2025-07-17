@@ -2,13 +2,13 @@
 
 namespace App\Livewire\Admin\Tournaments;
 
+use App\Http\Controllers\RconController;
 use App\Models\AvailableMaps;
 use App\Models\Server;
 use Livewire\Component;
 use App\Models\Tournament;
 use Livewire\Attributes\Layout;
 
-use xPaw\SourceQuery\SourceQuery;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
@@ -17,11 +17,13 @@ class Show extends Component
 
     public Tournament $tournament;
     public $availableMaps;
+    public $selectedMaps = [];
 
     public function mount($id)
     {
         $this->tournament = Tournament::findOrFail($id);
         $this->availableMaps = AvailableMaps::all();
+        $this->selectedMaps = $this->tournament->maps ?? [];
     }
 
     public function startTournament($full = false)
@@ -224,50 +226,42 @@ class Show extends Component
             return;
         }
 
-        $query = new SourceQuery();
-        try {
-            $query->Connect($freeServer->ip_address, $freeServer->port, 1, SourceQuery::SOURCE);
-            // $info = $query->GetInfo();
-            $query->SetRconPassword($freeServer->rcon_password);
+        $uri = route('api.matches.config', ['id' => $match->id]);
 
-            $uri = route('api.matches.config', ['id' => $match->id]);
+        new RconController()->sendCommand($freeServer->id, 'ps_loadconfig "'.$uri.'"');
+    }
 
-            $command = 'ps_loadconfig "'.$uri.'"';
+    public function pauseMatch($matchId)
+    {
+        $match = $this->tournament->games()->findOrFail($matchId);
+        $map = $match->maps->where('status', 'ongoing')->first();
 
-            $query->Rcon($command);
-            $query->Disconnect();
-
-            $freeServer->block($match->id);
-
-            $match->status = 'ongoing';
-            $match->server_id = $freeServer->id;
-            $match->save();
-
-            LivewireAlert::title('Match gestartet')
-                ->success()
+        if (!$map) {
+            LivewireAlert::title('Kein laufendes Spiel gefunden')
+                ->error()
                 ->toast()
                 ->position('top-end')
                 ->show();
-
-            Debugbar::info('Server config successfully sendet');
-
-            return;
-        } catch (\Exception $e) {
-            Debugbar::error('Server status error: ' . $e->getMessage());
-            LivewireAlert::title('Fehler beim Starten des Matches')
-                ->text('Überprüfe ob der Server online ist und die RCON Einstellungen korrekt sind.')
-                ->error()
-                ->show();
             return;
         }
+
+
+
+        $map->status = 'paused';
+        $map->save();
+
+        LivewireAlert::title('Match pausiert')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
     }
 
     public function changeMapState($mapId)
     {
         $map = AvailableMaps::findOrFail($mapId);
 
-        if (!$map)
-        {
+        if (!$map) {
             LivewireAlert::title('Karte nicht gefunden')
                 ->error()
                 ->toast()
@@ -276,23 +270,50 @@ class Show extends Component
             return;
         }
 
-        $maps = $this->tournament->maps;
-
-        // dd($maps);
-
-        if (!$maps)
-        {
-            $maps = [];
-        }
-
-        if (in_array($map->map_code, $maps)) {
-            $maps = array_diff($maps, [$map->map_code]);
+        if (array_search($map->map_code, $this->selectedMaps) !== false) {
+            // Karte entfernen
+            $this->selectedMaps = array_diff($this->selectedMaps, [$map->map_code]);
         } else {
-            $maps[] = $map->map_code;
+            // Karte hinzufügen
+            $this->selectedMaps[] = $map->map_code;
         }
 
-        $this->tournament->maps = $maps;
-        $this->tournament->save();
+        $this->tournament->maps = $this->selectedMaps;
+        $this->tournament->save(); 
+        LivewireAlert::title('Karte aktualisiert')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();   
+        // $map = AvailableMaps::findOrFail($mapId);
+
+        // if (!$map)
+        // {
+        //     LivewireAlert::title('Karte nicht gefunden')
+        //         ->error()
+        //         ->toast()
+        //         ->position('top-end')
+        //         ->show();
+        //     return;
+        // }
+
+        // $maps = $this->tournament->maps;
+
+        // // dd($maps);
+
+        // if (!$maps)
+        // {
+        //     $maps = [];
+        // }
+
+        // if (in_array($map->map_code, $maps)) {
+        //     $maps = array_diff($maps, [$map->map_code]);
+        // } else {
+        //     $maps[] = $map->map_code;
+        // }
+
+        // $this->tournament->maps = $maps;
+        // $this->tournament->save();
     }
 
     #[Layout('components.layouts.admin')]

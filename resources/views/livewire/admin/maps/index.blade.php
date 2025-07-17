@@ -101,6 +101,7 @@
                             <input
                                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                 id="mapThumbnail" wire:model='mapThumbnail' type="file">
+                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Wird die Datei freigelassen wird versucht das Bild anhand des Mapcode <a href="https://github.com/ghostcap-gaming/cs2-map-images/tree/main/cs2" target="_blank" class="text-blue-500 hover:underline">hier</a> zu finden.</p>
                         </div>
                 </div>
                 <!-- Modal footer -->
