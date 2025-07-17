@@ -1,0 +1,92 @@
+<?php
+
+namespace App\Livewire\Admin\Maps;
+
+use Livewire\Component;
+use App\Models\AvailableMaps;
+use Livewire\WithFileUploads;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
+
+class Index extends Component
+{
+    use WithFileUploads;
+
+    public $maps = [];
+
+    #[Validate('required|string|max:255|unique:available_maps,name')]
+    public $name;
+    #[Validate('required|string|max:255|unique:available_maps,map_code')]
+    public $map_code;
+    #[Validate('nullable|image|max:16432')] // Max 16MB image
+    public $mapThumbnail;
+
+    public function mount()
+    {
+        // Load available maps from the database
+        $this->maps = AvailableMaps::all();
+    }
+
+    public function add()
+    {
+        // dd($this->mapThumbnail->getClientOriginalName());
+        $originalName = $this->mapThumbnail->getClientOriginalName();
+        
+
+        $map = AvailableMaps::create([
+            'name' => $this->name,
+            'map_code' => $this->map_code,
+            'image_name' => $originalName,
+        ]);
+
+        $this->mapThumbnail->storePubliclyAs(path: 'maps_thumbnails', name: $originalName);
+
+        // Reload maps
+        $this->maps = AvailableMaps::all();
+
+        LivewireAlert::title('Karte hinzugefügt')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+
+        $this->reset(['name', 'map_code', 'mapThumbnail']);
+        $this->dispatch('mapAdded');
+    }
+
+    public function delete($id, $confirmed = false)
+    {
+        if (!$confirmed) {
+            LivewireAlert::title('Karte Löschen?')
+                ->text('Bist du sicher, dass du diese Karte aus dem verfügbaren Pool löschen möchtest?')
+                ->asConfirm()
+                ->withConfirmButton('Ja')
+                ->confirmButtonColor('red')
+                ->withDenyButton('Nein')
+                ->denyButtonColor('gray')
+                ->onConfirm('delete', ['confirmed' => true])
+                ->show();
+            return;
+        }
+
+        // Find and delete the map
+        $map = AvailableMaps::findOrFail($id);
+        $map->delete();
+
+        // Reload maps
+        $this->maps = AvailableMaps::all();
+
+        LivewireAlert::title('Karte gelöscht')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
+    #[Layout('components.layouts.admin')]
+    public function render()
+    {
+        return view('livewire.admin.maps.index');
+    }
+}

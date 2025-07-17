@@ -116,6 +116,27 @@
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
+            <h2 class="text-xl font-semibold mb-2">Karten (Grün hinterlegte Karten sind bereits im Pool)</h2>
+            <div class="grid grid-cols-12 gap-4">
+                @foreach($availableMaps as $map)
+                    <div wire:click='changeMapState({{ $map->id }})'
+                        class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 col-span-2 cursor-pointer @if($tournament->maps != null) @if(in_array($map->map_code, $tournament->maps)) bg-green-100 dark:bg-green-900 @endif @endif">
+                        <a>
+                            <img class="rounded-t-lg" src="{{ $map->getImageUrlAttribute() }}" alt="{{ $map->name }}" />
+                        </a>
+                        <div class="p-5">
+                            <a>
+                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{
+                                    $map->name }}</h5>
+                            </a>
+                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $map->map_code }}</p>
+                        </div>
+                    </div>
+                    @endforeach
+            </div>
+        </div>
+
+        <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">Turnierplan</h2>
             @if($tournament->type === 0) {{-- Bracket style --}}
             @php
@@ -155,7 +176,8 @@
                         @foreach($roundGames as $game)
                         {{-- {{ $game->id }} -> {{ $game->next_game_id }}<br> --}}
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
-                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative" style="z-index: 2;">
+                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative"
+                            style="z-index: 2;">
                             <button
                                 class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
                                 <i class="fa-solid fa-wrench"></i>
@@ -167,15 +189,15 @@
                                 class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                                 {{ $game->team1->name }}
                                 <span class="float-end">
-                                @if($game->tournament->maps_each_game == 0)
+                                    @if($game->tournament->maps_each_game == 0)
                                     @if($game->maps->isNotEmpty())
-                                        {{ $game->maps->first()->team1_score }}
+                                    {{ $game->maps->first()->team1_score }}
                                     @else
                                     0
                                     @endif
-                                @else
+                                    @else
                                     {{ $game->team1_maps_won }}
-                                @endif
+                                    @endif
                                 </span>
                             </a>
                             @else
@@ -190,15 +212,15 @@
                                 class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                                 {{ $game->team2->name }}
                                 <span class="float-end">
-                                @if($game->tournament->maps_each_game == 0)
+                                    @if($game->tournament->maps_each_game == 0)
                                     @if($game->maps->isNotEmpty())
-                                        {{ $game->maps->first()->team2_score }}
+                                    {{ $game->maps->first()->team2_score }}
                                     @else
                                     0
                                     @endif
-                                @else
+                                    @else
                                     {{ $game->team2_maps_won }}
-                                @endif
+                                    @endif
                                 </span>
                             </a>
                             @else
@@ -321,7 +343,7 @@
 </div>
 
 <script>
-// Function to draw bracket lines
+    // Function to draw bracket lines
 function drawBracketLines() {
     const container = document.getElementById('bracket-container');
     const svg = document.getElementById('bracket-lines');
@@ -420,4 +442,5 @@ window.addEventListener('resize', function() {
     setTimeout(drawBracketLines, 50);
     @endif
 });
+
 </script>

@@ -17,24 +17,32 @@ class MatchAPIController extends Controller
      * @param  int  $matchid
      * @return \Illuminate\Http\JsonResponse
      */
-    public function generateMatchConfig($matchid)
+    public function generateMatchConfig($gameid)
     {
-        $match = Game::find($matchid);
-        if (!$match) {
+        $game = Game::find($gameid);
+        if (!$game) {
             return response()->json(['error' => 'Match not found'], 404);
         }
 
-        $players_team1 = $match->team1->players->pluck('steam_name', 'steam_id')->toArray();
-        $players_team2 = $match->team2->players->pluck('steam_name', 'steam_id')->toArray();
+        $team1 = $game->team1;
+        $team2 = $game->team2;
 
-        $team1id = $match->team1->id;
-        $team2id = $match->team2->id;
+        if (!$team1 || !$team2) {
+            return response()->json(['error' => 'Teams not assigned'], 400);
+        }
 
-        $apiUri = route('api.matches.stats', ['id' => $match->id]);
-        $demoUri = route('api.matches.demo', ['id' => $match->id]);
+        $players_team1 = $team1->players->pluck('steam_name', 'steam_id')->toArray();
+        $players_team2 = $team2->players->pluck('steam_name', 'steam_id')->toArray();
+
+        if(count($players_team1) < $game->tournament->team_size || count($players_team2) < $game->tournament->team_size) {
+            return response()->json(['error' => 'Not enough players in one of the teams'], 400);
+        }
+
+        $apiUri = route('api.matches.stats', ['id' => $game->id]);
+        $demoUri = route('api.matches.demo', ['id' => $game->id]);
         $api_token = config('manager.api_bearer_token');
 
-        switch ($match->tournament->match_rounds) {
+        switch ($game->tournament->maps_each_game) {
             case 0:
                 $rounds = 1; // BO1
                 break;
@@ -49,29 +57,27 @@ class MatchAPIController extends Controller
         }
 
         $json = [
-            'maplist' => [
-                'de_ancient'
-            ],
+            'maplist' => $game->tournament->maps,
             'team1' => [
-                'id' => "$team1id",
-                'name' => $match->team1->name,
-                'tag' => $match->team1->tag,
+                'id' => "$team1->id",
+                'name' => $game->team1->name,
+                'tag' => $game->team1->tag,
                 'flag' => 'DE',
                 'players' => $players_team1
             ],
             'team2' => [
-                'id' => "$team2id",
-                'name' => $match->team2->name,
-                'tag' => $match->team2->tag,
+                'id' => "$team2->id",
+                'name' => $game->team2->name,
+                'tag' => $game->team2->tag,
                 'flag' => 'DE',
                 'players' => $players_team2
             ],
-            'matchid' => "$match->match_number",
+            'matchid' => "$game->id",
             'num_maps' => $rounds,
-            'players_per_team' => $match->tournament->team_size,
-            'min_players_to_ready' => $match->tournament->team_size,
-            'max_rounds' => $match->tournament->match_rounds,
-            'max_overtime_rounds' => $match->tournament->overtime_rounds,
+            'players_per_team' => $game->tournament->team_size,
+            'min_players_to_ready' => $game->tournament->team_size,
+            'max_rounds' => $game->tournament->map_rounds,
+            'max_overtime_rounds' => $game->tournament->map_overtime_rounds,
             'vote_timeout' => 60000,
             'eventula_apistats_url' => $apiUri,
             'eventula_apistats_token' => "Bearer $api_token",
@@ -80,8 +86,8 @@ class MatchAPIController extends Controller
             'server_locale' => 'de'
         ];
 
-        $match->status = 'ongoing';
-        $match->save();
+        $game->status = 'ongoing';
+        $game->save();
 
         return response()->json($json);
     }

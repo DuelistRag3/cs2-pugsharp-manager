@@ -26,6 +26,13 @@ class Tournament extends Model
         'status',
     ];
 
+    protected $casts = [
+        'registration_deadline' => 'datetime',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
+        'maps' => 'array', // Assuming maps is an array of map codes
+    ];
+
     public function games(): HasMany
     {
         return $this->hasMany(Game::class);
@@ -175,7 +182,6 @@ class Tournament extends Model
         $totalRounds = (int) ceil(log($numTeams, 2));
         $nextPowerOfTwo = (int) pow(2, $totalRounds);
         $byes = $nextPowerOfTwo - $numTeams;
-        $firstRoundMatches = (int) (($numTeams - $byes) / 2);
 
         // Convert collection to array for easier indexing
         $teamsArray = $teams->values()->all();

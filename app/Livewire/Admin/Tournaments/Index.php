@@ -63,8 +63,7 @@ class Index extends Component
             ->position('top-end')
             ->show();
 
-        $this->reset(['name', 'description', 'registration_deadline', 'start_date', 'team_size', 'max_teams', 'maps_each_game', 'maps_final_game', 'map_rounds', 'map_overtime_rounds']);
-        $this->dispatch('tournamentCreated');
+        return redirect(Show::class, ['id' => $tournament->id]);
     }
 
     public function delete($id)

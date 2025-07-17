@@ -15,6 +15,7 @@
       <ul class="space-y-2 font-medium">
          <x-navigation.sidebar-item href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" icon="fa-solid fa-gauge-high">Dashboard</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('admin.tournaments.index') }}" :active="request()->routeIs('admin.tournaments.index')" icon="fa-solid fa-trophy">Turniere</x-navigation.sidebar-item>
+         <x-navigation.sidebar-item href="{{ route('admin.maps.index') }}" :active="request()->routeIs('admin.maps.index')" icon="fa-solid fa-map">Karten</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('admin.server.index') }}" :active="request()->routeIs('admin.server.index')" icon="fa-solid fa-server">Server</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('landing') }}" :active="request()->routeIs('landing')" icon="fa-solid fa-home">Startseite</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('logout') }}" :active="request()->routeIs('logout')" icon="fa-solid fa-right-from-bracket">Abmelden</x-navigation.sidebar-item>

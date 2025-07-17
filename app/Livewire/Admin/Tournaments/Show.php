@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Tournaments;
 
+use App\Models\AvailableMaps;
 use App\Models\Server;
 use Livewire\Component;
 use App\Models\Tournament;
@@ -15,10 +16,12 @@ class Show extends Component
 {
 
     public Tournament $tournament;
+    public $availableMaps;
 
     public function mount($id)
     {
         $this->tournament = Tournament::findOrFail($id);
+        $this->availableMaps = AvailableMaps::all();
     }
 
     public function startTournament($full = false)
@@ -34,6 +37,17 @@ class Show extends Component
 
         if ($this->tournament->teams->count() < 2) {
             LivewireAlert::title('Nicht genug Teams für das Turnier')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+        if (!$this->tournament->maps)
+        {
+            LivewireAlert::title('Keine Karten ausgewählt')
+                ->text('Bitte wähle mindestens eine Karte für das Turnier aus.')
                 ->error()
                 ->toast()
                 ->position('top-end')
@@ -69,21 +83,21 @@ class Show extends Component
             ->show();
     }
 
-    public function cancelTournament()
+    public function cancelTournament($confirmed = false)
     {
-        LivewireAlert::title('Turnier abbrechen?')
-            ->text('Bist du sicher, dass du das Turnier abbrechen möchtest? Dadurch werden alle Spiele sofort abgebrochen und das Turnier wird als abgebrochen markiert.')
-            ->asConfirm()
-            ->withConfirmButton('Ja')
-            ->confirmButtonColor('red')
-            ->withDenyButton('Nein')
-            ->denyButtonColor('gray')
-            ->onConfirm('cancelConfirmed')
-            ->show();
-    }
+        if (!$confirmed) {
+            LivewireAlert::title('Turnier abbrechen?')
+                ->text('Bist du sicher, dass du das Turnier abbrechen möchtest? Dadurch werden alle Spiele sofort abgebrochen und das Turnier wird als abgebrochen markiert.')
+                ->asConfirm()
+                ->withConfirmButton('Ja')
+                ->confirmButtonColor('red')
+                ->withDenyButton('Nein')
+                ->denyButtonColor('gray')
+                ->onConfirm('cancelTournamentConfirmed', ['confirmed' => true])
+                ->show();
+            return;
+        }
 
-    public function cancelConfirmed()
-    {
         $this->tournament->cancel();
         LivewireAlert::title('Turnier abgebrochen')
             ->success()
@@ -102,8 +116,32 @@ class Show extends Component
             ->show();
     }
 
-    public function addTeamsToMatchPlan()
+    public function addTeamsToMatchPlan($alreadyassigned = false)
     {
+
+        if ($this->tournament->games()->count() == 0) {
+            LivewireAlert::title('Es gibt noch keine Spiele im Matchplan')
+                ->text('Bitte erstelle zuerst den Matchplan, bevor du Teams zuweist.')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+        if($this->tournament->games->first()->team1_id != null && !$alreadyassigned) {
+            LivewireAlert::title('Teams bereits zugewiesen')
+                ->text('Die Teams sind bereits zugewiesen. Möchtest du die Teams erneut zuweisen?')
+                ->asConfirm()
+                ->withConfirmButton('Ja')
+                ->confirmButtonColor('green')
+                ->withDenyButton('Nein')
+                ->denyButtonColor('gray')
+                ->onConfirm('addTeamsToMatchPlan', ['alreadyassigned' => true])
+                ->show();
+            return;
+        }
+
         $this->tournament->addTeamsToMatchPlan();
         LivewireAlert::title('Teams zugewiesen')
             ->success()
@@ -112,8 +150,20 @@ class Show extends Component
             ->show();
     }
 
-    public function removeAllTeamsFromMatchPlan()
+    public function removeAllTeamsFromMatchPlan($confirmed = false)
     {
+        if (!$confirmed) {
+            LivewireAlert::title('Alle Teams aus dem Matchplan entfernen?')
+                ->text('Bist du sicher, dass du alle Teams aus dem Matchplan entfernen möchtest?')
+                ->asConfirm()
+                ->withConfirmButton('Ja')
+                ->confirmButtonColor('red')
+                ->withDenyButton('Nein')
+                ->denyButtonColor('gray')
+                ->onConfirm('removeAllTeamsFromMatchPlan', ['confirmed' => true])
+                ->show();
+            return;
+        }
         $this->tournament->removeAllTeamsFromMatchPlan();
         LivewireAlert::title('Alle Teams aus dem Matchplan entfernt')
             ->success()
@@ -122,8 +172,20 @@ class Show extends Component
             ->show();
     }
 
-    public function resetMatchPlan()
+    public function resetMatchPlan($confirmed = false)
     {
+        if (!$confirmed) {
+            LivewireAlert::title('Matchplan zurücksetzen?')
+                ->text('Bist du sicher, dass du den Matchplan zurücksetzen möchtest? Dadurch werden alle Spiele und Teamzuweisungen gelöscht.')
+                ->asConfirm()
+                ->withConfirmButton('Ja')
+                ->confirmButtonColor('red')
+                ->withDenyButton('Nein')
+                ->denyButtonColor('gray')
+                ->onConfirm('resetMatchPlan', ['confirmed' => true])
+                ->show();
+            return;
+        }
         $this->tournament->games()->delete();
         LivewireAlert::title('Matchplan zurückgesetzt')
             ->success()
@@ -198,6 +260,39 @@ class Show extends Component
                 ->show();
             return;
         }
+    }
+
+    public function changeMapState($mapId)
+    {
+        $map = AvailableMaps::findOrFail($mapId);
+
+        if (!$map)
+        {
+            LivewireAlert::title('Karte nicht gefunden')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+        $maps = $this->tournament->maps;
+
+        // dd($maps);
+
+        if (!$maps)
+        {
+            $maps = [];
+        }
+
+        if (in_array($map->map_code, $maps)) {
+            $maps = array_diff($maps, [$map->map_code]);
+        } else {
+            $maps[] = $map->map_code;
+        }
+
+        $this->tournament->maps = $maps;
+        $this->tournament->save();
     }
 
     #[Layout('components.layouts.admin')]

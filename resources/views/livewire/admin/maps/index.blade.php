@@ -1,0 +1,112 @@
+<div>
+
+    <button type="button" data-modal-target="add-modal" data-modal-toggle="add-modal"
+        class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer col-span-2"><i
+            class="fa-solid fa-plus"></i> Hinzufügen</button>
+    <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
+        @foreach($maps as $map)
+
+
+        <div
+            class=" bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 col-span-3">
+            <a>
+                <img class="rounded-t-lg" src="{{ $map->getImageUrlAttribute() }}" alt="{{ $map->name }}" />
+            </a>
+            <div class="p-5">
+                <a>
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $map->name }}
+                    </h5>
+                </a>
+                <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $map->map_code }}</p>
+                <button type="button" wire:click='delete({{ $map->id }})'
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer"><i
+                        class="fa-solid fa-trash"></i> Entfernen</button>
+
+            </div>
+        </div>
+
+        @endforeach
+    </div>
+
+    <!-- Add modal -->
+    <div id="add-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
+        class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+        <div class="relative p-4 w-full max-w-2xl max-h-full">
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                <!-- Modal header -->
+                <div
+                    class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Karte hinzufügen
+                    </h3>
+                    <button type="button"
+                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                        data-modal-hide="add-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                </div>
+                <!-- Modal body -->
+                <div class="p-4 md:p-5 space-y-4">
+                    <form wire:submit="add">
+
+                        <div class="mb-5">
+                            <label for="name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('name') dark:text-red-500! @enderror">Kartenname
+                                @error('name') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='name' type="name" id="name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Dust 2" required />
+                        </div>
+                        <div class="mb-5">
+                            <label for="map_code"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('map_code') dark:text-red-500! @enderror">Karten-Code
+                                @error('map_code') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='map_code' type="map_code" id="map_code"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="de_dust2" required />
+                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Muss
+                                genauso lauten wie der Dateiname auf dem Server (zb.: de_dust2) und muss auf allen
+                                Servern existieren.</p>
+                        </div>
+                        <div class="mb-5">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                                for="mapThumbnail">Karten Thumbnail</label>
+                            <input
+                                class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                                id="mapThumbnail" wire:model='mapThumbnail' type="file">
+                        </div>
+                </div>
+                <!-- Modal footer -->
+                <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
+                    <button type="submit" wire:loading.attr="disabled"
+                        class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                        Erstellen
+                    </button>
+                    </form>
+                    <button data-modal-hide="add-modal" type="button"
+                        class="cursor-pointer py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Abbrechen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@script
+<script>
+    $wire.on('mapAdded', () => {
+            const modal = new Modal(document.getElementById('add-modal'));
+            if (modal) {
+                modal.hide();
+                document.querySelector("body > div[modal-backdrop]")?.remove();
+            }
+            // Optionally, you can refresh the tournaments list or show a success message
+            // Livewire.emit('refreshTournaments');
+        });
+</script>
+@endscript
