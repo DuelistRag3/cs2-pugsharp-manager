@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tournament extends Model
@@ -40,6 +41,11 @@ class Tournament extends Model
     public function teams(): HasMany
     {
         return $this->hasMany(Team::class);
+    }
+
+    public function maps(): BelongsToMany
+    {
+        return $this->belongsToMany(TournamentMap::class);
     }
 
     public function start()

@@ -119,7 +119,7 @@
             <h2 class="text-xl font-semibold mb-2">Karten (Grün hinterlegte Karten sind bereits im Pool)</h2>
             <div class="grid grid-cols-12 gap-4">
                 @foreach($availableMaps as $map)
-                    <div wire:click='changeMapState({{ $map->id }})'
+                    <div wire:click='changeMapState({{ $map->id }})' wire:loading.class="opacity-50 cursor-not-allowed"
                         class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 col-span-2 cursor-pointer @if($tournament->maps != null) @if(in_array($map->map_code, $tournament->maps)) bg-green-100 dark:bg-green-900 @endif @endif">
                         <a>
                             <img class="rounded-t-lg" src="{{ $map->getImageUrlAttribute() }}" alt="{{ $map->name }}" />

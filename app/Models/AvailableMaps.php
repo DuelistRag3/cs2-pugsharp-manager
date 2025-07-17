@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class AvailableMaps extends Model
 {
@@ -18,6 +18,13 @@ class AvailableMaps extends Model
      */
     public function getImageUrlAttribute()
     {
-        return Storage::exists('maps_thumbnails/' . $this->image_name) ? Storage::temporaryUrl('maps_thumbnails/' . $this->image_name, now()->addMinutes(2)) : asset('images/default-map-thumbnail.png');
+        $client = new Client();
+        $response = $client->get("https://raw.githubusercontent.com/ghostcap-gaming/cs2-map-images/refs/heads/main/cs2/{$this->map_code}.png");
+
+        if ($response->getStatusCode() === 200) {
+            return asset("https://raw.githubusercontent.com/ghostcap-gaming/cs2-map-images/refs/heads/main/cs2/{$this->map_code}.png");
+        }
+
+        return asset('images/default-map-thumbnail.png');
     }
 }

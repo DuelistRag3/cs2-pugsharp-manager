@@ -10,6 +10,7 @@
     @vite(['resources/css/app.css'])
 
     <link rel="icon" type="image/x-icon" href="{{ Vite::asset('resources/images/cs2logo.ico') }}">
+    @livewireStyles
 </head>
 <body class="dark:bg-gray-900">
     <x-navigation.sidebar>

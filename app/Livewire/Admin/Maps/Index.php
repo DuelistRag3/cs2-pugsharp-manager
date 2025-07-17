@@ -55,6 +55,32 @@ class Index extends Component
         $this->dispatch('mapAdded');
     }
 
+    public function addDefaultMaps()
+    {
+        $defaultMaps = [
+            ['name' => 'Dust II', 'map_code' => 'de_dust2'],
+            ['name' => 'Mirage', 'map_code' => 'de_mirage'],
+            ['name' => 'Inferno', 'map_code' => 'de_inferno'],
+            ['name' => 'Nuke', 'map_code' => 'de_nuke'],
+            ['name' => 'Overpass', 'map_code' => 'de_overpass'],
+            ['name' => 'Ancient', 'map_code' => 'de_ancient'],
+            ['name' => 'Train', 'map_code' => 'de_train'],
+        ];
+
+        foreach ($defaultMaps as $defaultMap) {
+            AvailableMaps::firstOrCreate($defaultMap);
+        }
+
+        // Reload maps
+        $this->maps = AvailableMaps::all();
+
+        LivewireAlert::title('Standardkarten hinzugefügt')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
     public function delete($id, $confirmed = false)
     {
         if (!$confirmed) {
