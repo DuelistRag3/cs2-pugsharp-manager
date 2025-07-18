@@ -18,6 +18,10 @@ class AvailableMaps extends Model
      */
     public function getImageUrlAttribute()
     {
-        return asset("https://raw.githubusercontent.com/ghostcap-gaming/cs2-map-images/refs/heads/main/cs2/{$this->map_code}.png");
+        if (!$this->image_name) {
+            return asset("https://raw.githubusercontent.com/ghostcap-gaming/cs2-map-images/refs/heads/main/cs2/{$this->map_code}.png");
+        }
+
+        return asset("images/maps_thumbnails/{$this->image_name}");
     }
 }

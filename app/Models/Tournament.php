@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\RconController;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -64,23 +65,14 @@ class Tournament extends Model
                 // If the game is ongoing, we need to send the stop command to the server
                 $server = $game->server;
                 if ($server) {
-                    try {
-                        $query = new \xPaw\SourceQuery\SourceQuery();
-                        $query->Connect($server->ip_address, $server->port, 1, \xPaw\SourceQuery\SourceQuery::SOURCE);
-                        $query->SetRconPassword($server->rcon_password);
-                        $query->Rcon('ps_stopmatch');
-                        $query->Disconnect();
-                    } catch (\Exception $e) {
-                        Debugbar::error('Error stopping game: ' . $e->getMessage());
-                    }
+                    $rcon = new RconController();
+                    $rcon->sendCommand($server->id, 'ps_stopmatch');
                 }
             }
 
-            $game->status = 'cancelled';
-            $game->save();
+            $game->cancel(); // Cancel the game
         });
-        $this->status = 'cancelled';
-        $this->save();
+        $this->cancel();
     }
 
     public function generateMatchPlan($type)
@@ -99,12 +91,12 @@ class Tournament extends Model
             // Create matches with correct round numbering for any number of teams
             $totalRounds = (int) ceil(log($numTeams, 2));
             $matchIndex = 0;
-            
+
             // Calculate how many teams get byes in the first round
             $nextPowerOfTwo = (int) pow(2, $totalRounds);
             $byes = $nextPowerOfTwo - $numTeams;
             $firstRoundMatches = (int) (($numTeams - $byes) / 2);
-            
+
             // Create first round matches
             for ($matchInRound = 0; $matchInRound < $firstRoundMatches; $matchInRound++) {
                 $match = new Game();
@@ -115,14 +107,14 @@ class Tournament extends Model
                 $match->save();
                 $matchIndex++;
             }
-            
+
             // Calculate teams advancing to round 2
             $teamsInNextRound = $firstRoundMatches + $byes;
-            
+
             // Create subsequent rounds
             for ($round = 2; $round <= $totalRounds; $round++) {
                 $matchesInRound = (int) ($teamsInNextRound / 2);
-                
+
                 for ($matchInRound = 0; $matchInRound < $matchesInRound; $matchInRound++) {
                     $match = new Game();
                     $match->tournament_id = $this->id;
@@ -132,7 +124,7 @@ class Tournament extends Model
                     $match->save();
                     $matchIndex++;
                 }
-                
+
                 $teamsInNextRound = $matchesInRound;
             }
 
@@ -202,13 +194,13 @@ class Tournament extends Model
                 $match->team1_id = $teamsArray[$teamIndex]->id;
                 $teamIndex++;
             }
-            
+
             // Assign team2
             if ($teamIndex < count($teamsArray) - $byes) {
                 $match->team2_id = $teamsArray[$teamIndex]->id;
                 $teamIndex++;
             }
-            
+
             $match->save();
         }
 
@@ -216,7 +208,7 @@ class Tournament extends Model
         if ($byes > 0) {
             $byeTeams = array_slice($teamsArray, -$byes); // Get the last 'byes' number of teams
             $round2Games = $this->games()->where('round', 2)->orderBy('match_number')->get();
-            
+
             $byeIndex = 0;
             foreach ($round2Games as $match) {
                 // Check if this match already has teams from round 1 winners
@@ -224,10 +216,10 @@ class Tournament extends Model
                     ->where('round', 1)
                     ->where('next_game_id', $match->id)
                     ->count();
-                
+
                 // If less than 2 round 1 matches feed into this round 2 match, it needs bye teams
                 $neededByes = 2 - $round1MatchesFeeding;
-                
+
                 if ($neededByes > 0 && $byeIndex < count($byeTeams)) {
                     if ($neededByes >= 2) {
                         // Both positions need bye teams
@@ -297,19 +289,19 @@ class Tournament extends Model
     private function assignNextGameIds()
     {
         $maxRound = $this->games()->max('round');
-        
+
         // Process each round (except the final round)
         for ($round = 1; $round < $maxRound; $round++) {
             $currentRoundMatches = $this->games()
                 ->where('round', $round)
                 ->orderBy('match_number')
                 ->get();
-            
+
             $nextRoundMatches = $this->games()
                 ->where('round', $round + 1)
                 ->orderBy('match_number')
                 ->get();
-            
+
             // For bracket tournaments, we need to handle byes properly
             if ($this->type === 0) { // Bracket style
                 $this->assignBracketNextGameIds($currentRoundMatches, $nextRoundMatches, $round);
@@ -317,7 +309,7 @@ class Tournament extends Model
                 // For other tournament types, simple assignment
                 foreach ($currentRoundMatches as $index => $match) {
                     $nextMatchIndex = (int) floor($index / 2);
-                    
+
                     if (isset($nextRoundMatches[$nextMatchIndex])) {
                         $match->next_game_id = $nextRoundMatches[$nextMatchIndex]->id;
                         $match->save();
@@ -333,18 +325,18 @@ class Tournament extends Model
         $totalRounds = (int) ceil(log($numTeams, 2));
         $nextPowerOfTwo = (int) pow(2, $totalRounds);
         $byes = $nextPowerOfTwo - $numTeams;
-        
+
         if ($round === 1 && $byes > 0) {
             // First round with byes - special handling
             $firstRoundMatches = (int) (($numTeams - $byes) / 2);
             $teamsAdvancingFromRound1 = $firstRoundMatches; // Winners from round 1
             $totalTeamsInRound2 = $teamsAdvancingFromRound1 + $byes;
-            
+
             // Assign first round matches to round 2 matches
             foreach ($currentRoundMatches as $index => $match) {
                 // Calculate which round 2 match this round 1 match feeds into
                 $nextMatchIndex = (int) floor($index / 2);
-                
+
                 if (isset($nextRoundMatches[$nextMatchIndex])) {
                     $match->next_game_id = $nextRoundMatches[$nextMatchIndex]->id;
                     $match->save();
@@ -354,7 +346,7 @@ class Tournament extends Model
             // Standard bracket progression for rounds without byes
             foreach ($currentRoundMatches as $index => $match) {
                 $nextMatchIndex = (int) floor($index / 2);
-                
+
                 if (isset($nextRoundMatches[$nextMatchIndex])) {
                     $match->next_game_id = $nextRoundMatches[$nextMatchIndex]->id;
                     $match->save();

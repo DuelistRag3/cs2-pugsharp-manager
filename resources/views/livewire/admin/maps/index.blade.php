@@ -6,9 +6,16 @@
         <button type="button" wire:click='addDefaultMaps' wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed"
             class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer col-span-2"><i
                 class="fa-solid fa-plus"></i> 
-                Standartkarten hinzufügen
+                Active Mappool hinzufügen
                 <i class="fa-solid fa-spinner fa-spin" wire:loading.delay.long></i>
             </button>
+    @endif
+    @if ($maps->count() > 0)
+        <button type="button" wire:click='confirmDeleteAll' wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed!" id="deleteAllButton"
+            class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer col-span-2"><i
+                class="fa-solid fa-trash"></i> Alle Karten löschen
+            <i class="fa-solid fa-spinner fa-spin" wire:loading.delay.longest></i>
+        </button>
     @endif
     <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
         @if (!$maps->count())

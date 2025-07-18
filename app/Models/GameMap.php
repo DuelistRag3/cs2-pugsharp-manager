@@ -25,4 +25,34 @@ class GameMap extends Model
     {
         return $this->hasMany(GameMapPlayerScore::class, 'game_map_id');
     }
+
+    public function start()
+    {
+        $this->status = 'ongoing';
+        $this->save();
+    }
+
+    public function pause()
+    {
+        $this->status = 'paused';
+        $this->save();
+    }
+
+    public function resume()
+    {
+        $this->status = 'ongoing';
+        $this->save();
+    }
+
+    public function complete()
+    {
+        $this->status = 'completed';
+        $this->save();
+    }
+
+    public function cancel()
+    {
+        $this->status = 'cancelled';
+        $this->save();
+    }
 }

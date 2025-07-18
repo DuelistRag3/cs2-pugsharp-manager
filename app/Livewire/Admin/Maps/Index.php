@@ -3,11 +3,12 @@
 namespace App\Livewire\Admin\Maps;
 
 use Livewire\Component;
+use App\Models\Tournament;
 use App\Models\AvailableMaps;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Index extends Component
@@ -33,7 +34,7 @@ class Index extends Component
     {
 
         // dd($this->mapThumbnail);
-        if($this->mapThumbnail != null) {
+        if ($this->mapThumbnail != null) {
             $originalName = $this->mapThumbnail->getClientOriginalName();
 
             AvailableMaps::create([
@@ -49,7 +50,7 @@ class Index extends Component
                 'map_code' => $this->map_code,
             ]);
         }
-        
+
 
         // Reload maps
         $this->maps = AvailableMaps::all();
@@ -90,9 +91,8 @@ class Index extends Component
             ->show();
     }
 
-    public function confirmDelete(AvailableMaps $map, $confirmed = false)
+    public function confirmDelete(AvailableMaps $map)
     {
-        if(!$confirmed) {
         LivewireAlert::title('Karte Löschen?')
             ->text('Bist du sicher, dass du diese Karte aus dem verfügbaren Pool löschen möchtest?')
             ->asConfirm()
@@ -100,16 +100,63 @@ class Index extends Component
             ->confirmButtonColor('red')
             ->withDenyButton('Nein')
             ->denyButtonColor('gray')
-            ->onConfirm('confirmDelete', [$map->id, true])
+            ->onConfirm('delete', $map)
             ->show();
-            return;
-        }
+        return;
+    }
+
+    public function delete(AvailableMaps $map)
+    {
         $map->delete();
+
+        $tournaments = Tournament::all();
+
+        $tournaments->each(function ($tournament) use ($map) {
+            if (array_search($map->map_code, $tournament->maps) !== false) {
+                $tournament->maps = array_diff($tournament->maps, [$map->map_code]);
+                $tournament->save();
+            }
+        });
 
         // Reload maps
         $this->maps = AvailableMaps::all();
 
         LivewireAlert::title('Karte gelöscht')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
+    public function confirmDeleteAll()
+    {
+        LivewireAlert::title('Alle Karten löschen?')
+            ->text('Bist du sicher, dass du alle Karten aus dem verfügbaren Pool löschen möchtest?')
+            ->asConfirm()
+            ->withConfirmButton('Ja')
+            ->confirmButtonColor('red')
+            ->withDenyButton('Nein')
+            ->denyButtonColor('gray')
+            ->onConfirm('deleteAll')
+            ->show();
+        return;
+    }
+
+    public function deleteAll()
+    {
+        AvailableMaps::truncate();
+
+        // Reload maps
+        $this->maps = AvailableMaps::all();
+
+        $tournaments = Tournament::all();
+
+        $tournaments->each(function ($tournament) {
+            $tournament->maps = [];
+            $tournament->save();
+        });
+
+        LivewireAlert::title('Alle Karten gelöscht')
             ->success()
             ->toast()
             ->position('top-end')

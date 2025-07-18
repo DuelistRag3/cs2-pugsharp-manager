@@ -178,7 +178,7 @@
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
                             class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative"
                             style="">
-                            <button data-dropdown-toggle="gamemenu{{ $game->id }}" data-dropdown-placement="right"
+                            <button type="button" data-dropdown-toggle="gamemenu{{ $game->id }}" data-dropdown-placement="right"
                                 class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
                                 <i class="fa-solid fa-wrench"></i>
                                 <span class="sr-only">Menü</span>
@@ -187,24 +187,24 @@
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="gamemenu{{ $game->id }}">
                                     @if($game->status === 'scheduled' && $game->team1 && $game->team2)
                                     <li>
-                                        <a href="#" wire:click="startMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">Match starten</a>
+                                        <a wire:click="startMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match starten</a>
                                     </li>
                                     @elseif($game->status === 'ongoing')
                                     @if($game->maps->where('status', 'ongoing')->isNotEmpty())
                                     <li>
-                                        <a href="#" wire:click="pauseMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">Match pausieren</a>
+                                        <a wire:click="pauseMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match pausieren</a>
                                     </li>
                                     @elseif($game->maps->where('status', 'paused')->isNotEmpty())
                                     <li>
-                                        <a href="#" wire:click="resumeMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">Match fortsetzen</a>
+                                        <a wire:click="resumeMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match fortsetzen</a>
                                     </li>
                                     @endif
                                     <li>
-                                        <a href="#" wire:click="abortMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-red-500 dark:hover:text-white">Match abbrechen</a>
+                                        <a wire:click="abortMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-red-500 dark:hover:text-white cursor-pointer">Match abbrechen</a>
                                     </li>
                                     @endif
                                     <li>
-                                        <a href="{{ route('api.matches.config', $tournament->id) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">Zeige Config</a>
+                                        <a href="{{ route('api.matches.config', $game->id) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">Zeige Config</a>
                                     </li>
                                 </ul>
                             </div>

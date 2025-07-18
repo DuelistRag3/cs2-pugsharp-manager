@@ -176,7 +176,7 @@ class Show extends Component
 
     public function resetMatchPlan($confirmed = false)
     {
-        if (!$confirmed) {
+        if ($confirmed == false) {
             LivewireAlert::title('Karte Löschen?')
                 ->text('Bist du sicher, dass du diese Karte aus dem verfügbaren Pool löschen möchtest?')
                 ->asConfirm()
@@ -184,7 +184,7 @@ class Show extends Component
                 ->confirmButtonColor('red')
                 ->withDenyButton('Nein')
                 ->denyButtonColor('gray')
-                ->onConfirm('delete', ['confirmed' => true])
+                ->onConfirm('resetMatchPlan', ['confirmed' => true])
                 ->show();
             return;
         }
@@ -204,6 +204,15 @@ class Show extends Component
 
         if ($token == null || $token == '') {
             LivewireAlert::title('Es ist kein API Token gesetzt')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            return;
+        }
+
+        if ($this->tournament->maps == null || count($this->tournament->maps) == 0) {
+            LivewireAlert::title('Keine Karten für das Turnier ausgewählt')
                 ->error()
                 ->toast()
                 ->position('top-end')
@@ -246,8 +255,6 @@ class Show extends Component
             return;
         }
 
-
-
         $map->status = 'paused';
         $map->save();
 
@@ -286,35 +293,6 @@ class Show extends Component
             ->toast()
             ->position('top-end')
             ->show();   
-        // $map = AvailableMaps::findOrFail($mapId);
-
-        // if (!$map)
-        // {
-        //     LivewireAlert::title('Karte nicht gefunden')
-        //         ->error()
-        //         ->toast()
-        //         ->position('top-end')
-        //         ->show();
-        //     return;
-        // }
-
-        // $maps = $this->tournament->maps;
-
-        // // dd($maps);
-
-        // if (!$maps)
-        // {
-        //     $maps = [];
-        // }
-
-        // if (in_array($map->map_code, $maps)) {
-        //     $maps = array_diff($maps, [$map->map_code]);
-        // } else {
-        //     $maps[] = $map->map_code;
-        // }
-
-        // $this->tournament->maps = $maps;
-        // $this->tournament->save();
     }
 
     #[Layout('components.layouts.admin')]

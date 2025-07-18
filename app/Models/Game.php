@@ -54,4 +54,16 @@ class Game extends Model
         $this->status = 'ongoing';
         $this->save();
     }
+
+    public function finish()
+    {
+        $this->status = 'completed';
+        $this->save();
+    }
+
+    public function cancel()
+    {
+        $this->status = 'cancelled';
+        $this->save();
+    }
 }
