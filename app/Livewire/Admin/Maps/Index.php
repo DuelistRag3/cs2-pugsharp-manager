@@ -90,8 +90,9 @@ class Index extends Component
             ->show();
     }
 
-    public function confirmDelete($id)
+    public function confirmDelete(AvailableMaps $map, $confirmed = false)
     {
+        if(!$confirmed) {
         LivewireAlert::title('Karte Löschen?')
             ->text('Bist du sicher, dass du diese Karte aus dem verfügbaren Pool löschen möchtest?')
             ->asConfirm()
@@ -99,14 +100,10 @@ class Index extends Component
             ->confirmButtonColor('red')
             ->withDenyButton('Nein')
             ->denyButtonColor('gray')
-            ->onConfirm('deleteMap', ['id' => $id])
+            ->onConfirm('confirmDelete', ['id' => $map->id, 'confirmed' => true])
             ->show();
-    }
-
-    public function deleteMap($id)
-    {
-        // Find and delete the map
-        $map = AvailableMaps::find($id);
+            return;
+        }
         $map->delete();
 
         // Reload maps
