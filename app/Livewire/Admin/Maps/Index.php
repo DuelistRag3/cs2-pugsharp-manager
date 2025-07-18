@@ -100,7 +100,7 @@ class Index extends Component
             ->confirmButtonColor('red')
             ->withDenyButton('Nein')
             ->denyButtonColor('gray')
-            ->onConfirm('confirmDelete', ['id' => $map->id, 'confirmed' => true])
+            ->onConfirm('confirmDelete', ['map' => $map->id, 'confirmed' => true])
             ->show();
             return;
         }
