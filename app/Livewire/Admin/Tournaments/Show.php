@@ -177,17 +177,18 @@ class Show extends Component
     public function resetMatchPlan($confirmed = false)
     {
         if (!$confirmed) {
-            LivewireAlert::title('Matchplan zurücksetzen?')
-                ->text('Bist du sicher, dass du den Matchplan zurücksetzen möchtest? Dadurch werden alle Spiele und Teamzuweisungen gelöscht.')
+            LivewireAlert::title('Karte Löschen?')
+                ->text('Bist du sicher, dass du diese Karte aus dem verfügbaren Pool löschen möchtest?')
                 ->asConfirm()
                 ->withConfirmButton('Ja')
                 ->confirmButtonColor('red')
                 ->withDenyButton('Nein')
                 ->denyButtonColor('gray')
-                ->onConfirm('resetMatchPlan', ['confirmed' => true])
+                ->onConfirm('delete', ['confirmed' => true])
                 ->show();
             return;
         }
+        
         $this->tournament->games()->delete();
         LivewireAlert::title('Matchplan zurückgesetzt')
             ->success()

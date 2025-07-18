@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Maps;
 
 use Livewire\Component;
 use App\Models\AvailableMaps;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
@@ -89,23 +90,23 @@ class Index extends Component
             ->show();
     }
 
-    public function delete($id, $confirmed = false)
+    public function confirmDelete($id)
     {
-        if (!$confirmed) {
-            LivewireAlert::title('Karte Löschen?')
-                ->text('Bist du sicher, dass du diese Karte aus dem verfügbaren Pool löschen möchtest?')
-                ->asConfirm()
-                ->withConfirmButton('Ja')
-                ->confirmButtonColor('red')
-                ->withDenyButton('Nein')
-                ->denyButtonColor('gray')
-                ->onConfirm('delete', ['confirmed' => true])
-                ->show();
-            return;
-        }
+        LivewireAlert::title('Karte Löschen?')
+            ->text('Bist du sicher, dass du diese Karte aus dem verfügbaren Pool löschen möchtest?')
+            ->asConfirm()
+            ->withConfirmButton('Ja')
+            ->confirmButtonColor('red')
+            ->withDenyButton('Nein')
+            ->denyButtonColor('gray')
+            ->onConfirm('deleteMap', ['id' => $id])
+            ->show();
+    }
 
+    public function deleteMap($id)
+    {
         // Find and delete the map
-        $map = AvailableMaps::findOrFail($id);
+        $map = AvailableMaps::find($id);
         $map->delete();
 
         // Reload maps
