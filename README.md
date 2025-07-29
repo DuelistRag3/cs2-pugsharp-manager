@@ -63,6 +63,10 @@ Currently there is no installer (will follow Soon™), so you have to install th
 
 For a detailed guide on how to configure your webserver to support laravel applications check out their <a href="https://laravel.com/docs/12.x/deployment" target="_blank">deployment guide</a>
 
+## Screenshots
+
+
+
 ## Contributing
 
 If you want to contribute to this project, just fork it and make a pull request.
