@@ -416,7 +416,6 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             if (shouldRedraw) {
                 setTimeout(drawBracketLines, 100);
-                setTimeout(setupTeamHighlighting, 150); // Re-setup highlighting after DOM changes
             }
         });
         
@@ -431,12 +430,10 @@ document.addEventListener('DOMContentLoaded', function() {
 // Livewire 3.x events
 document.addEventListener('livewire:updated', function() {
     setTimeout(drawBracketLines, 150);
-    setTimeout(setupTeamHighlighting, 200); // Re-setup highlighting after Livewire updates
 });
 
 document.addEventListener('livewire:navigated', function() {
     setTimeout(drawBracketLines, 150);
-    setTimeout(setupTeamHighlighting, 200);
 });
 
 // Redraw lines when window is resized
