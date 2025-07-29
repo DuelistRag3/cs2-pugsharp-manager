@@ -40,7 +40,7 @@ Currently there is no installer (will follow Soon™), so you have to install th
    ```bash
    npm install
    ```
-4. Copy your .env file and fill all relevant informations.
+4. Copy your .env file and fill all relevant informations (change the admin credentials and change APP_ENV to production and APP_DEBUG to false).
    ```bash
    cp .env.example .env
    ```
