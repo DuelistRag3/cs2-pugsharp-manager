@@ -7,6 +7,15 @@
 
 The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize and manage cs2 tournaments. It requires your own server(s) with the wonderful <a href="https://github.com/Lan2Play/PugSharp" target="_blank">Lan2Play Pugsharp</a> plugin installed. Manuel management is planed, but not yet implamented. It acts as an alternative to the <a href="https://github.com/Lan2Play/eventula-manager">Lan2Play Eventula-Manager</a> and is more lightweight approach and is designed just for the tournament management, not for event management, for this please refer to the eventula manager.
 
+## Table of Contents
+
+- [Server Requirements](#ServerRequirements)
+- [Installation](##Installation)
+- [Screenshots](##Screenshots)
+- [Contributing](##Contributing)
+- [Authors](##Authors)
+- [License](##License)
+
 ## Server Requirements
 
 - PHP >= 8.2
@@ -77,6 +86,10 @@ For a detailed guide on how to configure your webserver to support laravel appli
 ## Contributing
 
 If you want to contribute to this project, just fork it and make a pull request.
+
+## Authors
+
+- [@DuelistRag3](https://github.com/DuelistRag3)
 
 ## License
 
