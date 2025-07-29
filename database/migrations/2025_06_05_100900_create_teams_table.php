@@ -35,12 +35,17 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('teams')
                 ->onDelete('set null')
-                ->after('match_number');
+                ->after('status');
             $table->foreignId('team2_id')
                 ->nullable()
                 ->constrained('teams')
                 ->onDelete('set null')
                 ->after('team1_id');
+            $table->foreignId('winner_team_id')
+                ->nullable()
+                ->constrained(table: 'teams', indexName: 'id')
+                ->onDelete('set null')
+                ->after('team2_id');
         });
     }
 

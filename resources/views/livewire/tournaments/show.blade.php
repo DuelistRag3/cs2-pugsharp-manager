@@ -94,8 +94,8 @@
             $numberOfRounds = ceil(log($tournament->teams->count(), 2));
             $offset = 0;
             @endphp
-            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}">
-                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;">
+            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}" wire:poll>
+                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;" wire:ignore>
                     <!-- Lines will be drawn here by JavaScript -->
                 </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
@@ -120,52 +120,52 @@
                     <div class="h-full grid content-around">
                         @php
                         $roundGames = $tournament->games()->where('round', ($round + 1))->get();
-                        // $roundGames = $tournament->games()->get();
                         $offset = $offset + $roundGames->count();
                         @endphp
 
                         @foreach($roundGames as $game)
                         {{-- {{ $game->id }} -> {{ $game->next_game_id }}<br> --}}
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
-                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative" style="z-index: 2;">
+                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'completed') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
+                            style="">
                             @if($game->team1)
                             <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
                                 data-modal-toggle="team{{ $game->team1->id }}-modal"
-                                class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                                 {{ $game->team1->name }}
-                                <span class="float-end">
-                                @if($game->tournament->maps_each_game == 0)
+                                <span class="float-end @if($game->winner_team_id == $game->team1->id) font-bold text-green-500 @endif">
+                                    @if($game->tournament->maps_each_game == 0)
                                     @if($game->maps->isNotEmpty())
-                                        {{ $game->maps->first()->team1_score }}
+                                    {{ $game->maps->first()->team1_score }}
                                     @else
                                     0
                                     @endif
-                                @else
+                                    @else
                                     {{ $game->team1_maps_won }}
-                                @endif
+                                    @endif
                                 </span>
                             </a>
                             @else
                             <a aria-current="true"
-                                class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                                 TBD
                             </a>
                             @endif
                             @if($game->team2)
-                            <a data-modal-target="team{{ $game->team1->id }}-modal"
-                                data-modal-toggle="team{{ $game->team1->id }}-modal"
+                            <a data-modal-target="team{{ $game->team2->id }}-modal"
+                                data-modal-toggle="team{{ $game->team2->id }}-modal"
                                 class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
                                 {{ $game->team2->name }}
-                                <span class="float-end">
-                                @if($game->tournament->maps_each_game == 0)
+                                <span class="float-end @if($game->winner_team_id == $game->team2->id) font-bold text-green-500 @endif">
+                                    @if($game->tournament->maps_each_game == 0)
                                     @if($game->maps->isNotEmpty())
-                                        {{ $game->maps->first()->team2_score }}
+                                    {{ $game->maps->first()->team2_score }}
                                     @else
                                     0
                                     @endif
-                                @else
+                                    @else
                                     {{ $game->team2_maps_won }}
-                                @endif
+                                    @endif
                                 </span>
                             </a>
                             @else
@@ -185,7 +185,11 @@
                 @foreach($tournament->games as $game)
                 <div
                     class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative">
-
+                    <button
+                        class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
+                        <i class="fa-solid fa-wrench"></i>
+                        <span class="sr-only">Menü</span>
+                    </button>
                     @if($game->team1)
                     <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
                         data-modal-toggle="team{{ $game->team1->id }}-modal"

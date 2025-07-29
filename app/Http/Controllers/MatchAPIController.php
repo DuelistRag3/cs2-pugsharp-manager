@@ -249,14 +249,34 @@ class MatchAPIController extends Controller
             return response()->json("Match - Map combination not found", 404);
         }
 
+        $game = $map->game;
+
+        $tournament = $game->tournament;
+
+        $teams = $tournament->teams;
+
+        $winner = null;
+
+        foreach($teams as $team)
+        {
+            if($team->name == $request->winner)
+            {
+                $winner = $team;
+            }
+        }
+
         $map->team1_score = $request->team1score;
         $map->team2_score = $request->team2score;
+
+        $map->winner_team_id = $winner ? $winner->id : null;
 
         if ($request->team1score > $request->team2score) {
             $map->game->team1_maps_won += 1;
         } elseif ($request->team1score < $request->team2score) {
             $map->game->team2_maps_won += 1;
         }
+
+        $map->game->save();
 
         $map->status = 'completed';
         $map->save();
@@ -280,20 +300,37 @@ class MatchAPIController extends Controller
             return response()->json("Match not found", 404);
         }
 
-        if($game->team1_maps_won > $game->team2_maps_won) {
-            $winner = $game->team1;
-        } elseif($game->team1_maps_won < $game->team2_maps_won) {
-            $winner = $game->team2;
+        $tournament = $game->tournament;
+
+        $teams = $tournament->teams;
+
+        $winner = null;
+
+        foreach($teams as $team)
+        {
+            if($team->name == $request->winner)
+            {
+                $winner = $team;
+            }
         }
 
         if (!$winner) {
             return response()->json("No winner determined", 400);
         }
 
+        if($request->forfeit == 1)
+        {
+            $game->forfeit = true;
+        }
+
+        $game->winner_team_id = $winner->id;
         $game->status = 'completed';
         $game->played_at = now();
         $game->save();
-        $game->server->free();
+        if($game->server)
+        {
+            $game->server->free();
+        }
 
         $next = $game->nextGame;
 

@@ -140,43 +140,34 @@
             <h2 class="text-xl font-semibold mb-2">Turnierplan</h2>
             @if($tournament->type === 0) {{-- Bracket style --}}
             @php
-            $numberOfRounds = ceil(log($tournament->teams->count(), 2));
+            $numberOfRounds = $tournament->games->max('round') ?? 0;
             $offset = 0;
             @endphp
-            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}">
-                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;">
+            {{ $numberOfRounds }}
+            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}" wire:poll>
+                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;" wire:ignore>
                     <!-- Lines will be drawn here by JavaScript -->
                 </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
+                    @php
+                    if (isset(config('manager.round_names')[$numberOfRounds][$round])) {
+                        $roundName = config('manager.round_names')[$numberOfRounds][$round];
+                    } else {
+                        $roundName = 'Runde ' . ($round + 1);
+                    }
+                    @endphp
                     <h3 class="text-lg font-semibold mb-2">
-                        @switch($round)
-                        @case(0)
-                        Achtelfinale
-                        @break
-                        @case(1)
-                        Viertelfinale
-                        @break
-                        @case(2)
-                        Halbfinale
-                        @break
-                        @case(3)
-                        Finale
-                        @break
-                        @default
-                        Runde {{ $round + 1 }}
-                        @endswitch
+                        {{ $roundName }}
                     </h3>
                     <div class="h-full grid content-around">
                         @php
                         $roundGames = $tournament->games()->where('round', ($round + 1))->get();
-                        // $roundGames = $tournament->games()->get();
                         $offset = $offset + $roundGames->count();
                         @endphp
 
                         @foreach($roundGames as $game)
-                        {{-- {{ $game->id }} -> {{ $game->next_game_id }}<br> --}}
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
-                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'finished') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
+                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'completed') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
                             style="">
                             <button type="button" data-dropdown-toggle="gamemenu{{ $game->id }}" data-dropdown-placement="right"
                                 class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
@@ -211,9 +202,10 @@
                             @if($game->team1)
                             <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
                                 data-modal-toggle="team{{ $game->team1->id }}-modal"
-                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                data-team-id="{{ $game->team1->id }}"
+                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
                                 {{ $game->team1->name }}
-                                <span class="float-end">
+                                <span class="float-end @if($game->winner_team_id == $game->team1->id) font-bold text-green-500 @endif">
                                     @if($game->tournament->maps_each_game == 0)
                                     @if($game->maps->isNotEmpty())
                                     {{ $game->maps->first()->team1_score }}
@@ -232,11 +224,12 @@
                             </a>
                             @endif
                             @if($game->team2)
-                            <a data-modal-target="team{{ $game->team1->id }}-modal"
-                                data-modal-toggle="team{{ $game->team1->id }}-modal"
-                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                            <a data-modal-target="team{{ $game->team2->id }}-modal"
+                                data-modal-toggle="team{{ $game->team2->id }}-modal"
+                                data-team-id="{{ $game->team2->id }}"
+                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
                                 {{ $game->team2->name }}
-                                <span class="float-end">
+                                <span class="float-end @if($game->winner_team_id == $game->team2->id) font-bold text-green-500 @endif">
                                     @if($game->tournament->maps_each_game == 0)
                                     @if($game->maps->isNotEmpty())
                                     {{ $game->maps->first()->team2_score }}
@@ -260,7 +253,7 @@
                     </div>
             </div>
             @endfor
-            @elseif ($tournament->type === 1) {{-- Round Robin style --}}
+            @elseif ($tournament->type === 1)
             <div class="grid grid-cols-1 gap-4">
                 @foreach($tournament->games as $game)
                 <div
@@ -300,17 +293,11 @@
             @endif
         </div>
 
-
-        {{-- team modals --}}
         @foreach($tournament->teams as $team)
-        <div id="team{{ $team->id }}-modal" tabindex="-1" aria-hidden="true"
+        <div id="team{{ $team->id }}-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="relative p-4 w-full max-w-2xl max-h-full">
-                {{--
-                <!-- Modal content --> --}}
                 <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
-                    {{--
-                    <!-- Modal header --> --}}
                     <div
                         class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -327,8 +314,6 @@
                             <span class="sr-only">Schließen</span>
                         </button>
                     </div>
-                    {{--
-                    <!-- Modal body --> --}}
                     <div class="p-4 md:p-5 space-y-4">
                         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach($team->players as $player)
@@ -352,8 +337,6 @@
                             @endforeach
                         </ul>
                     </div>
-                    {{--
-                    <!-- Modal footer --> --}}
                     <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                         <button data-modal-hide="team{{ $team->id }}-modal" type="button"
                             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Schließen</button>
@@ -365,11 +348,10 @@
         @endforeach
 
     </div>
-    <div class="opacity-50 cursor-not-allowed disabled"> <!-- Placeholder for spacing --></div>
+    <div class="opacity-50 cursor-not-allowed disabled"></div>
 </div>
 
 <script>
-    // Function to draw bracket lines
 function drawBracketLines() {
     const container = document.getElementById('bracket-container');
     const svg = document.getElementById('bracket-lines');
@@ -428,6 +410,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initial draw
     setTimeout(drawBracketLines, 100);
     
+    // Setup team highlighting
+    setTimeout(setupTeamHighlighting, 100);
+    
     // MutationObserver to watch for DOM changes
     const targetNode = document.getElementById('bracket-container');
     if (targetNode) {
@@ -440,6 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             if (shouldRedraw) {
                 setTimeout(drawBracketLines, 100);
+                setTimeout(setupTeamHighlighting, 150); // Re-setup highlighting after DOM changes
             }
         });
         
@@ -455,10 +441,12 @@ document.addEventListener('DOMContentLoaded', function() {
 // Livewire 3.x events
 document.addEventListener('livewire:updated', function() {
     setTimeout(drawBracketLines, 150);
+    setTimeout(setupTeamHighlighting, 200); // Re-setup highlighting after Livewire updates
 });
 
 document.addEventListener('livewire:navigated', function() {
     setTimeout(drawBracketLines, 150);
+    setTimeout(setupTeamHighlighting, 200);
 });
 @endif
 

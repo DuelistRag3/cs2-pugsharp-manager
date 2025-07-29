@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('map_name')->nullable(); // Map Name
             $table->integer('team1_score')->default(0); // Score for team 1
             $table->integer('team2_score')->default(0); // Score for team 2
+            $table->unsignedBigInteger('winner_team_id')
+                ->nullable();
             $table->enum('status', ['scheduled', 'ongoing', 'paused', 'completed', 'cancelled'])
                 ->default('scheduled'); // Status of the matchup
             $table->timestamps();

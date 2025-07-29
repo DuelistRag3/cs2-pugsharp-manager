@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('matchup_count')->default(0); // Current game number, useful when multiple games played in a matchup
             $table->integer('next_game_id')->nullable(); // ID of the game where the winner will play next
             $table->text('notes')->nullable(); // Additional notes about the game
+            $table->boolean('forfeit')->default(false); // Indicates if the game was forfeited
             $table->timestamps();
         });
     }
