@@ -2,7 +2,7 @@
     class="grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10">
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-bold text-white">Tournament: {{ $tournament->name }}</h1>
+            <h1 class="text-2xl font-bold text-white">Turnier: {{ $tournament->name }}</h1>
             <div class="right">
                 @if($tournament->status === 'ongoing')
                 <button wire:click='cancelTournament()' type="button"
@@ -143,7 +143,6 @@
             $numberOfRounds = $tournament->games->max('round') ?? 0;
             $offset = 0;
             @endphp
-            {{ $numberOfRounds }}
             <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}" wire:poll>
                 <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;" wire:ignore>
                     <!-- Lines will be drawn here by JavaScript -->
