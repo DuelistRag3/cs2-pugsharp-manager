@@ -7,7 +7,7 @@
             </a>
             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">
                 <strong>
-                    Anmeldeschluss:<br>
+                    {{ __('manager.registration_deadline') }}:<br>
                 </strong>
                 @if ($tournament->registration_deadline)
                     {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
@@ -15,28 +15,28 @@
                     {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
                 @endif
             </p>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>Start:<br></strong> {{ $tournament->start_date ? new DateTime($tournament->start_date)->format('d.m.Y H:i') : 'Nicht festgelegt' }}</p>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>Teams:<br></strong> {{ $tournament->teams->count() ?? 0 }} / {{ $tournament->max_teams }}</p>
-            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>Status:<br></strong> 
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>{{ __('manager.start_date') }}:<br></strong> {{ $tournament->start_date ? new DateTime($tournament->start_date)->format('d.m.Y H:i') : 'Nicht festgelegt' }}</p>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>{{ __('manager.teams') }}:<br></strong> {{ $tournament->teams->count() ?? 0 }} / {{ $tournament->max_teams }}</p>
+            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400"><strong>{{ __('manager.status') }}:<br></strong>
             @switch($tournament->status)
                 @case('scheduled')
-                    <span class="text-yellow-500">Geplant</span>
+                    <span class="text-yellow-500">{{ __('manager.status_types.scheduled') }}</span>
                     @break
                 @case('ongoing')
-                    <span class="text-green-500">Läuft</span>
+                    <span class="text-green-500">{{ __('manager.status_types.ongoing') }}</span>
                     @break
                 @case('completed')
-                    <span class="text-gray-500">Abgeschlossen</span>
+                    <span class="text-gray-500">{{ __('manager.status_types.completed') }}</span>
                     @break
                 @case('cancelled')
-                    <span class="text-red-500">Abgebrochen</span>
+                    <span class="text-red-500">{{ __('manager.status_types.cancelled') }}</span>
                 @default
-                    <span class="text-red-500">Unbekannt</span>
+                    <span class="text-red-500">{{ __('manager.status_types.unknown') }}</span>
             @endswitch
             </p>
             <a href="{{ route('tournaments.show', $tournament->id) }}"
                 class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                Anzeigen
+                {{ __('manager.show') }}
                 <svg class="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                     fill="none" viewBox="0 0 14 10">
                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

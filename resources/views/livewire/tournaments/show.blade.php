@@ -1,31 +1,31 @@
 <div>
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-bold text-white">Turnier: {{ $tournament->name }}</h1>
+            <h1 class="text-2xl font-bold text-white">{{ __('manager.tournament') }}: {{ $tournament->name }}</h1>
             @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams &&
                 now()->lessThan(new DateTime($tournament->registration_deadline ? $tournament->registration_deadline :
                 $tournament->start_date)))
                 <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
-                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">Anmelden</button>
+                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">{{ __('manager.register') }}</button>
                 @endif
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Details</h2>
-            <p><strong>Anmeldeschluss:</strong>
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.details') }}</h2>
+            <p><strong>{{ __('manager.registration_deadline') }}:</strong>
                 @if ($tournament->registration_deadline)
                 {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
                 @else
                 {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
                 @endif
             </p>
-            <p><strong>Start Datum:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>End Datum:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled')
-                Turnier noch nicht vorbei @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif
+            <p><strong>{{ __('manager.start_date') }}:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
+            <p><strong>{{ __('manager.end_date') }}:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled')
+                {{ __('manager.tournament_not_finished') }} @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif
             </p>
-            <p><strong>Maximale Teams:</strong> {{ $tournament->max_teams }}</p>
-            <p><strong>Team Größe:</strong> {{ $tournament->team_size }}</p>
-            <p><strong>Spieltyp:</strong>
+            <p><strong>{{ __('manager.max_teams') }}:</strong> {{ $tournament->max_teams }}</p>
+            <p><strong>{{ __('manager.team_size') }}:</strong> {{ $tournament->team_size }}</p>
+            <p><strong>{{ __('manager.gametype') }}:</strong>
                 @switch($tournament->matchup_rounds)
                 @case(0)
                 <span class="text-blue-500">Best Of 1</span>
@@ -38,7 +38,7 @@
                 @break
                 @endswitch
             </p>
-            <p><strong>Spieltyp (Finale):</strong>
+            <p><strong>{{ __('manager.gametype') }} ({{ __('manager.final') }}):</strong>
                 @switch($tournament->final_rounds)
                 @case(0)
                 <span class="text-blue-500">Best Of 1</span>
@@ -51,30 +51,30 @@
                 @break
                 @endswitch
             </p>
-            <p><strong>Status:</strong>
+            <p><strong>{{ __('manager.status') }}:</strong>
                 @switch($tournament->status)
                 @case('scheduled')
-                <span class="text-yellow-500">Geplant</span>
+                <span class="text-yellow-500">{{ __('manager.status_types.scheduled') }}</span>
                 @break
                 @case('ongoing')
-                <span class="text-green-500">Läuft</span>
+                <span class="text-green-500">{{ __('manager.status_types.ongoing') }}</span>
                 @break
                 @case('completed')
-                <span class="text-gray-500">Abgeschlossen</span>
+                <span class="text-gray-500">{{ __('manager.status_types.completed') }}</span>
                 @break
                 @case('cancelled')
-                <span class="text-red-500">Abgebrochen</span>
+                <span class="text-red-500">{{ __('manager.status_types.cancelled') }}</span>
                 @default
-                <span class="text-red-500">Unbekannt</span>
+                <span class="text-red-500">{{ __('manager.status_types.unknown') }}</span>
                 @endswitch
             </p>
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Teams: ({{ $tournament->teams->count() }}/{{ $tournament->max_teams
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.teams') }}: ({{ $tournament->teams->count() }}/{{ $tournament->max_teams
                 }})</h2>
             @if($tournament->teams->isEmpty())
-            <p>Bisher sind keine Teams registriert.</p>
+            <p>{{ __('manager.no_teams_registered') }}</p>
             @else
             <ul class="list-disc">
                 @foreach($tournament->teams as $team)
@@ -88,7 +88,7 @@
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Turnierplan</h2>
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.tournament_plan') }}</h2>
             @if($tournament->type === 0) {{-- Bracket style --}}
             @php
             $numberOfRounds = $tournament->games->max('round') ?? 0;
@@ -100,14 +100,15 @@
                 </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
                     @php
-                    if (isset(config('manager.round_names')[$numberOfRounds][$round])) {
-                        $roundName = config('manager.round_names')[$numberOfRounds][$round];
+                    if (isset(config('manager.round_name_tokens')[$numberOfRounds][$round])) {
+                        $roundNameToken = config('manager.round_name_tokens')[$numberOfRounds][$round];
                     } else {
-                        $roundName = 'Runde ' . ($round + 1);
+                        $roundNameToken = 'round_' . ($round + 1);
                     }
+                    $roundNameToken = "manager.round_names.$roundNameToken";
                     @endphp
                     <h3 class="text-lg font-semibold mb-2">
-                        {{ $roundName }}
+                        {{ __($roundNameToken) }}
                     </h3>
                     <div class="h-full grid content-around">
                         @php
@@ -119,6 +120,7 @@
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
                             class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'completed') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
                             style="">
+                            
                             @if($game->team1)
                             <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
                                 data-modal-toggle="team{{ $game->team1->id }}-modal"

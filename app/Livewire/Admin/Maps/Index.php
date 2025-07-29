@@ -53,7 +53,7 @@ class Index extends Component
         // Reload maps
         $this->maps = AvailableMaps::all();
 
-        LivewireAlert::title('Karte hinzugefügt')
+        LivewireAlert::title(__('manager.map_added'))
             ->success()
             ->toast()
             ->position('top-end')
@@ -82,7 +82,7 @@ class Index extends Component
         // Reload maps
         $this->maps = AvailableMaps::all();
 
-        LivewireAlert::title('Standardkarten hinzugefügt')
+        LivewireAlert::title(__('manager.active_mappool_added'))
             ->success()
             ->toast()
             ->position('top-end')
@@ -91,12 +91,12 @@ class Index extends Component
 
     public function confirmDelete(AvailableMaps $map)
     {
-        LivewireAlert::title('Karte Löschen?')
-            ->text('Bist du sicher, dass du diese Karte aus dem verfügbaren Pool löschen möchtest?')
+        LivewireAlert::title(__('manager.delete_map'))
+            ->text(__('manager.delete_map_text'))
             ->asConfirm()
-            ->withConfirmButton('Ja')
+            ->withConfirmButton(__('manager.yes'))
             ->confirmButtonColor('red')
-            ->withDenyButton('Nein')
+            ->withDenyButton(__('manager.no'))
             ->denyButtonColor('gray')
             ->onConfirm('delete', $map)
             ->show();
@@ -119,7 +119,7 @@ class Index extends Component
         // Reload maps
         $this->maps = AvailableMaps::all();
 
-        LivewireAlert::title('Karte gelöscht')
+        LivewireAlert::title(__('manager.map_deleted'))
             ->success()
             ->toast()
             ->position('top-end')
@@ -128,12 +128,12 @@ class Index extends Component
 
     public function confirmDeleteAll()
     {
-        LivewireAlert::title('Alle Karten löschen?')
-            ->text('Bist du sicher, dass du alle Karten aus dem verfügbaren Pool löschen möchtest?')
+        LivewireAlert::title(__('manager.delete_all_maps'))
+            ->text(__('manager.delete_all_maps_text'))
             ->asConfirm()
-            ->withConfirmButton('Ja')
+            ->withConfirmButton(__('manager.yes'))
             ->confirmButtonColor('red')
-            ->withDenyButton('Nein')
+            ->withDenyButton(__('manager.no'))
             ->denyButtonColor('gray')
             ->onConfirm('deleteAll')
             ->show();
@@ -154,7 +154,7 @@ class Index extends Component
             $tournament->save();
         });
 
-        LivewireAlert::title('Alle Karten gelöscht')
+        LivewireAlert::title(__('manager.maps_deleted'))
             ->success()
             ->toast()
             ->position('top-end')

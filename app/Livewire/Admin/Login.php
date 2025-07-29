@@ -27,11 +27,11 @@ class Login extends Component
         // Attempt to log in the user
         if (auth()->attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             // Redirect to the intended page or dashboard
-            return redirect()->intended('/admin/dashboard');
+            return redirect()->intended('/admin/tournaments');
         }
 
         // If login fails, add an error message
-        LivewireAlert::title('Fehler beim Anmelden')->error()->toast()->position('top-end')->show();
+        LivewireAlert::title(__('auth.failed'))->error()->toast()->position('top-end')->show();
     }
 
     #[Layout('components.layouts.guest')]

@@ -14,13 +14,13 @@
     </button>
     <div class="hidden w-full md:block md:w-auto" id="navbar-default">
       <ul class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 dark:border-gray-700">
-        <x-navigation.navbar-item :link="route('landing')" :active="request()->routeIs('landing')">Start</x-navigation.navbar-item>
-        <x-navigation.navbar-item :link="route('tournaments.index')" :active="request()->routeIs('tournaments')">Turniere</x-navigation.navbar-item>
+        <x-navigation.navbar-item :link="route('landing')" :active="request()->routeIs('landing')">{{ __('manager.home') }}</x-navigation.navbar-item>
+        <x-navigation.navbar-item :link="route('tournaments.index')" :active="request()->routeIs('tournaments')">{{ __('manager.tournaments') }}</x-navigation.navbar-item>
         @auth
-        <x-navigation.navbar-item :link="route('admin.dashboard')" :active="request()->routeIs('admin')">Admin Panel</x-navigation.navbar-item>
-        <x-navigation.navbar-item :link="route('logout')" :active="request()->routeIs('logout')">Abmelden</x-navigation.navbar-item>
+        <x-navigation.navbar-item :link="route('admin.tournaments.index')" :active="request()->routeIs('admin')">{{ __('manager.dashboard') }}</x-navigation.navbar-item>
+        <x-navigation.navbar-item :link="route('logout')" :active="request()->routeIs('logout')">{{ __('auth.logout') }}</x-navigation.navbar-item>
         @else
-        <x-navigation.navbar-item :link="route('login')" :active="request()->routeIs('login')">Anmelden</x-navigation.navbar-item>
+        <x-navigation.navbar-item :link="route('login')" :active="request()->routeIs('login')">{{ __('auth.login') }}</x-navigation.navbar-item>
         @endauth
       </ul>
     </div>

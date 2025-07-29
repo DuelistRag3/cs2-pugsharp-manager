@@ -6,14 +6,14 @@ return [
 
     'api_bearer_token' => env("API_BEARER_TOKEN", "1"),
 
-    'round_names' => (function () {
+    'round_name_tokens' => (function () {
         $allRounds = [
-            'Zweiunddreißigstel-Finale',
-            'Sechzehntelfinale',
-            'Achtelfinale',
-            'Viertelfinale',
-            'Halbfinale',
-            'Finale',
+            'best_of_64',
+            'best_of_32',
+            'best_of_16',
+            'quarter_final',
+            'semi_final',
+            'final',
         ];
         $result = [];
         for ($i = 1; $i <= count($allRounds); $i++) {

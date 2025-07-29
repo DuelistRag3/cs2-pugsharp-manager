@@ -2,59 +2,53 @@
     class="grid-cols-1 grid-cols-2 grid-cols-3 grid-cols-4 grid-cols-5 grid-cols-6 grid-cols-7 grid-cols-8 grid-cols-9 grid-cols-10">
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-bold text-white">Turnier: {{ $tournament->name }}</h1>
+            <h1 class="text-2xl font-bold text-white">{{ __('manager.tournament') }}: {{ $tournament->name }}</h1>
             <div class="right">
                 @if($tournament->status === 'ongoing')
                 <button wire:click='cancelTournament()' type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Turnier
-                    Abbrechen</button>
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{ __('manager.cancel_tournament') }}</button>
                 @if($tournament->games->isEmpty())
                 <button wire:click='generateMatchPlan(0)' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Generiere
-                    Bracket Matchplan</button>
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{ __('manager.generate_bracket_matchplan') }}</button>
                 <button wire:click='generateMatchPlan(1)' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Generiere
-                    Round Robin Matchplan</button>
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{ __('manager.generate_round_robin_matchplan') }}</button>
                 @else
                 <button wire:click='resetMatchPlan()' type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Matchplan
-                    zurücksetzen</button>
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{ __('manager.reset_matchplan') }}</button>
                 <button wire:click='addTeamsToMatchPlan()' type="button"
                     class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">
-                    Teams zufällig zuweisen
+                    {{ __('manager.scramble_teams') }}
                 </button>
                 <button wire:click='removeAllTeamsFromMatchPlan()' type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">Alle
-                    Spiele leeren</button>
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{ __('manager.empty_matchplan') }}</button>
                 @endif
                 @endif
                 @if($tournament->status === 'scheduled')
                 <button type="button" data-modal-target="create-modal" data-modal-toggle="create-modal"
                     class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"><i
-                        class="fa-solid fa-plus"></i> Bearbeiten</button>
+                        class="fa-solid fa-plus"></i> {{ __('manager.edit') }}</button>
                 <button wire:click='startTournament()' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">Turnier
-                    Starten</button>
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{ __('manager.start_tournament') }}</button>
                 @endif
             </div>
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Details</h2>
-            <p><strong>Anmeldeschluss:</strong>
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.details') }}</h2>
+            <p><strong>{{ __('manager.registration_deadline') }}:</strong>
                 @if ($tournament->registration_deadline)
                 {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
                 @else
                 {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
                 @endif
             </p>
-            <p><strong>Start Datum:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>End Datum:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled')
-                Turnier noch nicht vorbei @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif
+            <p><strong>{{ __('manager.start_date') }}:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
+            <p><strong>{{ __('manager.end_date') }}:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled')
+                {{ __('manager.tournament_not_finished') }} @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif
             </p>
-            <p><strong>Maximale Teams:</strong> {{ $tournament->max_teams }}</p>
-            <p><strong>Team Größe:</strong> {{ $tournament->team_size }}</p>
-            <p><strong>Spieltyp:</strong>
+            <p><strong>{{ __('manager.max_teams') }}:</strong> {{ $tournament->max_teams }}</p>
+            <p><strong>{{ __('manager.team_size') }}:</strong> {{ $tournament->team_size }}</p>
+            <p><strong>{{ __('manager.gametype') }}:</strong>
                 @switch($tournament->matchup_rounds)
                 @case(0)
                 <span class="text-blue-500">Best Of 1</span>
@@ -67,7 +61,7 @@
                 @break
                 @endswitch
             </p>
-            <p><strong>Spieltyp (Finale):</strong>
+            <p><strong>{{ __('manager.gametype') }} ({{ __('manager.final') }}):</strong>
                 @switch($tournament->final_rounds)
                 @case(0)
                 <span class="text-blue-500">Best Of 1</span>
@@ -80,27 +74,27 @@
                 @break
                 @endswitch
             </p>
-            <p><strong>Status:</strong>
+            <p><strong>{{ __('manager.status') }}:</strong>
                 @switch($tournament->status)
                 @case('scheduled')
-                <span class="text-yellow-500">Geplant</span>
+                <span class="text-yellow-500">{{ __('manager.status_types.scheduled') }}</span>
                 @break
                 @case('ongoing')
-                <span class="text-green-500">Läuft</span>
+                <span class="text-green-500">{{ __('manager.status_types.ongoing') }}</span>
                 @break
                 @case('completed')
-                <span class="text-gray-500">Abgeschlossen</span>
+                <span class="text-gray-500">{{ __('manager.status_types.completed') }}</span>
                 @break
                 @case('cancelled')
-                <span class="text-red-500">Abgebrochen</span>
+                <span class="text-red-500">{{ __('manager.status_types.cancelled') }}</span>
                 @default
-                <span class="text-red-500">Unbekannt</span>
+                <span class="text-red-500">{{ __('manager.status_types.unknown') }}</span>
                 @endswitch
             </p>
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Karten (Grün hinterlegte Karten sind bereits im Pool)</h2>
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.maps') }}</h2>
             <div class="grid grid-cols-12 gap-4">
                 @foreach($availableMaps as $map)
                     <div wire:click='changeMapState({{ $map->id }})' wire:loading.class="opacity-50 cursor-not-allowed disabled"
@@ -121,9 +115,9 @@
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Teams</h2>
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.teams') }}</h2>
             @if($tournament->teams->isEmpty())
-            <p>Bisher sind keine Teams registriert.</p>
+            <p>{{ __('manager.no_teams_registered') }}</p>
             @else
             <ul class="list-disc">
                 @foreach($tournament->teams as $team)
@@ -137,7 +131,7 @@
         </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">Turnierplan</h2>
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.tournament_plan') }}</h2>
             @if($tournament->type === 0) {{-- Bracket style --}}
             @php
             $numberOfRounds = $tournament->games->max('round') ?? 0;
@@ -149,14 +143,15 @@
                 </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
                     @php
-                    if (isset(config('manager.round_names')[$numberOfRounds][$round])) {
-                        $roundName = config('manager.round_names')[$numberOfRounds][$round];
+                    if (isset(config('manager.round_name_tokens')[$numberOfRounds][$round])) {
+                        $roundNameToken = config('manager.round_name_tokens')[$numberOfRounds][$round];
                     } else {
-                        $roundName = 'Runde ' . ($round + 1);
+                        $roundNameToken = 'round_' . ($round + 1);
                     }
+                    $roundNameToken = "manager.round_names.$roundNameToken";
                     @endphp
                     <h3 class="text-lg font-semibold mb-2">
-                        {{ $roundName }}
+                        {{ __($roundNameToken) }}
                     </h3>
                     <div class="h-full grid content-around">
                         @php
@@ -171,7 +166,7 @@
                             <button type="button" data-dropdown-toggle="gamemenu{{ $game->id }}" data-dropdown-placement="right"
                                 class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
                                 <i class="fa-solid fa-wrench"></i>
-                                <span class="sr-only">Menü</span>
+                                <span class="sr-only">{{ __('manager.menu') }}</span>
                             </button>
                             <div id="gamemenu{{ $game->id }}" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-600">
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="gamemenu{{ $game->id }}">

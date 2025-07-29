@@ -1,19 +1,19 @@
 <div>
     <button type="button" data-modal-target="add-modal" data-modal-toggle="add-modal"
         class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer col-span-2"><i
-            class="fa-solid fa-plus"></i> Hinzufügen</button>
+            class="fa-solid fa-plus"></i> {{ __('manager.add') }}</button>
     @if ($maps->count() == 0)
         <button type="button" wire:click='addDefaultMaps' wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed"
             class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer col-span-2"><i
                 class="fa-solid fa-plus"></i> 
-                Active Mappool hinzufügen
+                {{ __('manager.add') }} {{ __('manager.active_mappool') }}
                 <i class="fa-solid fa-spinner fa-spin" wire:loading.delay.long></i>
             </button>
     @endif
     @if ($maps->count() > 0)
         <button type="button" wire:click='confirmDeleteAll' wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed!" id="deleteAllButton"
             class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer col-span-2"><i
-                class="fa-solid fa-trash"></i> Alle Karten löschen
+                class="fa-solid fa-trash"></i> {{ __('manager.remove_all_maps') }}
             <i class="fa-solid fa-spinner fa-spin" wire:loading.delay.longest></i>
         </button>
     @endif
@@ -22,10 +22,8 @@
             <div class="col-span-12">
                 <div
                     class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 p-5">
-                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Keine Karten
-                        gefunden</h5>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Es wurden keine Karten gefunden. Bitte
-                        füge eine Karte hinzu.</p>
+                    <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ __('manager.no_maps_found') }}</h5>
+                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ __('manager.no_maps_found_text') }}</p>
                 </div>
         @endif
         @foreach ($maps as $map)
@@ -43,7 +41,7 @@
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $map->map_code }}</p>
                     <button type="button" wire:click='confirmDelete({{ $map->id }})'
                         class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer"><i
-                            class="fa-solid fa-trash"></i> Entfernen</button>
+                            class="fa-solid fa-trash"></i> {{ __('manager.remove') }}</button>
 
                 </div>
             </div>
@@ -57,7 +55,7 @@
                 <div
                     class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Karte hinzufügen
+                        {{ __('manager.add_map') }}
                     </h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -75,7 +73,7 @@
 
                         <div class="mb-5">
                             <label for="name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('name') dark:text-red-500! @enderror">Kartenname
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('name') dark:text-red-500! @enderror">{{ __('manager.map_name') }}
                                 @error('name')
                                     ({{ $message }})
                                 @enderror
@@ -86,36 +84,34 @@
                         </div>
                         <div class="mb-5">
                             <label for="map_code"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('map_code') dark:text-red-500! @enderror">Karten-Code
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('map_code') dark:text-red-500! @enderror">{{ __('manager.map_code') }}
                                 @error('map_code')
                                     ({{ $message }})
                                 @enderror
                             </label>
                             <input wire:model.blur='map_code' type="map_code" id="map_code"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="de_dust2" required />
-                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Muss
-                                genauso lauten wie der Dateiname auf dem Server (zb.: de_dust2) und muss auf allen
-                                Servern existieren.</p>
+                                placeholder="{{ __('manager.map_code_placeholder') }}" required />
+                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('manager.map_code_help') }}</p>
                         </div>
                         <div class="mb-5">
                             <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                for="mapThumbnail">Karten Thumbnail</label>
+                                for="mapThumbnail">{{ __('manager.map_thumbnail') }}</label>
                             <input
                                 class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                 id="mapThumbnail" wire:model='mapThumbnail' type="file">
-                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">Wird die Datei freigelassen wird versucht das Bild anhand des Mapcode <a href="https://github.com/ghostcap-gaming/cs2-map-images/tree/main/cs2" target="_blank" class="text-blue-500 hover:underline">hier</a> zu finden.</p>
+                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('manager.map_thumbnail_help') }} <a href="https://github.com/ghostcap-gaming/cs2-map-images/tree/main/cs2" target="_blank" class="text-blue-500 hover:underline">repository</a> </p>
                         </div>
                 </div>
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button type="submit" wire:loading.attr="disabled"
                         class="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Erstellen
+                        {{ __('manager.add') }}
                         <i class="fa-solid fa-spinner fa-spin" wire:loading.delay.longer></i>
                     </button>
                     </form>
                     <button data-modal-hide="add-modal" type="button"
-                        class="cursor-pointer py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Abbrechen</button>
+                        class="cursor-pointer py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">{{ __('manager.cancel') }}</button>
                 </div>
             </div>
         </div>

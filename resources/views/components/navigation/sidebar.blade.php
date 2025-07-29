@@ -13,12 +13,12 @@
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Dashboard</span>
     </a>
       <ul class="space-y-2 font-medium">
-         <x-navigation.sidebar-item href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" icon="fa-solid fa-gauge-high">Dashboard</x-navigation.sidebar-item>
-         <x-navigation.sidebar-item href="{{ route('admin.tournaments.index') }}" :active="request()->routeIs('admin.tournaments.*')" icon="fa-solid fa-trophy">Turniere</x-navigation.sidebar-item>
-         <x-navigation.sidebar-item href="{{ route('admin.maps.index') }}" :active="request()->routeIs('admin.maps.index')" icon="fa-solid fa-map">Karten</x-navigation.sidebar-item>
-         <x-navigation.sidebar-item href="{{ route('admin.server.index') }}" :active="request()->routeIs('admin.server.index')" icon="fa-solid fa-server">Server</x-navigation.sidebar-item>
-         <x-navigation.sidebar-item href="{{ route('landing') }}" :active="request()->routeIs('landing')" icon="fa-solid fa-home">Startseite</x-navigation.sidebar-item>
-         <x-navigation.sidebar-item href="{{ route('logout') }}" :active="request()->routeIs('logout')" icon="fa-solid fa-right-from-bracket">Abmelden</x-navigation.sidebar-item>
+         {{-- <x-navigation.sidebar-item href="{{ route('admin.dashboard') }}" :active="request()->routeIs('admin.dashboard')" icon="fa-solid fa-gauge-high">{{ __('manager.dashboard') }}</x-navigation.sidebar-item> --}}
+         <x-navigation.sidebar-item href="{{ route('admin.tournaments.index') }}" :active="request()->routeIs('admin.tournaments.*')" icon="fa-solid fa-trophy">{{ __('manager.tournaments') }}</x-navigation.sidebar-item>
+         <x-navigation.sidebar-item href="{{ route('admin.maps.index') }}" :active="request()->routeIs('admin.maps.index')" icon="fa-solid fa-map">{{ __('manager.maps') }}</x-navigation.sidebar-item>
+         <x-navigation.sidebar-item href="{{ route('admin.server.index') }}" :active="request()->routeIs('admin.server.index')" icon="fa-solid fa-server">{{ __('manager.server') }}</x-navigation.sidebar-item>
+         <x-navigation.sidebar-item href="{{ route('landing') }}" :active="request()->routeIs('landing')" icon="fa-solid fa-home">{{ __('manager.home') }}</x-navigation.sidebar-item>
+         <x-navigation.sidebar-item href="{{ route('logout') }}" :active="request()->routeIs('logout')" icon="fa-solid fa-right-from-bracket">{{ __('auth.logout') }}</x-navigation.sidebar-item>
       </ul>
    </div>
 </aside>

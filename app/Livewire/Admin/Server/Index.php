@@ -38,7 +38,7 @@ class Index extends Component
         ]);
 
         $this->reset(['ip', 'port', 'rcon_password']);
-        LivewireAlert::title('Server hinzugefügt')
+        LivewireAlert::title(__('manager.server_added'))
             ->success()
             ->toast()
             ->position('top-end')
@@ -51,7 +51,7 @@ class Index extends Component
         $server = Server::find($id);
 
         if (!$server) {
-            LivewireAlert::title('Server nicht gefunden')
+            LivewireAlert::title(__('manager.server_not_found'))
                 ->error()
                 ->toast()
                 ->position('top-end')
@@ -63,7 +63,7 @@ class Index extends Component
 
         $server->free();
 
-        LivewireAlert::title('Server freigegeben')
+        LivewireAlert::title(__('manager.server_reset'))
             ->success()
             ->toast()
             ->position('top-end')
@@ -75,13 +75,13 @@ class Index extends Component
         $server = Server::find($id);
         if ($server) {
             $server->delete();
-            LivewireAlert::title('Server gelöscht')
+            LivewireAlert::title(__('manager.server_deleted'))
                 ->success()
                 ->toast()
                 ->position('top-end')
                 ->show();
         } else {
-            LivewireAlert::title('Server nicht gefunden')
+            LivewireAlert::title(__('manager.server_not_found'))
                 ->error()
                 ->toast()
                 ->position('top-end')
