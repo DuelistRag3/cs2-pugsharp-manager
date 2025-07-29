@@ -65,7 +65,14 @@ For a detailed guide on how to configure your webserver to support laravel appli
 
 ## Screenshots
 
+<h3>Tournament List</h3>
+<img src="https://raw.githubusercontent.com/DuelistRag3/cs2-pugsharp-manager/refs/heads/main/screenshots/tournament_list.png?token=GHSAT0AAAAAADIERF2XERGPADTL6B4VEGMQ2EIZGTQ">
 
+<h3>Tournament View</h3>
+<img src="https://raw.githubusercontent.com/DuelistRag3/cs2-pugsharp-manager/refs/heads/main/screenshots/tournament_view.png?token=GHSAT0AAAAAADIERF2WSCQMXWWPWJINLHJO2EIZHLQ">
+
+<h3>Bracket View</h3>
+<img src="https://raw.githubusercontent.com/DuelistRag3/cs2-pugsharp-manager/refs/heads/main/screenshots/bracket_view.png?token=GHSAT0AAAAAADIERF2WX2H7H5UJAOS7GLRQ2EIZH6Q">
 
 ## Contributing
 
