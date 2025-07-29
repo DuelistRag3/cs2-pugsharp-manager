@@ -162,14 +162,13 @@ class Tournament extends Model
 
     public function addTeamsToMatchPlan()
     {
-        // Empty teams from previous match plan
         $this->removeAllTeamsFromMatchPlan();
         $teams = $this->teams()->get();
-        $teams = $teams->shuffle(); // Shuffle teams to randomize matchups
+        $teams = $teams->shuffle();
 
-        if ($this->type === 0) { // Bracket style
+        if ($this->type === 0) {
             $this->addTeamsToBracket($teams);
-        } else { // Round Robin or other styles
+        } else {
             $this->addTeamsToRoundRobin($teams);
         }
     }
@@ -181,21 +180,17 @@ class Tournament extends Model
         $nextPowerOfTwo = (int) pow(2, $totalRounds);
         $byes = $nextPowerOfTwo - $numTeams;
 
-        // Convert collection to array for easier indexing
         $teamsArray = $teams->values()->all();
 
-        // First, assign teams to first round matches
         $firstRoundGames = $this->games()->where('round', 1)->orderBy('match_number')->get();
         $teamIndex = 0;
 
         foreach ($firstRoundGames as $match) {
-            // Assign team1
             if ($teamIndex < count($teamsArray) - $byes) {
                 $match->team1_id = $teamsArray[$teamIndex]->id;
                 $teamIndex++;
             }
 
-            // Assign team2
             if ($teamIndex < count($teamsArray) - $byes) {
                 $match->team2_id = $teamsArray[$teamIndex]->id;
                 $teamIndex++;
@@ -204,25 +199,21 @@ class Tournament extends Model
             $match->save();
         }
 
-        // Now assign bye teams to round 2 matches
         if ($byes > 0) {
-            $byeTeams = array_slice($teamsArray, -$byes); // Get the last 'byes' number of teams
+            $byeTeams = array_slice($teamsArray, -$byes);
             $round2Games = $this->games()->where('round', 2)->orderBy('match_number')->get();
 
             $byeIndex = 0;
             foreach ($round2Games as $match) {
-                // Check if this match already has teams from round 1 winners
                 $round1MatchesFeeding = $this->games()
                     ->where('round', 1)
                     ->where('next_game_id', $match->id)
                     ->count();
 
-                // If less than 2 round 1 matches feed into this round 2 match, it needs bye teams
                 $neededByes = 2 - $round1MatchesFeeding;
 
                 if ($neededByes > 0 && $byeIndex < count($byeTeams)) {
                     if ($neededByes >= 2) {
-                        // Both positions need bye teams
                         if (isset($byeTeams[$byeIndex])) {
                             $match->team1_id = $byeTeams[$byeIndex]->id;
                             $byeIndex++;
@@ -232,7 +223,6 @@ class Tournament extends Model
                             $byeIndex++;
                         }
                     } else {
-                        // One position needs a bye team (the other will come from round 1 winner)
                         if (isset($byeTeams[$byeIndex])) {
                             if (!$match->team1_id) {
                                 $match->team1_id = $byeTeams[$byeIndex]->id;
@@ -252,7 +242,6 @@ class Tournament extends Model
     {
         $numRounds = $this->games()->max('round') ?? 1;
 
-        // For round robin, assign teams to all rounds
         for ($round = 1; $round <= $numRounds; $round++) {
             $matchesInRound = $this->games()->where('round', $round)->get();
             foreach ($matchesInRound as $match) {
@@ -277,11 +266,10 @@ class Tournament extends Model
 
     public function removeAllTeamsFromMatchPlan()
     {
-        // Reset all games in the tournament
         $this->games()->each(function ($game) {
             $game->team1_id = null;
             $game->team2_id = null;
-            $game->status = 'scheduled'; // Reset the status to scheduled
+            $game->status = 'scheduled';
             $game->save();
         });
     }
@@ -290,7 +278,6 @@ class Tournament extends Model
     {
         $maxRound = $this->games()->max('round');
 
-        // Process each round (except the final round)
         for ($round = 1; $round < $maxRound; $round++) {
             $currentRoundMatches = $this->games()
                 ->where('round', $round)
@@ -302,11 +289,9 @@ class Tournament extends Model
                 ->orderBy('match_number')
                 ->get();
 
-            // For bracket tournaments, we need to handle byes properly
-            if ($this->type === 0) { // Bracket style
+            if ($this->type === 0) {
                 $this->assignBracketNextGameIds($currentRoundMatches, $nextRoundMatches, $round);
             } else {
-                // For other tournament types, simple assignment
                 foreach ($currentRoundMatches as $index => $match) {
                     $nextMatchIndex = (int) floor($index / 2);
 
@@ -327,14 +312,10 @@ class Tournament extends Model
         $byes = $nextPowerOfTwo - $numTeams;
 
         if ($round === 1 && $byes > 0) {
-            // First round with byes - special handling
             $firstRoundMatches = (int) (($numTeams - $byes) / 2);
-            $teamsAdvancingFromRound1 = $firstRoundMatches; // Winners from round 1
-            $totalTeamsInRound2 = $teamsAdvancingFromRound1 + $byes;
+            $teamsAdvancingFromRound1 = $firstRoundMatches;
 
-            // Assign first round matches to round 2 matches
             foreach ($currentRoundMatches as $index => $match) {
-                // Calculate which round 2 match this round 1 match feeds into
                 $nextMatchIndex = (int) floor($index / 2);
 
                 if (isset($nextRoundMatches[$nextMatchIndex])) {
@@ -343,7 +324,6 @@ class Tournament extends Model
                 }
             }
         } else {
-            // Standard bracket progression for rounds without byes
             foreach ($currentRoundMatches as $index => $match) {
                 $nextMatchIndex = (int) floor($index / 2);
 

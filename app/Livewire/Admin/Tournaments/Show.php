@@ -9,7 +9,6 @@ use Livewire\Component;
 use App\Models\Tournament;
 use Livewire\Attributes\Layout;
 
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Show extends Component
@@ -63,7 +62,6 @@ class Show extends Component
             }
         }
 
-        // Warn if torunament is not full
         if (!$full) {
             LivewireAlert::title('Turnier ist nicht voll')
                 ->text('Das Turnier hat nicht die maximale Anzahl an Teams. Möchtest du trotzdem starten?')
@@ -225,8 +223,6 @@ class Show extends Component
 
         $freeServer = Server::whereDoesntHave('game')->first();
 
-        // dd($freeServer);
-
         if (!isset($freeServer)) {
             LivewireAlert::title('Kein freier Server gefunden')
                 ->error()
@@ -279,10 +275,8 @@ class Show extends Component
         }
 
         if (array_search($map->map_code, $this->selectedMaps) !== false) {
-            // Karte entfernen
             $this->selectedMaps = array_diff($this->selectedMaps, [$map->map_code]);
         } else {
-            // Karte hinzufügen
             $this->selectedMaps[] = $map->map_code;
         }
 

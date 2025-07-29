@@ -16,7 +16,7 @@ class Game extends Model
         'tournament_id',
         'score_team1',
         'score_team2',
-        'status', // e.g., scheduled, completed, etc.
+        'status',
     ]; 
 
     public function tournament() : BelongsTo

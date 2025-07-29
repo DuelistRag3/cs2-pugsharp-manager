@@ -30,8 +30,6 @@ class Show extends Component
 
     public function registerTeam()
     {
-
-        // Get Players Data
         $ids = '';
 
         for ($i = 1; $i <= $this->tournament->team_size; $i++) {
@@ -39,11 +37,10 @@ class Show extends Component
             if (!empty($this->$playerId)) {
                 $ids .= $this->$playerId . ',';
                 if ($i == $this->tournament->team_size) {
-                    $ids = rtrim($ids, ','); // Remove trailing comma
+                    $ids = rtrim($ids, ',');
                 }
             }
         }
-        // dd($ids);
 
         $response = Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", [
             'key' => config('manager.steam_api_key'),

@@ -61,9 +61,7 @@ class MatchAPIController extends Controller
         foreach($game->tournament->maps as $map) {
             $maplist[] = $map;
         }
-
-        // dd($maplist);
-
+        
         $json = [
             'maplist' => $maplist,
             'team1' => [
@@ -148,8 +146,6 @@ class MatchAPIController extends Controller
     {
         $mapcount = +1;
 
-        // Storage::disk('local')->put("match_{$id}_map_{$mapcount}_updatetround.json", json_encode($request->all()));
-
         $map = GameMap::where('game_id', $id)->where('map_number', $mapcount)->first();
 
         if (!$map) {
@@ -176,14 +172,11 @@ class MatchAPIController extends Controller
     public function updatePlayer($id, $mapcount, $steamId, Request $request)
     {
         $mapcount = +1;
-        // $player = Player::where('steam_id', $steamId)->first();
 
         $game = Game::find($id);
         if (!$game) {
             return response()->json("Match not found", 404);
         }
-
-        // $map = GameMap::where('game_id', $id)->where('map_number', $mapcount)->first();
         $map = $game->maps()->where('map_number', $mapcount)->first();
         if (!$map) {
             return response()->json("Match - Map combination not found", 404);
@@ -242,8 +235,6 @@ class MatchAPIController extends Controller
      */
     public function finalizeMap($mapcount, Request $request)
     {
-        // Storage::disk('local')->put("match_{$request->id}_map_{$mapcount}_finished.json", json_encode($request->all()));
-
         $map = GameMap::where('game_id', $request->id)->where('map_number', $mapcount)->first();
         if (!$map) {
             return response()->json("Match - Map combination not found", 404);
@@ -292,9 +283,6 @@ class MatchAPIController extends Controller
      */
     public function finalizeMatchup($id, Request $request)
     {
-
-        // Storage::disk('local')->put("match_{$id}_finalized.json", json_encode($request->all()));
-
         $game = Game::find($id);
         if (!$game) {
             return response()->json("Match not found", 404);

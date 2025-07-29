@@ -145,7 +145,7 @@
             @endphp
             <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}" wire:poll>
                 <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;" wire:ignore>
-                    <!-- Lines will be drawn here by JavaScript -->
+                    
                 </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
                     @php
@@ -351,6 +351,7 @@
 </div>
 
 <script>
+@if($tournament->type === 0)
 function drawBracketLines() {
     const container = document.getElementById('bracket-container');
     const svg = document.getElementById('bracket-lines');
@@ -405,12 +406,8 @@ function drawLineBetweenGames(sourceGame, targetGame, svg, container) {
 
 // Initialize on DOM load and setup all event listeners
 document.addEventListener('DOMContentLoaded', function() {
-    @if($tournament->type === 0) {{-- Only for bracket style tournaments --}}
-    // Initial draw
+    // Initial draw with 100 miliseconds delay, to ensure correct rendering
     setTimeout(drawBracketLines, 100);
-    
-    // Setup team highlighting
-    setTimeout(setupTeamHighlighting, 100);
     
     // MutationObserver to watch for DOM changes
     const targetNode = document.getElementById('bracket-container');
@@ -433,10 +430,9 @@ document.addEventListener('DOMContentLoaded', function() {
             subtree: true
         });
     }
-    @endif
 });
 
-@if($tournament->type === 0)
+
 // Livewire 3.x events
 document.addEventListener('livewire:updated', function() {
     setTimeout(drawBracketLines, 150);
@@ -447,13 +443,12 @@ document.addEventListener('livewire:navigated', function() {
     setTimeout(drawBracketLines, 150);
     setTimeout(setupTeamHighlighting, 200);
 });
-@endif
 
 // Redraw lines when window is resized
 window.addEventListener('resize', function() {
-    @if($tournament->type === 0)
     setTimeout(drawBracketLines, 50);
-    @endif
+    
 });
+@endif
 
 </script>

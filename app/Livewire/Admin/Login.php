@@ -13,9 +13,7 @@ class Login extends Component
     public bool $remember = false;
 
     public function mount()
-    {
-        // Initialize any properties or perform actions when the component is mounted
-    }
+    {}
 
     public function login()
     {

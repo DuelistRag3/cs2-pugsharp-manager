@@ -91,31 +91,23 @@
             <h2 class="text-xl font-semibold mb-2">Turnierplan</h2>
             @if($tournament->type === 0) {{-- Bracket style --}}
             @php
-            $numberOfRounds = ceil(log($tournament->teams->count(), 2));
+            $numberOfRounds = $tournament->games->max('round') ?? 0;
             $offset = 0;
             @endphp
             <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}" wire:poll>
                 <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;" wire:ignore>
-                    <!-- Lines will be drawn here by JavaScript -->
+                    
                 </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
+                    @php
+                    if (isset(config('manager.round_names')[$numberOfRounds][$round])) {
+                        $roundName = config('manager.round_names')[$numberOfRounds][$round];
+                    } else {
+                        $roundName = 'Runde ' . ($round + 1);
+                    }
+                    @endphp
                     <h3 class="text-lg font-semibold mb-2">
-                        @switch($round)
-                        @case(0)
-                        Achtelfinale
-                        @break
-                        @case(1)
-                        Viertelfinale
-                        @break
-                        @case(2)
-                        Halbfinale
-                        @break
-                        @case(3)
-                        Finale
-                        @break
-                        @default
-                        Runde {{ $round + 1 }}
-                        @endswitch
+                        {{ $roundName }}
                     </h3>
                     <div class="h-full grid content-around">
                         @php
@@ -124,14 +116,14 @@
                         @endphp
 
                         @foreach($roundGames as $game)
-                        {{-- {{ $game->id }} -> {{ $game->next_game_id }}<br> --}}
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
                             class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'completed') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
                             style="">
                             @if($game->team1)
                             <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
                                 data-modal-toggle="team{{ $game->team1->id }}-modal"
-                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                data-team-id="{{ $game->team1->id }}"
+                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
                                 {{ $game->team1->name }}
                                 <span class="float-end @if($game->winner_team_id == $game->team1->id) font-bold text-green-500 @endif">
                                     @if($game->tournament->maps_each_game == 0)
@@ -154,7 +146,8 @@
                             @if($game->team2)
                             <a data-modal-target="team{{ $game->team2->id }}-modal"
                                 data-modal-toggle="team{{ $game->team2->id }}-modal"
-                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                                data-team-id="{{ $game->team2->id }}"
+                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
                                 {{ $game->team2->name }}
                                 <span class="float-end @if($game->winner_team_id == $game->team2->id) font-bold text-green-500 @endif">
                                     @if($game->tournament->maps_each_game == 0)
@@ -180,7 +173,7 @@
                     </div>
             </div>
             @endfor
-            @elseif ($tournament->type === 1) {{-- Round Robin style --}}
+            @elseif ($tournament->type === 1)
             <div class="grid grid-cols-1 gap-4">
                 @foreach($tournament->games as $game)
                 <div
@@ -407,7 +400,7 @@
 </script>
 
 <script>
-// Function to draw bracket lines
+@if($tournament->type === 0)
 function drawBracketLines() {
     const container = document.getElementById('bracket-container');
     const svg = document.getElementById('bracket-lines');
@@ -462,8 +455,7 @@ function drawLineBetweenGames(sourceGame, targetGame, svg, container) {
 
 // Initialize on DOM load and setup all event listeners
 document.addEventListener('DOMContentLoaded', function() {
-    @if($tournament->type === 0) {{-- Only for bracket style tournaments --}}
-    // Initial draw
+    // Initial draw with 100 miliseconds delay, to ensure correct rendering
     setTimeout(drawBracketLines, 100);
     
     // MutationObserver to watch for DOM changes
@@ -478,6 +470,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             if (shouldRedraw) {
                 setTimeout(drawBracketLines, 100);
+                setTimeout(setupTeamHighlighting, 150); // Re-setup highlighting after DOM changes
             }
         });
         
@@ -486,24 +479,25 @@ document.addEventListener('DOMContentLoaded', function() {
             subtree: true
         });
     }
-    @endif
 });
 
-@if($tournament->type === 0)
+
 // Livewire 3.x events
 document.addEventListener('livewire:updated', function() {
     setTimeout(drawBracketLines, 150);
+    setTimeout(setupTeamHighlighting, 200); // Re-setup highlighting after Livewire updates
 });
 
 document.addEventListener('livewire:navigated', function() {
     setTimeout(drawBracketLines, 150);
+    setTimeout(setupTeamHighlighting, 200);
 });
-@endif
 
 // Redraw lines when window is resized
 window.addEventListener('resize', function() {
-    @if($tournament->type === 0)
     setTimeout(drawBracketLines, 50);
-    @endif
+    
 });
+@endif
+
 </script>

@@ -32,8 +32,6 @@ class Index extends Component
 
     public function add()
     {
-
-        // dd($this->mapThumbnail);
         if ($this->mapThumbnail != null) {
             $originalName = $this->mapThumbnail->getClientOriginalName();
 
