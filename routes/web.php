@@ -29,7 +29,7 @@ Route::get('/tournaments', TournamentIndex::class)
 Route::get('/tournaments/{tournament}', TournamentShow::class)
     ->name('tournaments.show');
 
-Route::name('admin.')->prefix('admin')->middleware([])->group(function () {
+Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () {
     Route::redirect('/', '/admin/dashboard', 301);
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
 
