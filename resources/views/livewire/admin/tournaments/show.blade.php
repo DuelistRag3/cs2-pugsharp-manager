@@ -219,7 +219,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <x-tournament-game-card :game="$game" />
+                            <x-tournament-game-card :game=$game />
                         </div>
                         @endforeach
                     </div>
