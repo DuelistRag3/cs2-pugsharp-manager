@@ -176,4 +176,14 @@ return [
     'overtime' => 'Overtime',
 
     'show' => 'Anzeigen',
+
+    'register_team' => 'Team anmelden',
+    'team_name' => 'Team Name',
+    'team_tag' => 'Team Tag',
+    'steam_ids' => 'Steam IDs',
+    'steam_ids_help' => 'Bitte geben Sie die Steam64 IDs Ihrer Teammitglieder ein. Diese sind erforderlich, um die Spieler zu identifizieren.',
+    'steam_id_player' => 'Steam ID Spieler :number',
+    'steam_id_required' => 'Jede Steam ID ist erforderlich.',
+    'steam_id_distinct' => 'Jede Steam ID muss eindeutig sein.',
+    'steam_id_regex' => 'Eine Steam ID muss 17 Ziffern enthalten.',
 ];

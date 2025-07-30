@@ -7,19 +7,27 @@ use App\Models\Player;
 use Livewire\Component;
 use App\Models\Tournament;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\Http;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Show extends Component
 {
 
+    #[Validate(['required', 'string', 'max:255'])]
     public string $teamname;
+    #[Validate(['required', 'string', 'max:10'])]
     public string $teamtag;
-    public string $player1Id = '';
-    public string $player2Id = '';
-    public string $player3Id = '';
-    public string $player4Id = '';
-    public string $player5Id = '';
+    #[Validate([
+        'steam_ids' => 'required|array|min:1',
+        'steam_ids.*' => [
+            'required',
+            'string',
+            'distinct',
+            'regex:/^[0-9]{17}$/'
+        ],
+    ])]
+    public $steam_ids = [];
 
     public Tournament $tournament;
 
@@ -28,23 +36,23 @@ class Show extends Component
         $this->tournament = $tournament;
     }
 
+    public function messages()
+    {
+        return [
+            'steam_ids.*.required' => __('tournament_messages.steam_id_required'),
+            'steam_ids.*.distinct' => __('tournament_messages.steam_id_distinct'),
+            'steam_ids.*.regex' => __('tournament_messages.steam_id_regex'),
+        ];
+    }
+
     public function registerTeam()
     {
-        $ids = '';
-
-        for ($i = 1; $i <= $this->tournament->team_size; $i++) {
-            $playerId = "player{$i}Id";
-            if (!empty($this->$playerId)) {
-                $ids .= $this->$playerId . ',';
-                if ($i == $this->tournament->team_size) {
-                    $ids = rtrim($ids, ',');
-                }
-            }
-        }
+        // $this->validate();
+        dd($this->steam_ids);
 
         $response = Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", [
             'key' => config('manager.steam_api_key'),
-            'steamids' => $ids,
+            'steamids' => $this->steam_ids,
         ]);
 
         if ($response->successful()) {

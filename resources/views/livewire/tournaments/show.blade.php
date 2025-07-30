@@ -6,7 +6,7 @@
                 now()->lessThan(new DateTime($tournament->registration_deadline ? $tournament->registration_deadline :
                 $tournament->start_date)))
                 <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
-                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">{{ __('manager.register') }}</button>
+                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">{{ __('manager.register_team') }}</button>
                 @endif
         </div>
 
@@ -239,7 +239,7 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                         </svg>
-                        <span class="sr-only">Schließen</span>
+                        <span class="sr-only">{{ __('manager.close') }}</span>
                     </button>
                 </div>
                 {{--
@@ -281,7 +281,7 @@
 
     @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams)
         <!-- Register modal -->
-        <div id="register-modal" tabindex="-1" aria-hidden="true"
+        <div id="register-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
             <div class="relative p-4 w-full max-w-md max-h-full">
                 <!-- Modal content -->
@@ -290,7 +290,7 @@
                     <div
                         class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200">
                         <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                            Melde dich für das Turnier an
+                            {{ __('manager.register_team') }}
                         </h3>
                         <button type="button"
                             class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -300,7 +300,7 @@
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                     stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                             </svg>
-                            <span class="sr-only">Schließen</span>
+                            <span class="sr-only">{{ __('manager.close') }}</span>
                         </button>
                     </div>
                     <!-- Modal body -->
@@ -308,72 +308,25 @@
                         <form wire:submit='registerTeam' class="space-y-4" action="#">
                             <div>
                                 <label for="teamname"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teamname</label>
-                                <input wire:model='teamname' type="text" name="teamname" id="teamname"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamname') dark:text-red-500! @enderror">{{ __('manager.team_name') }} @error('teamname') ({{ $message }}) @enderror</label>
+                                <input wire:model.blur='teamname' type="text" name="teamname" id="teamname"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="Teamname" required />
+                                    placeholder="{{ __('manager.team_name') }}" required />
                             </div>
                             <div>
                                 <label for="teamtag"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Teamtag</label>
-                                <input wire:model='teamtag' type="text" name="teamtag" id="teamtag"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamtag') dark:text-red-500! @enderror">{{ __('manager.team_tag') }} @error('teamtag') ({{ $message }}) @enderror</label>
+                                <input wire:model.blur='teamtag' type="text" name="teamtag" id="teamtag"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="TeamTag" required />
+                                    placeholder="{{ __('manager.team_tag') }}" required />
                             </div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Bitte gib die Steam64 IDs der
-                                Teammitglieder ein. Diese werden benötigt, um die Spieler zu identifizieren.</p>
-                            {{-- <div>
-                                <label for="player1"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
-                                    von Spieler 1</label>
-                                <input type="text" name="player1" id="player1" wire:model='player1Id'
-                                    placeholder="Steam ID von Spieler 1"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    required />
-                            </div>
-                            <div>
-                                <label for="player2"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
-                                    von Spieler 2</label>
-                                <input type="text" name="player2" id="player2" wire:model='player2Id'
-                                    placeholder="Steam ID von Spieler 1"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    required />
-                            </div>
-                            <div>
-                                <label for="player3"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
-                                    von Spieler 3</label>
-                                <input type="text" name="player3" id="player3" wire:model='player3Id'
-                                    placeholder="Steam ID von Spieler 1"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    required />
-                            </div>
-                            <div>
-                                <label for="player4"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
-                                    von Spieler 4</label>
-                                <input type="text" name="player4" id="player4" wire:model='player4Id'
-                                    placeholder="Steam ID von Spieler 1"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    required />
-                            </div>
-                            <div>
-                                <label for="player5"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam ID
-                                    von Spieler 5</label>
-                                <input type="text" name="player5" id="player5" wire:model='player5Id'
-                                    placeholder="Steam ID von Spieler 1"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    required />
-                            </div> --}}
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ __('manager.steam_ids_help') }}</p>
                             @for ($i = 1; $i <= $tournament->team_size; $i++)
                                 <div>
-                                    <label for="player{{ $i }}"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Steam
-                                        ID von Spieler {{ $i }}</label>
-                                    <input type="text" name="player{{ $i }}" id="player{{ $i }}"
-                                        wire:model='player{{ $i }}Id' placeholder="Steam ID von Spieler {{ $i }}"
+                                    <label for="steam_ids.{{ $i }}"
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('steam_ids.{{ $i }}') dark:text-red-500! @enderror">{{ __('manager.steam_id_player', ['number' => $i]) }} @error('steam_ids.{{ $i }}') ({{ $message }}) @enderror</label>
+                                    <input type="text" name="steam_ids.{{ $i }}" id="steam_ids.{{ $i }}"
+                                        wire:model.blur='steam_ids.{{ $i }}' placeholder="{{ __('manager.steam_id_player', ['number' => $i]) }}"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                         required />
                                 </div>
