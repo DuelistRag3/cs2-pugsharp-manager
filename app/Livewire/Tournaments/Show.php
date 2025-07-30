@@ -47,13 +47,18 @@ class Show extends Component
 
     public function registerTeam()
     {
-        // $this->validate();
-        dd($this->steam_ids);
+
+        $this->validate();
 
         $response = Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", [
             'key' => config('manager.steam_api_key'),
-            'steamids' => $this->steam_ids,
+            'steamids' => implode(',', $this->steam_ids),
         ]);
+
+        if ($response->failed()) {
+            LivewireAlert::error()->toast()->position('top-end')->title($response->status() . ' - ' . $response->json('message'))->show();
+            return;
+        }
 
         if ($response->successful()) {
             $data = $response->json();

@@ -321,12 +321,12 @@
                                     placeholder="{{ __('manager.team_tag') }}" required />
                             </div>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ __('manager.steam_ids_help') }}</p>
-                            @for ($i = 1; $i <= $tournament->team_size; $i++)
+                            @for ($i = 0; $i < $tournament->team_size; $i++)
                                 <div>
                                     <label for="steam_ids.{{ $i }}"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('steam_ids.{{ $i }}') dark:text-red-500! @enderror">{{ __('manager.steam_id_player', ['number' => $i]) }} @error('steam_ids.{{ $i }}') ({{ $message }}) @enderror</label>
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('steam_ids.{{ $i }}') dark:text-red-500! @enderror">{{ __('manager.steam_id_player', ['number' => $i+1]) }} @error('steam_ids.{{ $i }}') ({{ $message }}) @enderror</label>
                                     <input type="text" name="steam_ids.{{ $i }}" id="steam_ids.{{ $i }}"
-                                        wire:model.blur='steam_ids.{{ $i }}' placeholder="{{ __('manager.steam_id_player', ['number' => $i]) }}"
+                                        wire:model.live='steam_ids.{{ $i }}' placeholder="{{ __('manager.steam_id_player', ['number' => $i+1]) }}"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                         required />
                                 </div>
