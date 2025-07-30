@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('steam_avatar');
             $table->string('steam_url');
             $table->timestamps();
-
-            // $table->unique(['steam_id', 'team_id']); // Ensure unique player per team
         });
     }
 

@@ -28,6 +28,8 @@ return new class extends Migration
                 ->constrained('teams')
                 ->onDelete('set null')
                 ->after('id');
+
+            $table->unique(['steam_id', 'team_id']); // Ensure unique player per team
         });
 
         Schema::table('games', function (Blueprint $table) {
