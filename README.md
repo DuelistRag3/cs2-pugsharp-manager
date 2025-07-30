@@ -40,6 +40,7 @@ The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize an
 - On site map voting.
 - Match and map overview for ongoing, upcoming and concluded matches and maps.
 - Player stat overview for each map and overall.
+- Docker container
 - and more.
 
 ## Known bugs:
