@@ -128,14 +128,7 @@
                             class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'completed') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
                             style="">
 
-                            <a data-modal-target="game{{ $game->id }}-modal" data-modal-toggle="game{{ $game->id }}-modal" data-team-id="{{ $game->team1 ? $game->team1->id : 'null' }}"
-                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                                {{ $game->team1 ? $game->team1->name : 'TBD' }}
-                            </a>
-                            <a data-modal-target="game{{ $game->id }}-modal" data-modal-toggle="game{{ $game->id }}-modal" data-team-id="{{ $game->team2 ? $game->team2->id : 'null' }}"
-                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                                {{ $game->team2 ? $game->team2->name : 'TBD' }}
-                            </a>
+                            <x-tournament-game-card :game=$game />
 
                         </div>
                         @endforeach
