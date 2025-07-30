@@ -12,7 +12,7 @@
     <link rel="icon" type="image/x-icon" href="{{ Vite::asset('resources/images/cs2logo.ico') }}">
     @livewireStyles
 </head>
-<body class="dark:bg-gray-900">
+<body class="dark:bg-gray-900 text-black dark:text-white">
     <x-navigation.navbar />
 
     <div class="container mx-auto px-4 py-8 min-h-screen">

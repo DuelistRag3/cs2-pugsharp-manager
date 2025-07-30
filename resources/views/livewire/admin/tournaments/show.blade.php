@@ -12,8 +12,8 @@
                 <button wire:click='generateMatchPlan(0)' type="button"
                     class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{
                     __('manager.generate_bracket_matchplan') }}</button>
-                <button wire:click='generateMatchPlan(1)' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{
+                <button type="button" disabled
+                    class="focus:outline-none disabled:opacity-75 disabled:cursor-not-allowed! text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{
                     __('manager.generate_round_robin_matchplan') }}</button>
                 @else
                 <button wire:click='resetMatchPlan()' type="button"
@@ -219,55 +219,14 @@
                                     </li>
                                 </ul>
                             </div>
-                            @if($game->team1)
-                            <a aria-current="true" data-modal-target="game{{ $game->id }}-modal"
-                                data-modal-toggle="game{{ $game->id }}-modal" data-team-id="{{ $game->team1->id }}"
-                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
-                                {{ $game->team1->name }}
-                                <span
-                                    class="float-end @if($game->winner_team_id == $game->team1->id) font-bold text-green-500 @endif">
-                                    @if($game->tournament->maps_each_game == 0)
-                                    @if($game->maps->isNotEmpty())
-                                    {{ $game->maps->first()->team1_score }}
-                                    @else
-                                    0
-                                    @endif
-                                    @else
-                                    {{ $game->team1_maps_won }}
-                                    @endif
-                                </span>
-                            </a>
-                            @else
-                            <a aria-current="true"
+                            <a data-modal-target="game{{ $game->id }}-modal" data-modal-toggle="game{{ $game->id }}-modal" data-team-id="{{ $game->team1 ? $game->team1->id : 'null' }}"
                                 class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                                TBD
+                                {{ $game->team1 ? $game->team1->name : 'TBD' }}
                             </a>
-                            @endif
-                            @if($game->team2)
-                            <a data-modal-target="game{{ $game->id }}-modal"
-                                data-modal-toggle="game{{ $game->id }}-modal" data-team-id="{{ $game->team2->id }}"
-                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
-                                {{ $game->team2->name }}
-                                <span
-                                    class="float-end @if($game->winner_team_id == $game->team2->id) font-bold text-green-500 @endif">
-                                    @if($game->tournament->maps_each_game == 0)
-                                    @if($game->maps->isNotEmpty())
-                                    {{ $game->maps->first()->team2_score }}
-                                    @else
-                                    0
-                                    @endif
-                                    @else
-                                    {{ $game->team2_maps_won }}
-                                    @endif
-                                </span>
-                            </a>
-                            @else
-                            <a
+                            <a data-modal-target="game{{ $game->id }}-modal" data-modal-toggle="game{{ $game->id }}-modal" data-team-id="{{ $game->team2 ? $game->team2->id : 'null' }}"
                                 class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                                TBD
+                                {{ $game->team2 ? $game->team2->name : 'TBD' }}
                             </a>
-                            @endif
-
                         </div>
                         @endforeach
                     </div>
@@ -386,9 +345,7 @@
                                 <p>Lineups</p>
                             </div>
                             <div>
-                                <div>
-                                    <p>{{ $game->team1 ? $game->team1->name : 'TBD' }}</p>
-                                </div>
+                                @if($game->team1)
                                 @foreach($game->team1->players as $player)
                                 <div class="flex items-center mt-2">
                                     <div class="shrink-0 mr-2">
@@ -402,11 +359,14 @@
                                     </div>
                                 </div>
                                 @endforeach
+                                @else
+                                @for ($i = 0; $i < $tournament->team_size; $i++)
+                                <p>TBD</p>
+                                @endfor
+                                @endif
                             </div>
                             <div class="text-right">
-                                <div>
-                                    <p>{{ $game->team2 ? $game->team2->name : 'TBD' }}</p>
-                                </div>
+                                @if($game->team2)
                                 @foreach($game->team2->players as $player)
                                 <div class="flex items-center mt-2">
                                     <div class="flex-1 min-w-0">
@@ -420,6 +380,11 @@
                                     </div>
                                 </div>
                                 @endforeach
+                                @else
+                                @for ($i = 0; $i < $tournament->team_size; $i++)
+                                <p>TBD</p>
+                                @endfor
+                                @endif
                             </div>
                             <div class="col-span-2">
                                 <a href="#" target="_blank" class="block text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full">View Match</a>
