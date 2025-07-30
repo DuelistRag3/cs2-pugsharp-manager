@@ -6,7 +6,7 @@
         <button type="button" wire:click='addDefaultMaps' wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed"
             class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer col-span-2"><i
                 class="fa-solid fa-plus"></i> 
-                {{ __('manager.add') }} {{ __('manager.active_mappool') }}
+                {{ __('manager.add_active_mappool') }}
                 <i class="fa-solid fa-spinner fa-spin" wire:loading.delay.long></i>
             </button>
     @endif

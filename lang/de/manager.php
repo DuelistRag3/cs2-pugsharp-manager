@@ -23,8 +23,13 @@ return [
     'home' => 'Startseite',
     'teams' => 'Teams',
     'menu' => 'Menü',
+    'name' => 'Name',
+    'view' => 'Ansehen',
 
+    'create_tournament' => 'Turnier erstellen',
+    'description' => 'Beschreibung',
     'cancel_tournament' => 'Turnier abbrechen',
+    'optional' => 'Optional',
     'generate_bracket_matchplan' => 'K.O.-Spielplan erstellen',
     'generate_round_robin_matchplan' => 'Jeder-gegen-jeden-Spielplan erstellen',
     'reset_matchplan' => 'Spielplan zurücksetzen',
@@ -60,6 +65,7 @@ return [
 
     'details' => 'Details',
     'registration_deadline' => 'Anmeldeschluss',
+    'registration_deadline_help' => 'Wenn nicht festgelegt, endet die Anmeldung mit dem Turnierstart.',
     'start_date' => 'Startdatum',
     'end_date' => 'Enddatum',
     'tournament_not_finished' => 'Turnier nicht beendet',
@@ -162,6 +168,12 @@ return [
         'semi_final' => 'Halbfinale',
         'final' => 'Finale'
     ],
+
+    'rounds_per_map' => 'Runden pro Karte',
+    'rounds_per_map_help' => 'Der Standard für CS2 sind 24 Runden.',
+    'overtime_rounds' => 'Overtime-Runden',
+    'overtime_rounds_help' => 'Der Standard für CS2 sind 6 Runden.',
+    'overtime' => 'Overtime',
 
     'show' => 'Anzeigen',
 ];
