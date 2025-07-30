@@ -8,13 +8,44 @@
 The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize and manage cs2 tournaments. It requires your own server(s) with the wonderful <a href="https://github.com/Lan2Play/PugSharp" target="_blank">Lan2Play Pugsharp</a> plugin installed. Manuel management is planed, but not yet implamented. It acts as an alternative to the <a href="https://github.com/Lan2Play/eventula-manager">Lan2Play Eventula-Manager</a> and is more lightweight approach and is designed just for the tournament management, not for event management, for this please refer to the eventula manager.
 
 ## Table of Contents
+- [Features](#features)
+- [Planed Features](#planed-features)
+- [Known bugs](#known-bugs)
+- [Server Requirements](#server-requirements)
+- [Installation](#Installation)
+- [Screenshots](#Screenshots)
+- [Support](#support)
+- [Contributing](#Contributing)
+- [Authors](#Authors)
+- [License](#License)
 
-- [Server Requirements](#ServerRequirements)
-- [Installation](##Installation)
-- [Screenshots](##Screenshots)
-- [Contributing](##Contributing)
-- [Authors](##Authors)
-- [License](##License)
+## Features
+- Multi-Language support (in development | missing many language strings ^^)
+- Tournament management
+  - Start date, End date
+  - Team size
+  - Max teams
+  - Round and Overtime Length
+  - Match type (Best of 1, etc...)
+  - Define playable maps
+  - start, cancel and pause matches
+  - and more
+- Tournament overview for guests
+- Register for a Tournament as a team (via steamid´s)
+- Automatic team advancement.
+- Adding servers.
+
+## Planed features
+- Register as player and manage your teams.
+- On site map voting.
+- Match and map overview for ongoing, upcoming and concluded matches and maps.
+- Player stat overview for each map and overall.
+- and more.
+
+## Known bugs:
+- Missing language strings all over the place in both german and englisch.
+- Tournaments will not auto conclude after the finale has been played
+- The auto updating in the server overview is not consistent (should refresh server info every 60 seconds... it just don't sometimes)
 
 ## Server Requirements
 
@@ -82,6 +113,9 @@ For a detailed guide on how to configure your webserver to support laravel appli
 
 <h3>Bracket View</h3>
 <img src="https://raw.githubusercontent.com/DuelistRag3/cs2-pugsharp-manager/refs/heads/main/screenshots/bracket_view.png">
+
+## Support
+To receive proper support, either open a GitHub issue or check out the channel on the [Lan2Play Discord](https://discord.gg/aEGq33zcZK)
 
 ## Contributing
 
