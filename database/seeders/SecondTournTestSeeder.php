@@ -50,14 +50,14 @@ class SecondTournTestSeeder extends Seeder
                 }
             };
 
-            $server = Server::create([
-                'ip_address' => '127.0.0.1',
-                'port' => 27015,
-                'rcon_password' => 'test',
-            ]);
-
             $tourn->generateMatchPlan(0);
             // $tourn->addTeamsToMatchPlan();
         }
+
+        $server = Server::create([
+                'ip_address' => '127.0.0.1',
+                'port' => 27015,
+                'rcon_password' => 'test',
+        ]);
     }
 }

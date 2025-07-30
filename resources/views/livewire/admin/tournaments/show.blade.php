@@ -168,7 +168,7 @@
                                 <i class="fa-solid fa-wrench"></i>
                                 <span class="sr-only">{{ __('manager.menu') }}</span>
                             </button>
-                            <div id="gamemenu{{ $game->id }}" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-600">
+                            <div id="gamemenu{{ $game->id }}" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-600" wire:ignore.self>
                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="gamemenu{{ $game->id }}">
                                     @if($game->status === 'scheduled' && $game->team1 && $game->team2)
                                         <li>
