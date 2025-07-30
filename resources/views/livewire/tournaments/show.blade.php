@@ -122,8 +122,8 @@
                             style="">
                             
                             @if($game->team1)
-                            <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
-                                data-modal-toggle="team{{ $game->team1->id }}-modal"
+                            <a aria-current="true" data-modal-target="game{{ $game->id }}-modal"
+                                data-modal-toggle="game{{ $game->id }}-modal"
                                 data-team-id="{{ $game->team1->id }}"
                                 class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
                                 {{ $game->team1->name }}
@@ -146,8 +146,8 @@
                             </a>
                             @endif
                             @if($game->team2)
-                            <a data-modal-target="team{{ $game->team2->id }}-modal"
-                                data-modal-toggle="team{{ $game->team2->id }}-modal"
+                            <a data-modal-target="game{{ $game->id }}-modal"
+                                data-modal-toggle="game{{ $game->id }}-modal"
                                 data-team-id="{{ $game->team2->id }}"
                                 class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
                                 {{ $game->team2->name }}
@@ -279,6 +279,69 @@
     </div>
     @endforeach
 
+    {{-- Matchup Modals --}}
+        @foreach($tournament->games as $game)
+        <div id="game{{ $game->id }}-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
+            class="hidden text-black dark:text-white overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                    <div
+                        class="flex items-center justify-center p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200 text-center">
+                        <h3 class="text-xl text-center font-semibold text-gray-900 dark:text-white">
+                            {{ $game->team1 ? $game->team1->name . ' ('.$game->team1->tag.')' : 'TBD' }} VS {{ $game->team2 ? $game->team2->name . ' ('.$game->team2->tag.')' : 'TBD' }}
+                        </h3>
+                    </div>
+                    <div class="p-4 md:p-5 space-y-4">
+                        <div class="mb-4 grid grid-cols-2 auto-rows-auto gap-4">
+                            <div class="col-span-2 text-center">
+                                <p>Lineups</p>
+                            </div>
+                            <div>
+                                <div>
+                                    <p>{{ $game->team1 ? $game->team1->name : 'TBD' }}</p>
+                                </div>
+                                @foreach($game->team1->players as $player)
+                                <div class="flex items-center mt-2">
+                                    <div class="shrink-0 mr-2">
+                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}" alt="avatar">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
+                                                $player->steam_name }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            <div class="text-right">
+                                <div>
+                                    <p>{{ $game->team2 ? $game->team2->name : 'TBD' }}</p>
+                                </div>
+                                @foreach($game->team2->players as $player)
+                                <div class="flex items-center mt-2">
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
+                                                $player->steam_name }}</a>
+                                        </p>
+                                    </div>
+                                    <div class="shrink-0 ml-2">
+                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}" alt="avatar">
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            <div class="col-span-2">
+                                <a href="#" target="_blank" class="block text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full">View Match</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
+
     @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams)
         <!-- Register modal -->
         <div id="register-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
@@ -338,10 +401,8 @@
                 </div>
             </div>
         </div>
-        @endif
-
-
-</div>
+    @endif
+    </div>
 </div>
 @script
 <script>

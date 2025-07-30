@@ -6,21 +6,26 @@
             <div class="right">
                 @if($tournament->status === 'ongoing')
                 <button wire:click='cancelTournament()' type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{ __('manager.cancel_tournament') }}</button>
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{
+                    __('manager.cancel_tournament') }}</button>
                 @if($tournament->games->isEmpty())
                 <button wire:click='generateMatchPlan(0)' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{ __('manager.generate_bracket_matchplan') }}</button>
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{
+                    __('manager.generate_bracket_matchplan') }}</button>
                 <button wire:click='generateMatchPlan(1)' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{ __('manager.generate_round_robin_matchplan') }}</button>
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{
+                    __('manager.generate_round_robin_matchplan') }}</button>
                 @else
                 <button wire:click='resetMatchPlan()' type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{ __('manager.reset_matchplan') }}</button>
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{
+                    __('manager.reset_matchplan') }}</button>
                 <button wire:click='addTeamsToMatchPlan()' type="button"
                     class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">
                     {{ __('manager.scramble_teams') }}
                 </button>
                 <button wire:click='removeAllTeamsFromMatchPlan()' type="button"
-                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{ __('manager.empty_matchplan') }}</button>
+                    class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{
+                    __('manager.empty_matchplan') }}</button>
                 @endif
                 @endif
                 @if($tournament->status === 'scheduled')
@@ -28,7 +33,8 @@
                     class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"><i
                         class="fa-solid fa-plus"></i> {{ __('manager.edit') }}</button>
                 <button wire:click='startTournament()' type="button"
-                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{ __('manager.start_tournament') }}</button>
+                    class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 cursor-pointer">{{
+                    __('manager.start_tournament') }}</button>
                 @endif
             </div>
         </div>
@@ -42,9 +48,12 @@
                 {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
                 @endif
             </p>
-            <p><strong>{{ __('manager.start_date') }}:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>{{ __('manager.end_date') }}:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled')
-                {{ __('manager.tournament_not_finished') }} @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif
+            <p><strong>{{ __('manager.start_date') }}:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y
+                H:i') }}</p>
+            <p><strong>{{ __('manager.end_date') }}:</strong> @if($tournament->status != 'completed' ||
+                $tournament->status != 'cancelled')
+                {{ __('manager.tournament_not_finished') }} @else {{ new DateTime($tournament->end_date)->format('d.m.Y
+                H:i') }} @endif
             </p>
             <p><strong>{{ __('manager.max_teams') }}:</strong> {{ $tournament->max_teams }}</p>
             <p><strong>{{ __('manager.team_size') }}:</strong> {{ $tournament->team_size }}</p>
@@ -97,20 +106,21 @@
             <h2 class="text-xl font-semibold mb-2">{{ __('manager.maps') }}</h2>
             <div class="grid grid-cols-12 gap-4">
                 @foreach($availableMaps as $map)
-                    <div wire:click='changeMapState({{ $map->id }})' wire:loading.class="opacity-50 cursor-not-allowed disabled"
-                        class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 col-span-2 cursor-pointer @if($selectedMaps) @if(in_array($map->map_code, $selectedMaps)) bg-green-100 dark:bg-green-900 @endif @endif">
+                <div wire:click='changeMapState({{ $map->id }})'
+                    wire:loading.class="opacity-50 cursor-not-allowed disabled"
+                    class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 col-span-2 cursor-pointer @if($selectedMaps) @if(in_array($map->map_code, $selectedMaps)) bg-green-100 dark:bg-green-900 @endif @endif">
+                    <a>
+                        <img class="rounded-t-lg" src="{{ $map->getImageUrlAttribute() }}" alt="{{ $map->name }}" />
+                    </a>
+                    <div class="p-5">
                         <a>
-                            <img class="rounded-t-lg" src="{{ $map->getImageUrlAttribute() }}" alt="{{ $map->name }}" />
+                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{
+                                $map->name }}</h5>
                         </a>
-                        <div class="p-5">
-                            <a>
-                                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{
-                                    $map->name }}</h5>
-                            </a>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $map->map_code }}</p>
-                        </div>
+                        <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $map->map_code }}</p>
                     </div>
-                    @endforeach
+                </div>
+                @endforeach
             </div>
         </div>
 
@@ -137,16 +147,18 @@
             $numberOfRounds = $tournament->games->max('round') ?? 0;
             $offset = 0;
             @endphp
-            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}" wire:poll>
-                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;" wire:ignore>
-                    
+            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}"
+                wire:poll>
+                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"
+                    wire:ignore>
+
                 </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
                     @php
                     if (isset(config('manager.round_name_tokens')[$numberOfRounds][$round])) {
-                        $roundNameToken = config('manager.round_name_tokens')[$numberOfRounds][$round];
+                    $roundNameToken = config('manager.round_name_tokens')[$numberOfRounds][$round];
                     } else {
-                        $roundNameToken = 'round_' . ($round + 1);
+                    $roundNameToken = 'round_' . ($round + 1);
                     }
                     $roundNameToken = "manager.round_names.$roundNameToken";
                     @endphp
@@ -163,43 +175,57 @@
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
                             class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'completed') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
                             style="">
-                            <button type="button" data-dropdown-toggle="gamemenu{{ $game->id }}" data-dropdown-placement="right"
+                            <button type="button" data-dropdown-toggle="gamemenu{{ $game->id }}"
+                                data-dropdown-placement="right"
                                 class="cursor-pointer text-xs text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded p-2 text-center inline-flex items-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 shadow-lg">
                                 <i class="fa-solid fa-wrench"></i>
                                 <span class="sr-only">{{ __('manager.menu') }}</span>
                             </button>
-                            <div id="gamemenu{{ $game->id }}" class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-600" wire:ignore.self>
-                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="gamemenu{{ $game->id }}">
+                            <div id="gamemenu{{ $game->id }}"
+                                class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-600"
+                                wire:ignore.self>
+                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                    aria-labelledby="gamemenu{{ $game->id }}">
                                     @if($game->status === 'scheduled' && $game->team1 && $game->team2)
-                                        <li>
-                                            <a wire:click="startMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match starten</a>
-                                        </li>
+                                    <li>
+                                        <a wire:click="startMatch({{ $game->id }})"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match
+                                            starten</a>
+                                    </li>
                                     @elseif($game->status === 'ongoing')
-                                        @if($game->maps->where('status', 'ongoing')->isNotEmpty())
-                                            <li>
-                                                <a wire:click="pauseMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match pausieren</a>
-                                            </li>
-                                        @elseif($game->maps->where('status', 'paused')->isNotEmpty())
-                                            <li>
-                                                <a wire:click="resumeMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match fortsetzen</a>
-                                            </li>
-                                        @endif
-                                        <li>
-                                            <a wire:click="abortMatch({{ $game->id }})" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-red-500 dark:hover:text-white cursor-pointer">Match abbrechen</a>
-                                        </li>
+                                    @if($game->maps->where('status', 'ongoing')->isNotEmpty())
+                                    <li>
+                                        <a wire:click="pauseMatch({{ $game->id }})"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match
+                                            pausieren</a>
+                                    </li>
+                                    @elseif($game->maps->where('status', 'paused')->isNotEmpty())
+                                    <li>
+                                        <a wire:click="resumeMatch({{ $game->id }})"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white cursor-pointer">Match
+                                            fortsetzen</a>
+                                    </li>
                                     @endif
                                     <li>
-                                        <a href="{{ route('api.matches.config', $game->id) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">Zeige Config</a>
+                                        <a wire:click="abortMatch({{ $game->id }})"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-red-500 dark:hover:text-white cursor-pointer">Match
+                                            abbrechen</a>
+                                    </li>
+                                    @endif
+                                    <li>
+                                        <a href="{{ route('api.matches.config', $game->id) }}" target="_blank"
+                                            class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">Zeige
+                                            Config</a>
                                     </li>
                                 </ul>
                             </div>
                             @if($game->team1)
-                            <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
-                                data-modal-toggle="team{{ $game->team1->id }}-modal"
-                                data-team-id="{{ $game->team1->id }}"
+                            <a aria-current="true" data-modal-target="game{{ $game->id }}-modal"
+                                data-modal-toggle="game{{ $game->id }}-modal" data-team-id="{{ $game->team1->id }}"
                                 class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
                                 {{ $game->team1->name }}
-                                <span class="float-end @if($game->winner_team_id == $game->team1->id) font-bold text-green-500 @endif">
+                                <span
+                                    class="float-end @if($game->winner_team_id == $game->team1->id) font-bold text-green-500 @endif">
                                     @if($game->tournament->maps_each_game == 0)
                                     @if($game->maps->isNotEmpty())
                                     {{ $game->maps->first()->team1_score }}
@@ -218,12 +244,12 @@
                             </a>
                             @endif
                             @if($game->team2)
-                            <a data-modal-target="team{{ $game->team2->id }}-modal"
-                                data-modal-toggle="team{{ $game->team2->id }}-modal"
-                                data-team-id="{{ $game->team2->id }}"
+                            <a data-modal-target="game{{ $game->id }}-modal"
+                                data-modal-toggle="game{{ $game->id }}-modal" data-team-id="{{ $game->team2->id }}"
                                 class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
                                 {{ $game->team2->name }}
-                                <span class="float-end @if($game->winner_team_id == $game->team2->id) font-bold text-green-500 @endif">
+                                <span
+                                    class="float-end @if($game->winner_team_id == $game->team2->id) font-bold text-green-500 @endif">
                                     @if($game->tournament->maps_each_game == 0)
                                     @if($game->maps->isNotEmpty())
                                     {{ $game->maps->first()->team2_score }}
@@ -287,6 +313,7 @@
             @endif
         </div>
 
+        {{-- Team Modals --}}
         @foreach($tournament->teams as $team)
         <div id="team{{ $team->id }}-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -341,12 +368,74 @@
         </div>
         @endforeach
 
+        {{-- Matchup Modals --}}
+        @foreach($tournament->games as $game)
+        <div id="game{{ $game->id }}-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                    <div
+                        class="flex items-center justify-center p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200 text-center">
+                        <h3 class="text-xl text-center font-semibold text-gray-900 dark:text-white">
+                            {{ $game->team1 ? $game->team1->name . ' ('.$game->team1->tag.')' : 'TBD' }} VS {{ $game->team2 ? $game->team2->name . ' ('.$game->team2->tag.')' : 'TBD' }}
+                        </h3>
+                    </div>
+                    <div class="p-4 md:p-5 space-y-4">
+                        <div class="mb-4 grid grid-cols-2 auto-rows-auto gap-4">
+                            <div class="col-span-2 text-center">
+                                <p>Lineups</p>
+                            </div>
+                            <div>
+                                <div>
+                                    <p>{{ $game->team1 ? $game->team1->name : 'TBD' }}</p>
+                                </div>
+                                @foreach($game->team1->players as $player)
+                                <div class="flex items-center mt-2">
+                                    <div class="shrink-0 mr-2">
+                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}" alt="avatar">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
+                                                $player->steam_name }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            <div class="text-right">
+                                <div>
+                                    <p>{{ $game->team2 ? $game->team2->name : 'TBD' }}</p>
+                                </div>
+                                @foreach($game->team2->players as $player)
+                                <div class="flex items-center mt-2">
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
+                                                $player->steam_name }}</a>
+                                        </p>
+                                    </div>
+                                    <div class="shrink-0 ml-2">
+                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}" alt="avatar">
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                            <div class="col-span-2">
+                                <a href="#" target="_blank" class="block text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full">View Match</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endforeach
     </div>
     <div class="opacity-50 cursor-not-allowed disabled"></div>
 </div>
 
 <script>
-@if($tournament->type === 0)
+    @if($tournament->type === 0)
 function drawBracketLines() {
     const container = document.getElementById('bracket-container');
     const svg = document.getElementById('bracket-lines');
