@@ -144,8 +144,6 @@ class MatchAPIController extends Controller
      */
     public function updateRound($id, $mapcount, Request $request)
     {
-        $mapcount = +1;
-
         $map = GameMap::where('game_id', $id)->where('map_number', $mapcount)->first();
 
         if (!$map) {

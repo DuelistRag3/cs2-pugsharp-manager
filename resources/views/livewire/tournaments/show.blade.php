@@ -142,7 +142,7 @@
                     </div>
             </div>
             @endfor
-            @elseif ($tournament->type === 1)
+            {{-- @elseif ($tournament->type === 1)
             <div class="grid grid-cols-1 gap-4">
                 @foreach($tournament->games as $game)
                 <div
@@ -164,7 +164,7 @@
                     </a>
                 </div>
                 @endforeach
-            </div>
+            </div> --}}
             @endif
         </div>
     </div>
