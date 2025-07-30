@@ -23,8 +23,13 @@ return [
     'home' => 'Home',
     'teams' => 'Teams',
     'menu' => 'Menu',
+    'name' => 'Name',
+    'view' => 'View',
 
+    'create_tournament' => 'Create Tournament',
+    'description' => 'Description',
     'cancel_tournament' => 'Cancel Tournament',
+    'optional' => 'Optional',
     'generate_bracket_matchplan' => 'Generate Bracket Matchplan',
     'generate_round_robin_matchplan' => 'Generate Round Robin Matchplan',
     'reset_matchplan' => 'Reset Matchplan',
@@ -60,6 +65,7 @@ return [
 
     'details' => 'Details',
     'registration_deadline' => 'Registration Deadline',
+    'registration_deadline_help' => 'If not set, the registration will end with the tournament start.',
     'start_date' => 'Start Date',
     'end_date' => 'End Date',
     'tournament_not_finished' => 'Tournament not finished',
@@ -162,6 +168,12 @@ return [
         'semi_final' => 'Semi Final',
         'final' => 'Final'
     ],
+
+    'rounds_per_map' => 'Rounds per Map',
+    'rounds_per_map_help' => 'The default for CS2 is 24 rounds.',
+    'overtime_rounds' => 'Overtime Rounds',
+    'overtime_rounds_help' => 'The default for CS2 is 6 rounds.',
+    'overtime' => 'Overtime',
 
     'show' => 'Show',
 ];
