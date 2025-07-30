@@ -343,7 +343,7 @@
 
 </div>
 </div>
-
+@script
 <script>
     $wire.on('teamRegistered', () => {
             const modal = new Modal(document.getElementById('register-modal'));
@@ -353,7 +353,7 @@
             }
         });
 </script>
-
+@endscript
 <script>
 @if($tournament->type === 0)
 function drawBracketLines() {
