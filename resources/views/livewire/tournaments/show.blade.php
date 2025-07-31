@@ -6,72 +6,16 @@
                 now()->lessThan(new DateTime($tournament->registration_deadline ? $tournament->registration_deadline :
                 $tournament->start_date)))
                 <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
-                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">{{ __('manager.register_team') }}</button>
+                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">{{
+                    __('manager.register_team') }}</button>
                 @endif
         </div>
 
-        <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">{{ __('manager.details') }}</h2>
-            <p><strong>{{ __('manager.registration_deadline') }}:</strong>
-                @if ($tournament->registration_deadline)
-                {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
-                @else
-                {{ new Datetime($tournament->start_date)->format('d.m.Y H:i') }}
-                @endif
-            </p>
-            <p><strong>{{ __('manager.start_date') }}:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}</p>
-            <p><strong>{{ __('manager.end_date') }}:</strong> @if($tournament->status != 'completed' || $tournament->status != 'cancelled')
-                {{ __('manager.tournament_not_finished') }} @else {{ new DateTime($tournament->end_date)->format('d.m.Y H:i') }} @endif
-            </p>
-            <p><strong>{{ __('manager.max_teams') }}:</strong> {{ $tournament->max_teams }}</p>
-            <p><strong>{{ __('manager.team_size') }}:</strong> {{ $tournament->team_size }}</p>
-            <p><strong>{{ __('manager.gametype') }}:</strong>
-                @switch($tournament->matchup_rounds)
-                @case(0)
-                <span class="text-blue-500">Best Of 1</span>
-                @break
-                @case(1)
-                <span class="text-blue-500">Best Of 3</span>
-                @break
-                @case(2)
-                <span class="text-blue-500">Best Of 5</span>
-                @break
-                @endswitch
-            </p>
-            <p><strong>{{ __('manager.gametype') }} ({{ __('manager.final') }}):</strong>
-                @switch($tournament->final_rounds)
-                @case(0)
-                <span class="text-blue-500">Best Of 1</span>
-                @break
-                @case(1)
-                <span class="text-blue-500">Best Of 3</span>
-                @break
-                @case(2)
-                <span class="text-blue-500">Best Of 5</span>
-                @break
-                @endswitch
-            </p>
-            <p><strong>{{ __('manager.status') }}:</strong>
-                @switch($tournament->status)
-                @case('scheduled')
-                <span class="text-yellow-500">{{ __('manager.status_types.scheduled') }}</span>
-                @break
-                @case('ongoing')
-                <span class="text-green-500">{{ __('manager.status_types.ongoing') }}</span>
-                @break
-                @case('completed')
-                <span class="text-gray-500">{{ __('manager.status_types.completed') }}</span>
-                @break
-                @case('cancelled')
-                <span class="text-red-500">{{ __('manager.status_types.cancelled') }}</span>
-                @default
-                <span class="text-red-500">{{ __('manager.status_types.unknown') }}</span>
-                @endswitch
-            </p>
-        </div>
+        <x-tournament-details-card :tournament=$tournament />
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">{{ __('manager.teams') }}: ({{ $tournament->teams->count() }}/{{ $tournament->max_teams
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.teams') }}: ({{ $tournament->teams->count() }}/{{
+                $tournament->max_teams
                 }})</h2>
             @if($tournament->teams->isEmpty())
             <p>{{ __('manager.no_teams_registered') }}</p>
@@ -94,16 +38,18 @@
             $numberOfRounds = $tournament->games->max('round') ?? 0;
             $offset = 0;
             @endphp
-            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}" wire:poll>
-                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;" wire:ignore>
-                    
+            <div id="bracket-container" class="relative grid grid-rows-1 gap-4 grid-cols-{{ ($numberOfRounds) }}"
+                wire:poll>
+                <svg id="bracket-lines" class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;"
+                    wire:ignore>
+
                 </svg>
                 @for($round = 0; $round < $numberOfRounds; $round++) <div class="mb-4">
                     @php
                     if (isset(config('manager.round_name_tokens')[$numberOfRounds][$round])) {
-                        $roundNameToken = config('manager.round_name_tokens')[$numberOfRounds][$round];
+                    $roundNameToken = config('manager.round_name_tokens')[$numberOfRounds][$round];
                     } else {
-                        $roundNameToken = 'round_' . ($round + 1);
+                    $roundNameToken = 'round_' . ($round + 1);
                     }
                     $roundNameToken = "manager.round_names.$roundNameToken";
                     @endphp
@@ -120,62 +66,15 @@
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
                             class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'completed') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
                             style="">
-                            
-                            @if($game->team1)
-                            <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
-                                data-modal-toggle="team{{ $game->team1->id }}-modal"
-                                data-team-id="{{ $game->team1->id }}"
-                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
-                                {{ $game->team1->name }}
-                                <span class="float-end @if($game->winner_team_id == $game->team1->id) font-bold text-green-500 @endif">
-                                    @if($game->tournament->maps_each_game == 0)
-                                    @if($game->maps->isNotEmpty())
-                                    {{ $game->maps->first()->team1_score }}
-                                    @else
-                                    0
-                                    @endif
-                                    @else
-                                    {{ $game->team1_maps_won }}
-                                    @endif
-                                </span>
-                            </a>
-                            @else
-                            <a aria-current="true"
-                                class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                                TBD
-                            </a>
-                            @endif
-                            @if($game->team2)
-                            <a data-modal-target="team{{ $game->team2->id }}-modal"
-                                data-modal-toggle="team{{ $game->team2->id }}-modal"
-                                data-team-id="{{ $game->team2->id }}"
-                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white transition-all duration-200">
-                                {{ $game->team2->name }}
-                                <span class="float-end @if($game->winner_team_id == $game->team2->id) font-bold text-green-500 @endif">
-                                    @if($game->tournament->maps_each_game == 0)
-                                    @if($game->maps->isNotEmpty())
-                                    {{ $game->maps->first()->team2_score }}
-                                    @else
-                                    0
-                                    @endif
-                                    @else
-                                    {{ $game->team2_maps_won }}
-                                    @endif
-                                </span>
-                            </a>
-                            @else
-                            <a
-                                class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                                TBD
-                            </a>
-                            @endif
+
+                            <x-tournament-game-card :game=$game />
 
                         </div>
                         @endforeach
                     </div>
             </div>
             @endfor
-            @elseif ($tournament->type === 1)
+            {{-- @elseif ($tournament->type === 1)
             <div class="grid grid-cols-1 gap-4">
                 @foreach($tournament->games as $game)
                 <div
@@ -185,33 +84,19 @@
                         <i class="fa-solid fa-wrench"></i>
                         <span class="sr-only">Menü</span>
                     </button>
-                    @if($game->team1)
-                    <a aria-current="true" data-modal-target="team{{ $game->team1->id }}-modal"
-                        data-modal-toggle="team{{ $game->team1->id }}-modal"
-                        class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                        {{ $game->team1->name }}
+                    <a data-modal-target="game{{ $game->id }}-modal" data-modal-toggle="game{{ $game->id }}-modal"
+                        data-team-id="{{ $game->team1 ? $game->team1->id : 'null' }}"
+                        class="block w-full px-4 py-2 border-b rounded-t-lg border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
+                        {{ $game->team1 ? $game->team1->name : 'TBD' }}
                     </a>
-                    @else
-                    <a aria-current="true"
-                        class="block w-full px-4 py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                        TBD
-                    </a>
-                    @endif
-                    @if($game->team2)
-                    <a data-modal-target="team{{ $game->team1->id }}-modal"
-                        data-modal-toggle="team{{ $game->team1->id }}-modal"
+                    <a data-modal-target="game{{ $game->id }}-modal" data-modal-toggle="game{{ $game->id }}-modal"
+                        data-team-id="{{ $game->team2 ? $game->team2->id : 'null' }}"
                         class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                        {{ $game->team2->name }}
+                        {{ $game->team2 ? $game->team2->name : 'TBD' }}
                     </a>
-                    @else
-                    <a
-                        class="block w-full px-4 py-2 rounded-b-lg cursor-pointer hover:bg-gray-100 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:border-gray-600 dark:hover:bg-gray-600 dark:hover:text-white dark:focus:ring-gray-500 dark:focus:text-white">
-                        TBD
-                    </a>
-                    @endif
                 </div>
                 @endforeach
-            </div>
+            </div> --}}
             @endif
         </div>
     </div>
@@ -279,6 +164,75 @@
     </div>
     @endforeach
 
+    {{-- Matchup Modals --}}
+    @foreach($tournament->games as $game)
+    <div id="game{{ $game->id }}-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
+            class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+            <div class="relative p-4 w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow-sm dark:bg-gray-700">
+                    <div
+                        class="flex items-center justify-center p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200 text-center">
+                        <h3 class="text-xl text-center font-semibold text-gray-900 dark:text-white">
+                            {{ $game->team1 ? $game->team1->name . ' ('.$game->team1->tag.')' : 'TBD' }} VS {{ $game->team2 ? $game->team2->name . ' ('.$game->team2->tag.')' : 'TBD' }}
+                        </h3>
+                    </div>
+                    <div class="p-4 md:p-5 space-y-4">
+                        <div class="mb-4 grid grid-cols-2 auto-rows-auto gap-4">
+                            <div class="col-span-2 text-center">
+                                <p>Lineups</p>
+                            </div>
+                            <div>
+                                @if($game->team1)
+                                @foreach($game->team1->players as $player)
+                                <div class="flex items-center mt-2">
+                                    <div class="shrink-0 mr-2">
+                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}" alt="avatar">
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
+                                                $player->steam_name }}</a>
+                                        </p>
+                                    </div>
+                                </div>
+                                @endforeach
+                                @else
+                                @for ($i = 0; $i < $tournament->team_size; $i++)
+                                <p>TBD</p>
+                                @endfor
+                                @endif
+                            </div>
+                            <div class="text-right">
+                                @if($game->team2)
+                                @foreach($game->team2->players as $player)
+                                <div class="flex items-center mt-2">
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
+                                                $player->steam_name }}</a>
+                                        </p>
+                                    </div>
+                                    <div class="shrink-0 ml-2">
+                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}" alt="avatar">
+                                    </div>
+                                </div>
+                                @endforeach
+                                @else
+                                @for ($i = 0; $i < $tournament->team_size; $i++)
+                                <p>TBD</p>
+                                @endfor
+                                @endif
+                            </div>
+                            <div class="col-span-2">
+                                <a href="#" target="_blank" class="block text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full">View Match</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+
     @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams)
         <!-- Register modal -->
         <div id="register-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
@@ -308,25 +262,31 @@
                         <form wire:submit='registerTeam' class="space-y-4" action="#">
                             <div>
                                 <label for="teamname"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamname') dark:text-red-500! @enderror">{{ __('manager.team_name') }} @error('teamname') ({{ $message }}) @enderror</label>
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamname') dark:text-red-500! @enderror">{{
+                                    __('manager.team_name') }} @error('teamname') ({{ $message }}) @enderror</label>
                                 <input wire:model.blur='teamname' type="text" name="teamname" id="teamname"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                     placeholder="{{ __('manager.team_name') }}" required />
                             </div>
                             <div>
                                 <label for="teamtag"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamtag') dark:text-red-500! @enderror">{{ __('manager.team_tag') }} @error('teamtag') ({{ $message }}) @enderror</label>
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamtag') dark:text-red-500! @enderror">{{
+                                    __('manager.team_tag') }} @error('teamtag') ({{ $message }}) @enderror</label>
                                 <input wire:model.blur='teamtag' type="text" name="teamtag" id="teamtag"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                     placeholder="{{ __('manager.team_tag') }}" required />
                             </div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ __('manager.steam_ids_help') }}</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ __('manager.steam_ids_help') }}
+                            </p>
                             @for ($i = 0; $i < $tournament->team_size; $i++)
                                 <div>
                                     <label for="steam_ids.{{ $i }}"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('steam_ids.{{ $i }}') dark:text-red-500! @enderror">{{ __('manager.steam_id_player', ['number' => $i+1]) }} @error('steam_ids.{{ $i }}') ({{ $message }}) @enderror</label>
+                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('steam_ids.{{ $i }}') dark:text-red-500! @enderror">{{
+                                        __('manager.steam_id_player', ['number' => $i+1]) }} @error('steam_ids.{{ $i
+                                        }}') ({{ $message }}) @enderror</label>
                                     <input type="text" name="steam_ids.{{ $i }}" id="steam_ids.{{ $i }}"
-                                        wire:model.live='steam_ids.{{ $i }}' placeholder="{{ __('manager.steam_id_player', ['number' => $i+1]) }}"
+                                        wire:model.live='steam_ids.{{ $i }}'
+                                        placeholder="{{ __('manager.steam_id_player', ['number' => $i+1]) }}"
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                         required />
                                 </div>
@@ -339,8 +299,6 @@
             </div>
         </div>
         @endif
-
-
 </div>
 </div>
 @script
@@ -355,7 +313,7 @@
 </script>
 @endscript
 <script>
-@if($tournament->type === 0)
+    @if($tournament->type === 0)
 function drawBracketLines() {
     const container = document.getElementById('bracket-container');
     const svg = document.getElementById('bracket-lines');

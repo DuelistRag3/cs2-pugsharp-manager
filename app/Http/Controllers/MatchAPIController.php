@@ -42,7 +42,9 @@ class MatchAPIController extends Controller
         $demoUri = route('api.matches.demo', ['id' => $game->id]);
         $api_token = config('manager.api_bearer_token');
 
-        switch ($game->tournament->maps_each_game) {
+        $gametype = $game->next_game_id ? $game->tournament->maps_each_game : $game->tournament->maps_final_game;
+
+        switch ($gametype) {
             case 0:
                 $rounds = 1; // BO1
                 break;
@@ -92,17 +94,14 @@ class MatchAPIController extends Controller
             'server_locale' => 'de'
         ];
 
-        $game->status = 'ongoing';
-        $game->save();
-
         return response()->json($json);
     }
 
-    public function goLive($mapcount, Request $request)
+    public function goLive($gameid, $mapcount, Request $request)
     {
-        Storage::disk('local')->put("match_{$request->id}_map_{$mapcount}_golive.json", json_encode($request->all()));
+        Storage::disk('local')->put("match_{$gameid}_map_{$mapcount}_golive.json", json_encode($request->all()));
 
-        $game = Game::find($request->id);
+        $game = Game::find($gameid);
         if (!$game) {
             return response()->json("Match not found", 404);
         }
@@ -131,6 +130,9 @@ class MatchAPIController extends Controller
             $map->playerScores()->save($score);
         }
 
+        $game->status = 'ongoing';
+        $game->save();
+
         return response()->json("Map is now live", 200);
     }
 
@@ -144,8 +146,6 @@ class MatchAPIController extends Controller
      */
     public function updateRound($id, $mapcount, Request $request)
     {
-        $mapcount = +1;
-
         $map = GameMap::where('game_id', $id)->where('map_number', $mapcount)->first();
 
         if (!$map) {
@@ -169,11 +169,10 @@ class MatchAPIController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updatePlayer($id, $mapcount, $steamId, Request $request)
+    public function updatePlayer($gameid, $mapcount, $steamId, Request $request)
     {
-        $mapcount = +1;
 
-        $game = Game::find($id);
+        $game = Game::find($gameid);
         if (!$game) {
             return response()->json("Match not found", 404);
         }
@@ -233,9 +232,9 @@ class MatchAPIController extends Controller
      * @param  int  $map
      * @return \Illuminate\Http\JsonResponse
      */
-    public function finalizeMap($mapcount, Request $request)
+    public function finalizeMap($gameid, $mapcount, Request $request)
     {
-        $map = GameMap::where('game_id', $request->id)->where('map_number', $mapcount)->first();
+        $map = GameMap::where('game_id', $gameid)->where('map_number', $mapcount)->first();
         if (!$map) {
             return response()->json("Match - Map combination not found", 404);
         }
@@ -300,6 +299,7 @@ class MatchAPIController extends Controller
             {
                 $winner = $team;
             }
+            
         }
 
         if (!$winner) {
@@ -322,13 +322,16 @@ class MatchAPIController extends Controller
 
         $next = $game->nextGame;
 
-        if(!$next->team1_id)
+        if(!$next)
+        {
+            if(!$next->team1_id)
         {
             $next->team1_id = $winner->id;
             $next->save();
         } else {
             $next->team2_id = $winner->id;
             $next->save();
+        }
         }
 
         return response()->json("Matchup finalized", 200);
