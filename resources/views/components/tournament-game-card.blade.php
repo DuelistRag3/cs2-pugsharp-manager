@@ -33,15 +33,15 @@
                         $map = $game->maps->where('status', 'ongoing')->first();
                     @endphp
                     <span class="
-                                {{ $map->team1_score > $map->team2_score ? 'text-green-500!' : '' }}
-                                {{ $map->team1_score < $map->team2_score ? 'text-red-500!' : '' }}
-                                {{ $map->team1_score == $map->team2_score ? 'text-gray-500!' : '' }}
+                                {{ $map ? $map->team1_score > $map->team2_score ? 'text-green-500!' : '' : '' }}
+                                {{ $map ? $map->team1_score < $map->team2_score ? 'text-red-500!' : '' : '' }}
+                                {{ $map ? $map->team1_score == $map->team2_score ? 'text-gray-500!' : '' : '' }}
                                 ">
-                        {{ $map->team1_score }}
+                        {{ $map ? $map->team1_score : 0 }}
                     </span> <span class="text-xs
-                                        {{ $map->team1_maps_won > $map->team2_maps_won ? 'text-green-500!' : '' }}
-                                        {{ $map->team1_maps_won < $map->team2_maps_won ? 'text-red-500!' : '' }}
-                                        {{ $map->team1_maps_won == $map->team2_maps_won ? 'text-gray-500!' : '' }}
+                                        {{ $game->team1_maps_won > $game->team2_maps_won ? 'text-green-500!' : '' }}
+                                        {{ $game->team1_maps_won < $game->team2_maps_won ? 'text-red-500!' : '' }}
+                                        {{ $game->team1_maps_won == $game->team2_maps_won ? 'text-gray-500!' : '' }}
                                         ">({{ $game->team1_maps_won ? $game->team1_maps_won : 0 }})</span>
                 @else
                 <span class="
@@ -83,15 +83,15 @@
                         $map = $game->maps->where('status', 'ongoing')->first();
                     @endphp
                     <span class="
-                                {{ $map->team2_score > $map->team1_score ? 'text-green-500!' : '' }}
-                                {{ $map->team2_score < $map->team1_score ? 'text-red-500!' : '' }}
-                                {{ $map->team2_score == $map->team1_score ? 'text-gray-500!' : '' }}
+                                {{ $map ? $map->team2_score > $map->team1_score ? 'text-green-500!' : '' : '' }}
+                                {{ $map ? $map->team2_score < $map->team1_score ? 'text-red-500!' : '' : '' }}
+                                {{ $map ? $map->team2_score == $map->team1_score ? 'text-gray-500!' : '' : '' }}
                                 ">
-                        {{ $map->team2_score }}
+                        {{ $map ? $map->team2_score : 0 }}
                     </span> <span class="text-xs
-                                        {{ $map->team2_maps_won > $map->team2_maps_won ? 'text-green-500!' : '' }}
-                                        {{ $map->team2_maps_won < $map->team1_maps_won ? 'text-red-500!' : '' }}
-                                        {{ $map->team2_maps_won == $map->team1_maps_won ? 'text-gray-500!' : '' }}
+                                        {{ $game->team2_maps_won > $game->team2_maps_won ? 'text-green-500!' : '' }}
+                                        {{ $game->team2_maps_won < $game->team1_maps_won ? 'text-red-500!' : '' }}
+                                        {{ $game->team2_maps_won == $game->team1_maps_won ? 'text-gray-500!' : '' }}
                                         ">({{ $game->team2_maps_won ? $game->team2_maps_won : 0 }})</span>
                 @else
                 <span class="

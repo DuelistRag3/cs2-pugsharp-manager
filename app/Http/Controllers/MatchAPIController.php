@@ -169,11 +169,10 @@ class MatchAPIController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function updatePlayer($id, $mapcount, $steamId, Request $request)
+    public function updatePlayer($gameid, $mapcount, $steamId, Request $request)
     {
-        $mapcount = +1;
 
-        $game = Game::find($id);
+        $game = Game::find($gameid);
         if (!$game) {
             return response()->json("Match not found", 404);
         }
@@ -233,9 +232,9 @@ class MatchAPIController extends Controller
      * @param  int  $map
      * @return \Illuminate\Http\JsonResponse
      */
-    public function finalizeMap($mapcount, Request $request)
+    public function finalizeMap($gameid, $mapcount, Request $request)
     {
-        $map = GameMap::where('game_id', $request->id)->where('map_number', $mapcount)->first();
+        $map = GameMap::where('game_id', $gameid)->where('map_number', $mapcount)->first();
         if (!$map) {
             return response()->json("Match - Map combination not found", 404);
         }
@@ -300,6 +299,7 @@ class MatchAPIController extends Controller
             {
                 $winner = $team;
             }
+            
         }
 
         if (!$winner) {
