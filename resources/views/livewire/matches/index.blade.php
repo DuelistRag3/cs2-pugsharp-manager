@@ -1,4 +1,4 @@
-<div class="grid auto-rows-auto max-w-6/12 mx-auto" wire:poll>
+<div class="grid auto-rows-auto max-w-10/12 md:max-w-6/12 mx-auto" wire:poll>
     <div>
         <h1 class="text-2xl text-bold">{{ __('manager.running_matches') }}</h1>
         @foreach($runningMatches as $match)
