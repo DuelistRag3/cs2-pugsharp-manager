@@ -42,7 +42,9 @@ class MatchAPIController extends Controller
         $demoUri = route('api.matches.demo', ['id' => $game->id]);
         $api_token = config('manager.api_bearer_token');
 
-        switch ($game->tournament->maps_each_game) {
+        $gametype = $game->next_game_id ? $game->tournament->maps_each_game : $game->tournament->maps_final_game;
+
+        switch ($gametype) {
             case 0:
                 $rounds = 1; // BO1
                 break;
