@@ -32,6 +32,8 @@ The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize an
   - and more
 - Tournament overview for guests
 - Register for a Tournament as a team (via steamid´s)
+- Matches
+  - Matchoverview for upcoming and running matches
 - Automatic team advancement.
 - Adding servers.
 
