@@ -94,17 +94,14 @@ class MatchAPIController extends Controller
             'server_locale' => 'de'
         ];
 
-        $game->status = 'ongoing';
-        $game->save();
-
         return response()->json($json);
     }
 
-    public function goLive($mapcount, Request $request)
+    public function goLive($gameid, $mapcount, Request $request)
     {
-        Storage::disk('local')->put("match_{$request->id}_map_{$mapcount}_golive.json", json_encode($request->all()));
+        Storage::disk('local')->put("match_{$gameid}_map_{$mapcount}_golive.json", json_encode($request->all()));
 
-        $game = Game::find($request->id);
+        $game = Game::find($gameid);
         if (!$game) {
             return response()->json("Match not found", 404);
         }
@@ -132,6 +129,9 @@ class MatchAPIController extends Controller
             $score->player_id = $player->id;
             $map->playerScores()->save($score);
         }
+
+        $game->status = 'ongoing';
+        $game->save();
 
         return response()->json("Map is now live", 200);
     }
