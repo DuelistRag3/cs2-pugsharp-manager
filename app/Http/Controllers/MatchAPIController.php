@@ -322,13 +322,16 @@ class MatchAPIController extends Controller
 
         $next = $game->nextGame;
 
-        if(!$next->team1_id)
+        if(!$next)
+        {
+            if(!$next->team1_id)
         {
             $next->team1_id = $winner->id;
             $next->save();
         } else {
             $next->team2_id = $winner->id;
             $next->save();
+        }
         }
 
         return response()->json("Matchup finalized", 200);

@@ -186,4 +186,10 @@ return [
     'steam_id_required' => 'Each Steam ID is required.',
     'steam_id_distinct' => 'Each Steam ID must be unique.',
     'steam_id_regex' => 'A Steam ID must contain 17 digits.',
+
+    'matches' => 'Matches',
+    'match' => 'Match',
+    'upcoming_matches' => 'Upcoming Matches',
+    'running_matches' => 'Running Matches',
+    'finished_matches' => 'Finished Matches',
 ];

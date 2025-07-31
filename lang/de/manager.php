@@ -186,4 +186,6 @@ return [
     'steam_id_required' => 'Jede Steam ID ist erforderlich.',
     'steam_id_distinct' => 'Jede Steam ID muss eindeutig sein.',
     'steam_id_regex' => 'Eine Steam ID muss 17 Ziffern enthalten.',
+
+    'matches' => 'Spiele',
 ];
