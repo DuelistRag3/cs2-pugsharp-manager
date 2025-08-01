@@ -15,12 +15,13 @@ return [
 
     'failed' => 'These credentials do not match our records.',
 
+    'profile' => 'Profile',
     'login' => 'Sign In',
     'email' => 'Email',
     'password' => 'Password',
     'remember_me' => 'Remember Me',
     'forgot_password' => 'Forgot Your Password?',
-    'register' => 'Register',
+    'register' => 'Sign Up',
     'name' => 'Name',
     'confirm_password' => 'Confirm Password',
     'register_success' => 'Registration successful! You can now log in.',

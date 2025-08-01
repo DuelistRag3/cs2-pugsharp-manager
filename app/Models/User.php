@@ -47,4 +47,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function profilePicture(): string
+    {
+        return $this->steam_avatar ?? 'resources/images/default_avatar.png';
+    }
 }

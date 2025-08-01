@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Livewire\Admin;
+namespace App\Livewire\Auth;
 
 use Livewire\Component;
-use Livewire\Attributes\Layout;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Login extends Component
@@ -34,9 +33,8 @@ class Login extends Component
         LivewireAlert::title(__('auth.failed'))->error()->toast()->position('top-end')->show();
     }
 
-    #[Layout('components.layouts.guest')]
     public function render()
     {
-        return view('livewire.admin.login');
+        return view('livewire.auth.login');
     }
 }
