@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
         "owenvoke/blade-fontawesome": "^2.9",
+        "spatie/laravel-permission": "*",
         "xpaw/php-source-query-class": "^4.0"
     },
     "require-dev": {
