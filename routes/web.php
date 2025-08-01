@@ -62,6 +62,9 @@ Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () 
     Route::get('/matches/{id}', AdminMatchShow::class)->name('matches.show');
 });
 
+Route::get('steamlogin', \App\Http\Controllers\SteamAuthController::class)
+    ->name('steam.login');
+
 Route::get('logout', function () {
     auth()->logout();
     return redirect()->route('landing');

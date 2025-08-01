@@ -42,6 +42,6 @@
     </div>
     <div class="py-2 w-[90%] mx-auto flex items-center text-sm text-gray-800 before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:before:border-neutral-600 dark:after:border-neutral-600">or</div>
     <div class="pb-2">
-        <a href="#" class="block w-2/3 mx-auto"><img src="https://community.fastly.steamstatic.com/public/images/signinthroughsteam/sits_01.png" alt="Register Image"></a>
+        <a href="{{ route('steam.login') }}" class="block w-2/3 mx-auto"><img src="https://community.fastly.steamstatic.com/public/images/signinthroughsteam/sits_01.png" alt="Register Image"></a>
     </div>
 </div>
