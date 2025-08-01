@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Team extends Model
 {
@@ -17,11 +17,11 @@ class Team extends Model
 
     public function players(): HasMany
     {
-        return $this->hasMany(Player::class);
+        return $this->hasMany(User::class);
     }
 
-    public function tournament(): BelongsTo
+    public function tournaments(): HasMany
     {
-        return $this->belongsTo(Tournament::class);
+        return $this->hasMany(TeamInTournament::class);
     }
 }

@@ -22,10 +22,10 @@ return new class extends Migration
 
         Schema::table('games', function (Blueprint $table) {
             $table->foreignId('server_id')
+                ->after('forfeit')
                 ->nullable()
                 ->constrained('servers')
-                ->onDelete('set null')
-                ->after('matchup_count'); // Set to null if the server is deleted
+                ->onDelete('set null');
         });
     }
 

@@ -41,7 +41,7 @@ class Tournament extends Model
     }
     public function teams(): HasMany
     {
-        return $this->hasMany(Team::class);
+        return $this->hasMany(TeamInTournament::class);
     }
 
     public function maps(): BelongsToMany

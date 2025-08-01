@@ -4,18 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Player extends Model
+class TeamInTournament extends Model
 {
+
     protected $fillable = [
-        'steam_id',
-        'steam_name',
-        'steam_avatar',
-        'steam_url',
+        'team_id',
+        'tournament_id',
     ];
 
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
+    }
+
+    public function tournament(): BelongsTo
+    {
+        return $this->belongsTo(Tournament::class);
     }
 }
