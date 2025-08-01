@@ -62,10 +62,6 @@ Route::name('admin.')->prefix('admin')->middleware(['auth'])->group(function () 
     Route::get('/matches/{id}', AdminMatchShow::class)->name('matches.show');
 });
 
-Route::get('register', function () {
-    return redirect()->route('landing');
-})->name('register');
-
 Route::get('logout', function () {
     auth()->logout();
     return redirect()->route('landing');

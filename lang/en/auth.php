@@ -17,8 +17,10 @@ return [
 
     'profile' => 'Profile',
     'login' => 'Sign In',
+    'username' => 'Username',
     'email' => 'Email',
     'password' => 'Password',
+    'password_confirmation' => 'Password Confirmation',
     'remember_me' => 'Remember Me',
     'forgot_password' => 'Forgot Your Password?',
     'register' => 'Sign Up',
