@@ -36,8 +36,9 @@
                     required="">
             </div>
             <button wire:loading.attr="disabled" type="submit"
-                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-2">
-                {{ __('auth.register') }}
+                class="w-full text-white disabled:opacity-70! disabled:cursor-not-allowed! bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-1 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 mt-2">
+                {{ __('auth.register') }}<i class="fa-solid fa-spinner fa-spin ms-2" wire:loading
+                    wire:target='register'></i>
             </button>
         </form>
     </div>
