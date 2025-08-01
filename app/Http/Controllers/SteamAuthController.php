@@ -54,8 +54,8 @@ class SteamAuthController extends Controller
         return User::firstOrCreate([
             'steam_id' => $steamUser->getSteamId(),
         ], [
-            'name' => $steamUser->getPersonaName(),
-            'avatar' => $steamUser->getAvatarFull(),
+            'steam_name' => $steamUser->getPersonaName(),
+            'steam_avatar' => $steamUser->getAvatarFull(),
             'player_level' => $steamUser->getPlayerLevel(),
             // ...and other what you need
         ]);
