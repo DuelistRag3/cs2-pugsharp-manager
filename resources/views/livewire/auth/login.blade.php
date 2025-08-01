@@ -1,5 +1,5 @@
 <div id="dropdownLogin"
-    class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-60 dark:bg-gray-700">
+    class="z-10 hidden bg-white rounded-lg shadow-sm w-60 dark:bg-gray-700">
     <div class="p-2 space-y-2 md:space-y-2 sm:p-3">
         <form class="" wire:submit.prevent='login'>
             @if (session()->has('error'))
@@ -39,5 +39,9 @@
                     wire:target='login'></i>
             </button>
         </form>
+    </div>
+    <div class="py-2 w-[90%] mx-auto flex items-center text-sm text-gray-800 before:flex-1 before:border-t before:border-gray-200 before:me-6 after:flex-1 after:border-t after:border-gray-200 after:ms-6 dark:text-white dark:before:border-neutral-600 dark:after:border-neutral-600">or</div>
+    <div class="pb-2">
+        <a href="#" class="block w-2/3 mx-auto"><img src="https://community.fastly.steamstatic.com/public/images/signinthroughsteam/sits_01.png" alt="Register Image"></a>
     </div>
 </div>
