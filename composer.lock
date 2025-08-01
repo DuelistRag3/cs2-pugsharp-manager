@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d032908c88955ec75c8d77cf694ebe6",
+    "content-hash": "eb61b1b2534e44797d93c012b27295a4",
     "packages": [
         {
             "name": "blade-ui-kit/blade-icons",
@@ -1134,6 +1134,63 @@
                 }
             ],
             "time": "2025-02-03T10:55:03+00:00"
+        },
+        {
+            "name": "ilzrv/laravel-steam-auth",
+            "version": "v3.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ilzrv/laravel-steam-auth.git",
+                "reference": "75d1a0b0b6071dad44529cc7af8b0e8413246428"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ilzrv/laravel-steam-auth/zipball/75d1a0b0b6071dad44529cc7af8b0e8413246428",
+                "reference": "75d1a0b0b6071dad44529cc7af8b0e8413246428",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+                "php": "^8.1",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^2.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "7.x|^8.5",
+                "phpunit/phpunit": "^10.0|^11.0",
+                "roave/security-advisories": "dev-latest",
+                "vimeo/psalm": "^5.12"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ilzrv\\LaravelSteamAuth\\ServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ilzrv\\LaravelSteamAuth\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ilia Lazarev",
+                    "email": "me@ilzrv.com"
+                }
+            ],
+            "description": "Steam Auth for Laravel",
+            "support": {
+                "issues": "https://github.com/ilzrv/laravel-steam-auth/issues",
+                "source": "https://github.com/ilzrv/laravel-steam-auth/tree/v3.2.0"
+            },
+            "time": "2025-03-16T17:09:29+00:00"
         },
         {
             "name": "jantinnerezo/livewire-alert",

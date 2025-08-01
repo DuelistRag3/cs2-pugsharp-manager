@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ilzrv/laravel-steam-auth": "^3.2",
         "jantinnerezo/livewire-alert": "^4.0",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
