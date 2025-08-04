@@ -54,6 +54,7 @@ class SteamAuthController extends Controller
             'steam_id' => $steamUser->getSteamId(),
         ], [
             'name' => $steamUser->getPersonaName(),
+            'password' => bcrypt(str_random(16)), // Generate a random password
             'steam_name' => $steamUser->getPersonaName(),
             'steam_avatar' => $steamUser->getAvatarFull(),
             'player_level' => $steamUser->getPlayerLevel(),
