@@ -30,4 +30,9 @@ return [
     'logout' => 'Sign Out',
     'no_email' => 'You have not set an email address yet. Please do so, to use our services.',
     'set_email' => 'Add here',
+    'email_already_exists' => 'This email address is already in use by another user.',
+    'email_set' => 'Email address set successfully!',
+
+    'not_allowed' => 'Not allowed',
+    'not_allowed_text' => 'You are not allowed to perform this action.',
 ];

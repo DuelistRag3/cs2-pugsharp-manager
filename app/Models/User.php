@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Vite;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -56,5 +57,52 @@ class User extends Authenticatable
     public function profilePicture(): string
     {
         return $this->steam_avatar ?? Vite::asset('resources/images/default_avatar.png');
+    }
+
+    public function teamHasPlayers()
+    {
+        return $this->hasMany(TeamHasPlayer::class);
+    }
+
+    public function ongoingMatches()
+    {
+        $matches = collect();
+        foreach($this->teamHasPlayers as $teamHasPlayer) {
+            $matches = $matches->merge($teamHasPlayer->team()->games()->where('status', 'ongoing')->get());
+        }
+        return $matches->sortByDesc('created_at');
+    }
+    
+    public function matchHistory()
+    {
+        $matches = collect();
+        foreach($this->teamHasPlayers as $teamHasPlayer) {
+            $matches = $matches->merge($teamHasPlayer->team()->games()->where('status', 'completed')->get());
+        }
+        return $matches->sortByDesc('created_at');
+    }
+
+    public function map_scores(): HasMany
+    {
+        return $this->hasMany(GameMapPlayerScore::class, 'steam_id', 'steam_id');
+    }
+
+    public function stats(): array
+    {
+        $stats = [
+            'kills' => 0,
+            'headshots' => 0,
+            'deaths' => 0,
+            'assists' => 0,
+        ];
+
+        foreach ($this->map_scores as $score) {
+            $stats['kills'] += $score->kills;
+            $stats['headshots'] += $score->headshots;
+            $stats['deaths'] += $score->deaths;
+            $stats['assists'] += $score->assists;
+        }
+
+        return $stats;
     }
 }

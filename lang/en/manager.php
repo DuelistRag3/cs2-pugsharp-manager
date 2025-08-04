@@ -192,4 +192,14 @@ return [
     'upcoming_matches' => 'Upcoming Matches',
     'running_matches' => 'Running Matches',
     'finished_matches' => 'Finished Matches',
+
+    'steam' => [
+        'unlink_confirmation_title' => 'Unlink Steam Account?',
+        'unlink_confirmation_text' => 'Are you sure you want to unlink your Steam account? This action cannot be undone.',
+        'unlink' => 'Unlink'
+    ],
+
+    'matchhistory_title' => 'Match History',
+
+    'stats' => 'Stats',
 ];
