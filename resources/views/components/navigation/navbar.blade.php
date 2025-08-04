@@ -163,12 +163,11 @@
         class="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 dark:border-gray-700">
         <x-navigation.navbar-item :link="route('landing')" :active="request()->routeIs('landing')">{{ __('manager.home')
           }}</x-navigation.navbar-item>
-        <x-navigation.navbar-item :link="route('tournaments.index')" :active="request()->routeIs('tournaments')">{{
+        <x-navigation.navbar-item :link="route('tournaments.index')" :active="request()->routeIs('tournaments.*')">{{
           __('manager.tournaments') }}</x-navigation.navbar-item>
-        <x-navigation.navbar-item :link="route('teams.index')" :active="request()->routeIs('teams')">{{
+        <x-navigation.navbar-item :link="route('teams.index')" :active="request()->routeIs('teams.*')">{{
           __('manager.teams') }}</x-navigation.navbar-item>
-
-        <x-navigation.navbar-item :link="route('matches.index')" :active="request()->routeIs('matches')">{{
+        <x-navigation.navbar-item :link="route('matches.index')" :active="request()->routeIs('matches.*')">{{
           __('manager.matches') }}</x-navigation.navbar-item>
       </ul>
     </div>
