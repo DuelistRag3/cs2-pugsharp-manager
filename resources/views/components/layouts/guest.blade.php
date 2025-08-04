@@ -15,6 +15,15 @@
 <body class="dark:bg-gray-900 text-black dark:text-white">
     <x-navigation.navbar />
 
+    @auth
+        @if(Auth::user()->email == null)
+            <div class="bg-yellow-100 text-yellow-800 p-4 text-center">
+                {{ __('auth.no_email') }}
+                <a href="{{ route('verification.notice') }}" class="text-blue-600 hover:underline">{{ __('auth.verify_email') }}</a>
+            </div>
+        @endif   
+    @endauth
+
     <div class="container mx-auto px-4 py-8 min-h-screen">
         {{ $slot }}
     </div>

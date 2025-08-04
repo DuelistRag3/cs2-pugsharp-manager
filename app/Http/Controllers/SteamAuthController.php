@@ -50,10 +50,10 @@ class SteamAuthController extends Controller
 
     private function firstOrCreate(SteamUserDto $steamUser): User
     {
-        dd($steamUser);
         return User::firstOrCreate([
             'steam_id' => $steamUser->getSteamId(),
         ], [
+            'name' => $steamUser->getPersonaName(),
             'steam_name' => $steamUser->getPersonaName(),
             'steam_avatar' => $steamUser->getAvatarFull(),
             'player_level' => $steamUser->getPlayerLevel(),

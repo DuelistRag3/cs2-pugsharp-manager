@@ -28,4 +28,5 @@ return [
     'confirm_password' => 'Confirm Password',
     'register_success' => 'Registration successful! You can now log in.',
     'logout' => 'Sign Out',
+    'no_email' => 'You have not set an email address yet. Please do so, to use our services.',
 ];
