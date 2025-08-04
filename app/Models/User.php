@@ -65,23 +65,23 @@ class User extends Authenticatable
         return $this->belongsToMany(Team::class);
     }
 
-    public function ongoingMatches()
-    {
-        $matches = collect();
-        foreach($this->teams as $team) {
-            $matches = $matches->merge($team->games()->where('status', 'ongoing')->get());
-        }
-        return $matches->sortByDesc('created_at');
-    }
+    // public function ongoingMatches()
+    // {
+    //     $matches = collect();
+    //     foreach($this->teams as $team) {
+    //         $matches = $matches->merge($team->games()->where('status', 'ongoing')->get());
+    //     }
+    //     return $matches->sortByDesc('created_at');
+    // }
     
-    public function matchHistory()
-    {
-        $matches = collect();
-        foreach($this->teams as $team) {
-            $matches = $matches->merge($team->games()->where('status', 'completed')->get());
-        }
-        return $matches->sortByDesc('created_at');
-    }
+    // public function matchHistory()
+    // {
+    //     $matches = collect();
+    //     foreach($this->teams as $team) {
+    //         $matches = $matches->merge($team->games()->where('status', 'completed')->get());
+    //     }
+    //     return $matches->sortByDesc('created_at');
+    // }
 
     public function map_scores(): HasMany
     {

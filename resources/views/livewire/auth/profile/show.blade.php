@@ -73,6 +73,14 @@
             class="block mt-2 py-1 px-3 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ __('manager.teams') }}
             </h5>
+            @foreach($user->teams as $team)
+            <a href="{{ route('profile.show', $team->id) }}" target="_blank"
+                class="flex items-center py-1 {{ $loop->last ? '' : 'border-b' }} border-gray-200 dark:border-gray-700">
+                <img class="w-8 h-8 rounded-full mr-2" src="{{ $team->logoUrl() }}"
+                    alt="{{ $team->name }}" />
+                <span class="text-gray-900 dark:text-white">{{ $team->name }}</span>
+            </a>
+            @endforeach
         </div>
     </div>
 
@@ -92,7 +100,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($user->ongoingMatches() as $match)
+                    {{-- @foreach($user->ongoingMatches() as $match)
                     <tr
                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <td class="px-6 py-4">{{ $match->id }}</td>
@@ -107,7 +115,7 @@
                         <td class="px-6 py-4">{{ $match->created_at->format('Y-m-d H:i') }}</td>
                         <td class="px-6 py-4"></td>
                     </tr>
-                    @endforeach
+                    @endforeach --}}
                 </tbody>
             </table>
         </div>

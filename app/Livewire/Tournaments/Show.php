@@ -30,10 +30,12 @@ class Show extends Component
     public $steam_ids = [];
 
     public Tournament $tournament;
+    public $avlTeams;
 
     public function mount(Tournament $tournament)
     {
         $this->tournament = $tournament;
+        $this->avlTeams = Team::where('captain_id', auth()->id())->has('players', $this->tournament->team_size)->get();
     }
 
     public function messages()

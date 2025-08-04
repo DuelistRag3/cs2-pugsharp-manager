@@ -37,7 +37,12 @@ class Index extends Component
             'logo_extension' => $this->teamLogo ? $this->teamLogo->extension() : null,
         ]);
 
-        $this->teamLogo->storePubliclyAs(path: 'team_logos', name: $team->id . '.' . $this->teamLogo->extension());
+        if($this->teamLogo) {
+            // Store the team logo
+            $this->teamLogo->storePubliclyAs('team_logos', "{$team->id}.{$this->teamLogo->extension()}");
+        }
+
+        $team->players()->attach(auth()->id());
 
         return redirect()->route('teams.show', $team->id);
     }

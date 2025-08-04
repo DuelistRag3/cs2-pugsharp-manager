@@ -20,9 +20,9 @@ class Team extends Model
         'logo_extension',
     ];
 
-    public function players(): HasMany
+    public function players(): BelongsToMany
     {
-        return $this->hasMany(User::class);
+        return $this->belongsToMany(User::class);
     }
 
     public function tournaments(): BelongsToMany
@@ -30,10 +30,10 @@ class Team extends Model
         return $this->belongsToMany(Tournament::class);
     }
 
-    public function games(): HasMany
-    {
-        return $this->hasMany(Game::class);
-    }
+    // public function games(): HasMany
+    // {
+    //     return $this->hasMany(Game::class);
+    // }
 
     public function captain(): BelongsTo
     {
