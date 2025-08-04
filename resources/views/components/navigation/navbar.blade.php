@@ -165,6 +165,9 @@
           }}</x-navigation.navbar-item>
         <x-navigation.navbar-item :link="route('tournaments.index')" :active="request()->routeIs('tournaments')">{{
           __('manager.tournaments') }}</x-navigation.navbar-item>
+        <x-navigation.navbar-item :link="route('teams.index')" :active="request()->routeIs('teams')">{{
+          __('manager.teams') }}</x-navigation.navbar-item>
+
         <x-navigation.navbar-item :link="route('matches.index')" :active="request()->routeIs('matches')">{{
           __('manager.matches') }}</x-navigation.navbar-item>
       </ul>

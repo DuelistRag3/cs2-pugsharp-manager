@@ -1,12 +1,14 @@
 <?php
 
 use App\Livewire\Landing;
-use App\Livewire\Admin\Dashboard;
 /* Livewire components import */
 
 /* Tournaments Guest */
 use App\Livewire\Tournaments\Index as TournamentIndex;
 use App\Livewire\Tournaments\Show as TournamentShow;
+
+/* Teams Guest */
+use App\Livewire\Teams\Index as TeamIndex;
 
 /* Matches Guest */
 use App\Livewire\Matches\Show as MatchShow;
@@ -39,6 +41,9 @@ Route::get('/tournaments', TournamentIndex::class)
 Route::get('/tournaments/{tournament}', TournamentShow::class)
     ->name('tournaments.show');
 
+Route::get('/teams', TeamIndex::class)
+    ->name('teams.index');
+
 Route::get('/matches', MatchIndex::class)
     ->name('matches.index');
 
@@ -46,8 +51,7 @@ Route::get('/matches/{match}', MatchShow::class)
     ->name('matches.show');
 
 Route::name('admin.')->prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-    Route::redirect('/', '/admin/dashboard', 301);
-    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::redirect('/', '/admin/torunaments', 301);
 
     /* Map routes */
     Route::get('/maps', MapIndex::class)->name('maps.index');
