@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Vite;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -59,16 +60,16 @@ class User extends Authenticatable
         return $this->steam_avatar ?? Vite::asset('resources/images/default_avatar.png');
     }
 
-    public function teamHasPlayers()
+    public function teams(): BelongsToMany
     {
-        return $this->hasMany(TeamHasPlayer::class);
+        return $this->belongsToMany(Team::class);
     }
 
     public function ongoingMatches()
     {
         $matches = collect();
-        foreach($this->teamHasPlayers as $teamHasPlayer) {
-            $matches = $matches->merge($teamHasPlayer->team()->games()->where('status', 'ongoing')->get());
+        foreach($this->teams as $team) {
+            $matches = $matches->merge($team->games()->where('status', 'ongoing')->get());
         }
         return $matches->sortByDesc('created_at');
     }
@@ -76,8 +77,8 @@ class User extends Authenticatable
     public function matchHistory()
     {
         $matches = collect();
-        foreach($this->teamHasPlayers as $teamHasPlayer) {
-            $matches = $matches->merge($teamHasPlayer->team()->games()->where('status', 'completed')->get());
+        foreach($this->teams as $team) {
+            $matches = $matches->merge($team->games()->where('status', 'completed')->get());
         }
         return $matches->sortByDesc('created_at');
     }
