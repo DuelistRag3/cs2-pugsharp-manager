@@ -4,10 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Vite;
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
@@ -23,6 +24,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'steam_id',
+        'steam_name',
+        'steam_avatar',
+        'steam_url',
     ];
 
     /**
@@ -50,6 +55,6 @@ class User extends Authenticatable
 
     public function profilePicture(): string
     {
-        return $this->steam_avatar ?? 'resources/images/default_avatar.png';
+        return $this->steam_avatar ?? Vite::asset('resources/images/default_avatar.png');
     }
 }

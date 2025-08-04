@@ -50,6 +50,7 @@ class SteamAuthController extends Controller
 
     private function firstOrCreate(SteamUserDto $steamUser): User
     {
+        // dd($steamUser->getSteamId(), $steamUser->getAvatarFull(), $steamUser->getPersonaName(), $steamUser->getProfileUrl());
         return User::firstOrCreate([
             'steam_id' => $steamUser->getSteamId(),
         ], [
@@ -57,8 +58,7 @@ class SteamAuthController extends Controller
             'password' => bcrypt(str()->random(16)), // Generate a random password
             'steam_name' => $steamUser->getPersonaName(),
             'steam_avatar' => $steamUser->getAvatarFull(),
-            'player_level' => $steamUser->getPlayerLevel(),
-            // ...and other what you need
+            'steam_url' => $steamUser->getProfileUrl(),
         ]);
     }
 }

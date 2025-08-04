@@ -19,7 +19,7 @@
         @if(Auth::user()->email == null)
             <div class="bg-yellow-100 text-yellow-800 p-4 text-center">
                 {{ __('auth.no_email') }}
-                <a href="{{ route('verification.notice') }}" class="text-blue-600 hover:underline">{{ __('auth.verify_email') }}</a>
+                <a href="#" class="text-blue-600 hover:underline">{{ __('auth.set_email') }}</a>               
             </div>
         @endif   
     @endauth
