@@ -2,9 +2,7 @@
     <div class="flex flex-col gap-4">
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold text-white">{{ __('manager.tournament') }}: {{ $tournament->name }}</h1>
-            @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams &&
-                now()->lessThan(new DateTime($tournament->registration_deadline ? $tournament->registration_deadline :
-                $tournament->start_date)) && Auth::user())
+            @if($this->registrationAllowed())
                 <button type="button" data-modal-target="register-modal" data-modal-toggle="register-modal"
                     class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer">{{
                     __('manager.register_team') }}</button>
@@ -236,7 +234,7 @@
     </div>
     @endforeach
 
-    @if($tournament->status === 'scheduled' && $tournament->teams()->count() < $tournament->max_teams && Auth::user())
+    @if($this->registrationAllowed())
         <!-- Register modal -->
         <div id="register-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
             class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
@@ -269,13 +267,14 @@
                             <img src="{{ $team->logoUrl() }}" alt="logo" class="w-10 h-10 rounded-full">
 
                             <div class="ml-4">
-                                <h2 class="text-lg font-bold dark:text-gray-300">{{ $team->name }} ({{ $team->tag }})</h2>
+                                <h2 class="text-lg font-bold dark:text-gray-300">{{ $team->name }} ({{ $team->tag }})
+                                </h2>
                                 <h4 class=" text-gray-500 dark:text-gray-400">{{ __('manager.captain') }}: {{
                                     $team->captain->name ?? 'N/A' }}</h4>
                                 <h5 class="text-gray-500 dark:text-gray-400 text-sm">
                                     {{ __('manager.players') }}:
                                     @foreach($team->players as $player)
-                                        <span class="block">{{ $player->steam_name }}</span><br>
+                                    <span class="block">{{ $player->steam_name }}</span><br>
                                     @endforeach
                                 </h5>
                             </div>

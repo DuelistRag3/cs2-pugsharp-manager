@@ -35,7 +35,7 @@ class Show extends Component
     public function mount(Tournament $tournament)
     {
         $this->tournament = $tournament;
-        $this->avlTeams = Team::where('captain_id', auth()->id())->has('players', $this->tournament->team_size)->get();
+        $this->avlTeams = Team::where('captain_id', auth()->id())->has('players', $this->tournament->team_size)->has('tournaments', '!=', $this->tournament->id)->get();
     }
 
     public function messages()
@@ -47,52 +47,35 @@ class Show extends Component
         ];
     }
 
-    public function registerTeam()
+    public function registerTeam($id)
     {
 
-        $this->validate();
-
-        $response = Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", [
-            'key' => config('manager.steam_api_key'),
-            'steamids' => implode(',', $this->steam_ids),
-        ]);
-
-        if ($response->failed()) {
-            LivewireAlert::error()->toast()->position('top-end')->title($response->status() . ' - ' . $response->json('message'))->show();
-            return;
-        }
-
-        if ($response->successful()) {
-            $data = $response->json();
-            
-            $team = new Team([
-                'name' => $this->teamname,
-                'tag' => $this->teamtag,
-                'flag' => "DE"
-            ]);
-
-            $this->tournament->teams()->save($team);
-
-            foreach ($data['response']['players'] as $player) {
-                $player = new Player([
-                    'steam_id' => $player['steamid'],
-                    'steam_name' => $player['personaname'],
-                    'steam_avatar' => $player['avatarfull'],
-                    'steam_url' => $player['profileurl']
-                ]);
-
-                $team->players()->save($player);
-            }
-            LivewireAlert::success()->toast()->position('top-end')->title('Registrierung erfolgreich')->show();
-            return;
-        } else {
-            $error =  $response->json();
-            LivewireAlert::error()->toast()->position('top-end')->title("Fehler")->show();
-        }
+        $this->tournament->teams()->attach($id);
 
         $this->dispatch('teamRegistered');
 
         return;
+    }
+
+    public function registrationAllowed()
+    {
+        if( $this->tournament->status !== 'scheduled') {
+            return false;
+        }
+
+        if( $this->tournament->teams()->count() >= $this->tournament->max_teams) {
+            return false;
+        }
+
+        if( now()->greaterThanOrEqualTo(new \DateTime($this->tournament->registration_deadline ?? $this->tournament->start_date))) {
+            return false;
+        }
+
+        if( auth()->guest() || $this->tournament->teams()->where('captain_id', auth()->id())->exists()) {
+            return false;
+        }
+
+        return true;
     }
 
     #[Layout('components.layouts.guest')]
