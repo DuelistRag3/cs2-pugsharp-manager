@@ -1,4 +1,4 @@
-<div class="grid grid-cols-4 gap-2 mb-4">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
     <div class="col-span-1">
         <div
             class="w-full max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
@@ -60,16 +60,25 @@
             @php
             $stats = $user->stats();
             @endphp
-            <p class="flex justify-between w-full">Kills: <span class="text-sm text-right text-gray-500 dark:text-gray-400">{{ $stats['kills'] }}</span></p>
-            <p class="flex justify-between w-full">Headshots: <span class="text-sm text-right text-gray-500 dark:text-gray-400">{{ $stats['headshots'] }}</span></p>
-            <p class="flex justify-between w-full">Deaths: <span class="text-sm text-right text-gray-500 dark:text-gray-400">{{ $stats['deaths'] }}</span></p>
-            <p class="flex justify-between w-full">Assists: <span class="text-sm text-right text-gray-500 dark:text-gray-400">{{ $stats['assists'] }}</span></p>
+            <p class="flex justify-between w-full">Kills: <span
+                    class="text-sm text-right text-gray-500 dark:text-gray-400">{{ $stats['kills'] }}</span></p>
+            <p class="flex justify-between w-full">Headshots: <span
+                    class="text-sm text-right text-gray-500 dark:text-gray-400">{{ $stats['headshots'] }}</span></p>
+            <p class="flex justify-between w-full">Deaths: <span
+                    class="text-sm text-right text-gray-500 dark:text-gray-400">{{ $stats['deaths'] }}</span></p>
+            <p class="flex justify-between w-full">Assists: <span
+                    class="text-sm text-right text-gray-500 dark:text-gray-400">{{ $stats['assists'] }}</span></p>
+        </div>
+        <div
+            class="block mt-2 py-1 px-3 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ __('manager.teams') }}
+            </h5>
         </div>
     </div>
 
 
     <div
-        class="block col-span-3 p-6 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        class="block col-span-1 md:col-span-3 p-6 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
 
         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{
             __('manager.matchhistory_title') }}</h5>
