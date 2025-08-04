@@ -8,7 +8,7 @@
                 <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="{{ $user->profilePicture() }}"
                     alt="Bonnie image" />
                 <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{ $user->name }}</h5>
-                @if($isThisUser)
+                @if($user->isThisUser())
                 <span class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</span>
                 @if(!$user->email)
                 <form class="max-w-sm mx-auto" wire:submit.prevent="addEmail">
@@ -31,14 +31,14 @@
                             href="{{ $user->steam_url }}" target="_blank">{{ $user->steam_name }}</a></span>
 
                 </div>
-                @if($isThisUser)
+                @if($user->isThisUser())
                 <button wire:click="unlinkSteam"
                     class="focus:outline-none mt-2 text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer">
                     Unlink Steam account
                 </button>
                 @endif
                 @else
-                @if($isThisUser)
+                @if($user->isThisUser())
                 <div class="pb-2">
                     <p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-1">No Steam account linked.</p>
                     <a href="{{ route('profile.steam.link') }}" class="block mx-auto"><img

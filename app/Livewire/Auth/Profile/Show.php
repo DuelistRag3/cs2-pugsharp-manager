@@ -11,7 +11,6 @@ class Show extends Component
 {
     public User $user;
     public string $email;
-    public bool $isThisUser;
 
     public function mount($id)
     {
@@ -32,7 +31,6 @@ class Show extends Component
         }
 
         $this->user = User::findOrFail($id);
-        $this->isThisUser = auth()->user()->id === $this->user->id ? true : false;
     }
 
     public function unlinkSteam($confirmed = false)

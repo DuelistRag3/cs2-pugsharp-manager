@@ -105,4 +105,9 @@ class User extends Authenticatable
 
         return $stats;
     }
+
+    public function isThisUser(): bool
+    {
+        return auth()->user()->id === $this->id ? true : false;
+    }
 }
