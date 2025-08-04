@@ -35,7 +35,7 @@ class Show extends Component
 
     public function unlinkSteam($confirmed = false)
     {
-        if(!$this->isThisUser) {
+        if(!$this->user->isThisUser()) {
             LivewireAlert::title(__('auth.not_allowed'))
                 ->text(__('auth.not_allowed_text'))
                 ->error()
@@ -75,7 +75,7 @@ class Show extends Component
 
     public function addEmail()
     {
-        if(!$this->isThisUser) {
+        if(!$this->user->isThisUser()) {
             LivewireAlert::title(__('auth.not_allowed'))
                 ->text(__('auth.not_allowed_text'))
                 ->error()

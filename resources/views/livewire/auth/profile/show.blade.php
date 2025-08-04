@@ -1,5 +1,5 @@
-<div class="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4">
-    <div class="col-span-1">
+<div class="grid grid-cols-1 xl:grid-cols-8 gap-2 mb-4 max-w-10/12 md:max-w-6/12 mx-auto">
+    <div class="xl:col-span-3">
         <div
             class="w-full max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
             <div class="flex justify-end px-4 pt-4">
@@ -41,7 +41,7 @@
                 @if($user->isThisUser())
                 <div class="pb-2">
                     <p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-1">No Steam account linked.</p>
-                    <a href="{{ route('profile.steam.link') }}" class="block mx-auto"><img
+                    <a href="{{ route('steam.link') }}" class="block mx-auto"><img
                             src="https://community.fastly.steamstatic.com/public/images/signinthroughsteam/sits_01.png"
                             alt="Register Image"></a>
                 </div>
@@ -78,7 +78,7 @@
 
 
     <div
-        class="block col-span-1 md:col-span-3 p-6 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        class="block xl:col-span-5 p-6 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
 
         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{
             __('manager.matchhistory_title') }}</h5>

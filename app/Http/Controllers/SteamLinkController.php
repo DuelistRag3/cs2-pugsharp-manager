@@ -13,7 +13,6 @@ use Illuminate\Routing\Redirector;
 use Ilzrv\LaravelSteamAuth\Exceptions\Authentication\SteamResponseNotValidAuthenticationException;
 use Ilzrv\LaravelSteamAuth\Exceptions\Validation\ValidationException;
 use Ilzrv\LaravelSteamAuth\SteamAuthenticator;
-use Ilzrv\LaravelSteamAuth\SteamUserDto;
 
 class SteamLinkController extends Controller
 {
@@ -22,7 +21,6 @@ class SteamLinkController extends Controller
         Redirector $redirector,
         Client $client,
         HttpFactory $httpFactory,
-        AuthManager $authManager,
     ): RedirectResponse {
         $steamAuthenticator = new SteamAuthenticator(
             new Uri($request->getUri()),
@@ -59,6 +57,6 @@ class SteamLinkController extends Controller
 
         session()->flash('steam_linked', true);
 
-        return $redirector->to('/profile');
+        return $redirector->to('/profile/' . $user->id);
     }
 }

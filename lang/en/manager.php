@@ -202,4 +202,16 @@ return [
     'matchhistory_title' => 'Match History',
 
     'stats' => 'Stats',
+    'captain' => 'Captain',
+    'players' => 'Players',
+    'player' => 'Player',
+    'team' => 'Team',
+    'create_team' => 'Create Team',
+    'teamname' => 'Team Name',
+    'teamtag' => 'Team Tag',
+    'teamlogo' => 'Team Logo',
+    'team_created' => 'Team created successfully.',
+    'team_updated' => 'Team updated successfully.',
+    'team_deleted' => 'Team deleted successfully.',
+    'team_not_found' => 'Team not found.',
 ];

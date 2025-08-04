@@ -44,6 +44,9 @@ Route::get('/tournaments/{tournament}', TournamentShow::class)
 Route::get('/teams', TeamIndex::class)
     ->name('teams.index');
 
+Route::get('/teams/{team}', \App\Livewire\Teams\Show::class)
+    ->name('teams.show');
+
 Route::get('/matches', MatchIndex::class)
     ->name('matches.index');
 
@@ -70,12 +73,12 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'role:admin'])->grou
 
 Route::name('profile.')->prefix('profile')->group(function () {
     Route::get('/{id}', ProfileShow::class)->name('show');
+});
 
-    Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth'])->group(function () {
         Route::get('/steam-link', \App\Http\Controllers\SteamLinkController::class)
             ->name('steam.link');
     });
-});
 
 Route::get('steamlogin', \App\Http\Controllers\SteamAuthController::class)
     ->name('steam.login');
