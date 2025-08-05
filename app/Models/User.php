@@ -65,6 +65,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Team::class);
     }
 
+    public function isTeamCaptain(Team $team): bool
+    {
+        return $this->id === $team->captain_id;
+    }
+
     // public function ongoingMatches()
     // {
     //     $matches = collect();

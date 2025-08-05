@@ -280,6 +280,11 @@
                             </div>
                         </div>
                         @endforeach
+                        @if($avlTeams->isEmpty())
+                            <div class="text-gray-500 dark:text-gray-400">
+                                {{ __('manager.no_available_teams') }}
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

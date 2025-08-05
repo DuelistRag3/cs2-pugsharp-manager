@@ -207,6 +207,10 @@ return [
     'player' => 'Player',
     'team' => 'Team',
     'create_team' => 'Create Team',
+    'edit_team' => 'Edit Team',
+    'delete_team' => 'Delete Team',
+    'delete_team_confirmation' => 'Delete Team?',
+    'delete_team_confirmation_text' => 'Are you sure you want to delete this team? This action cannot be undone.',
     'teamname' => 'Team Name',
     'teamtag' => 'Team Tag',
     'teamlogo' => 'Team Logo',
@@ -214,4 +218,8 @@ return [
     'team_updated' => 'Team updated successfully.',
     'team_deleted' => 'Team deleted successfully.',
     'team_not_found' => 'Team not found.',
+    'no_teams_found' => 'No teams found.',
+    'no_available_teams' => 'No available teams found.',
+
+    'invite_player' => 'Invite Player',
 ];
