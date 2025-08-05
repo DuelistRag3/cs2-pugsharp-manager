@@ -57,27 +57,6 @@ class Show extends Component
         return;
     }
 
-    public function registrationAllowed()
-    {
-        if( $this->tournament->status !== 'scheduled') {
-            return false;
-        }
-
-        if( $this->tournament->teams()->count() >= $this->tournament->max_teams) {
-            return false;
-        }
-
-        if( now()->greaterThanOrEqualTo(new \DateTime($this->tournament->registration_deadline ?? $this->tournament->start_date))) {
-            return false;
-        }
-
-        if( auth()->guest() || $this->tournament->teams()->where('captain_id', auth()->id())->exists()) {
-            return false;
-        }
-
-        return true;
-    }
-
     #[Layout('components.layouts.guest')]
     public function render()
     {

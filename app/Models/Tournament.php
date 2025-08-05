@@ -50,6 +50,27 @@ class Tournament extends Model
         return $this->belongsToMany(TournamentMap::class);
     }
 
+    public function registrationAllowed()
+    {
+        if( $this->status !== 'scheduled') {
+            return false;
+        }
+
+        if( $this->teams()->count() >= $this->max_teams) {
+            return false;
+        }
+
+        if( now()->greaterThanOrEqualTo(new \DateTime($this->registration_deadline ?? $this->start_date))) {
+            return false;
+        }
+
+        if( auth()->guest() || $this->teams()->where('captain_id', auth()->id())->exists()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function start()
     {
         $this->status = 'ongoing';
