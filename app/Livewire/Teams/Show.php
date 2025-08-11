@@ -13,6 +13,7 @@ class Show extends Component
     public Team $team;
     public $search = '';
     public $invitablePlayers = [];
+    public $invitePlayers = [];
 
     public function mount(Team $team)
     {
