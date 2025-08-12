@@ -70,6 +70,21 @@ class User extends Authenticatable
         return $this->id === $team->captain_id;
     }
 
+    public function teamInvitations(): HasMany
+    {
+        return $this->hasMany(TeamInvitation::class);
+    }
+
+    public function getNotificationsCount(): int
+    {
+        $count = 0;
+
+        // Count team invitations
+        $count += $this->teamInvitations()->count();
+
+        return $count;
+    }
+
     // public function ongoingMatches()
     // {
     //     $matches = collect();

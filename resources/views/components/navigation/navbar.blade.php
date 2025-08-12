@@ -96,13 +96,16 @@
     @auth
     <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
       <button type="button"
-        class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 cursor-pointer"
+        class="flex justify-end text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 cursor-pointer"
         id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
         data-dropdown-placement="bottom">
         <span class="sr-only">Open user menu</span>
         <img class="w-8 h-8 rounded-full" src="{{ Auth::user()->profilePicture() }}"
           alt="{{ Auth::user()->name }}">
-      </button>
+          @if(Auth::user()->getNotificationsCount() > 0)
+          <div style="font-size: 0.5rem;" class="absolute  inline-flex items-center justify-center w-4 h-4 font-bold text-white bg-red-500 border-2 border-white rounded-full dark:border-gray-900">{{ Auth::user()->getNotificationsCount() }}</div>
+          @endif
+        </button>
       <!-- Dropdown menu -->
       <div
         class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600"

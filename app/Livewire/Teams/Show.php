@@ -7,6 +7,7 @@ use App\Models\User;
 use Livewire\Component;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Layout;
+use Illuminate\Database\Eloquent\Builder;
 
 class Show extends Component
 {
@@ -18,18 +19,26 @@ class Show extends Component
     public function mount(Team $team)
     {
         $this->team = $team;
-        $this->invitablePlayers = User::where('name', 'like', "%{$this->search}%")->orWhere('steam_name', 'like', "%{$this->search}%")
-            ->orWhere('steam_id', 'like', "%{$this->search}%")->orWhere('email', 'like', "%{$this->search}%")
+        $this->invitablePlayers = User::whereAny([
+                'name',
+                'steam_name',
+                'steam_id',
+                'email'
+            ], 'like', "%{$this->search}%")
+            ->whereNotIn('id', $this->team->players->pluck('id'))
             ->limit(5)->get();
     }
 
     #[On('updatedSearch')]
     public function updatedSearch()
     {
-        $this->invitablePlayers = User::where('name', 'like', "%{$this->search}%")
-            ->orWhere('steam_name', 'like', "%{$this->search}%")
-            ->orWhere('steam_id', 'like', "%{$this->search}%")
-            ->orWhere('email', 'like', "%{$this->search}%")
+        $this->invitablePlayers = User::whereAny([
+                'name',
+                'steam_name',
+                'steam_id',
+                'email'
+            ], 'like', "%{$this->search}%")
+            ->whereNotIn('id', $this->team->players->pluck('id'))
             ->limit(5)->get();
     }
 
