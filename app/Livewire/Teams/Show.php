@@ -32,19 +32,20 @@ class Show extends Component
             ->limit(5)->get();
     }
 
-    #[On('updatedSearch')]
-    public function updatedSearch()
+    public function updating($property, $value)
     {
-        $this->invitablePlayers = User::whereAny([
-                'name',
-                'steam_name',
-                'steam_id',
+        if ($property === 'search') {
+            $this->invitablePlayers = User::whereAny([
+                    'name',
+                    'steam_name',
+                    'steam_id',
                 'email'
-            ], 'like', "%{$this->search}%")
+            ], 'like', "%{$value}%")
             ->whereNotIn('id', $this->team->players->pluck('id'))
             ->whereNotIn('id', $this->team->pendingInvites->pluck('id'))
             ->where('steam_id', '!=', null)
             ->limit(5)->get();
+        }
     }
 
     public function confirmInvitePlayer(User $player)

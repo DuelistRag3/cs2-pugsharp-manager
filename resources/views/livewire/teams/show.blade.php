@@ -113,15 +113,3 @@
     @endif
     @endauth
 </div>
-
-
-@script
-<script>
-    let input = document.getElementById('searchInput')
-    input.addEventListener('input', function() {
-        $wire.set('search', input.value);
-
-        $wire.dispatch('updatedSearch');
-    });
-</script>
-@endscript
