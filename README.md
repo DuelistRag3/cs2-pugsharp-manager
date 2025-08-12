@@ -1,6 +1,6 @@
 <h1 align="center" id="title">CS2 Pugsharp Manager</h1>
 
-![Version - Beta 1.0](https://img.shields.io/badge/Version-Beta_1.0-2ea44f?style=for-the-badge)
+![Version - Beta 1.1.0](https://img.shields.io/badge/Version-Beta_1.1.0-2ea44f?style=for-the-badge)
 ![License - CC BY-NC 4.0](https://img.shields.io/badge/License-CC_BY--NC_4.0-42e6f5?style=for-the-badge)
 
 ## About CS2 Pugsharp Manager
@@ -30,15 +30,18 @@ The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize an
   - Define playable maps
   - start, cancel and pause matches
   - and more
+- Register and connect with steam
+- Team management
+  - Create, Delete
+  - Invite and Kick players
+  - Register your team for tournaments
 - Tournament overview for guests
-- Register for a Tournament as a team (via steamid´s)
 - Matches
   - Matchoverview for upcoming and running matches
 - Automatic team advancement.
 - Adding servers.
 
 ## Planed features
-- Register as player and manage your teams.
 - On site map voting.
 - Match and map overview for ongoing, upcoming and concluded matches and maps.
 - Player stat overview for each map and overall.

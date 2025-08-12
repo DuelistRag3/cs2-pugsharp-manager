@@ -30,7 +30,7 @@
 
     <footer class="bg-gray-800 text-white py-4">
         <div class="container mx-auto text-center">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            &copy; {{ date('Y') }} {{ config('app.name') }} {{ config('app.version') }} All rights reserved.
         </div>
     </footer>
 
