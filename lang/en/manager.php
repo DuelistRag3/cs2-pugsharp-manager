@@ -221,6 +221,8 @@ return [
     'no_teams_found' => 'No teams found.',
     'no_available_teams' => 'No available teams found.',
 
+
+
     'notifications' => 'Notifications',
     'invites' => 'Invites',
 
@@ -243,4 +245,6 @@ return [
 
     'search' => 'Search Players',
     'search_placeholder' => 'Search by name, Steam name, Steam ID or email',
+
+    'search_teams' => 'Search Teams',
 ];

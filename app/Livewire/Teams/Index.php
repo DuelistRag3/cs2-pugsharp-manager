@@ -11,6 +11,7 @@ class Index extends Component
 {
     use WithFileUploads;
 
+    public $search = '';
     public $teams;
     public $teamName;
     public $teamTag;
@@ -19,7 +20,20 @@ class Index extends Component
     public function mount()
     {
         // Fetch teams with their related tournaments and players
-        $this->teams = Team::all();
+        $this->teams = Team::whereAny([
+            'name',
+            'tag',
+        ], 'like', "%{$this->search}%")->limit(10)->get();
+    }
+
+    public function updating($property, $value)
+    {
+        if ($property === 'search') {
+            $this->teams = Team::whereAny([
+                'name',
+                'tag',
+            ], 'like', "%{$value}%")->limit(10)->get();
+        }
     }
 
     public function createTeam()

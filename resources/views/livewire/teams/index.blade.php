@@ -7,7 +7,12 @@
     </button>
     @endauth
     <div>
-        <h1 class="text-2xl text-bold">{{ __('manager.teams') }}</h1>
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl text-bold">{{ __('manager.teams') }}</h1>
+            <input type="text" wire:model.live='search' name="search" id="search"
+                                class="bg-gray-50 max-w-56 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                placeholder="{{ __('manager.search_teams') }}" required />
+        </div>
         @foreach($teams as $team)
         <x-team-card :team="$team" />
         @endforeach
