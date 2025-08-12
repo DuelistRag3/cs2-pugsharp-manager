@@ -224,6 +224,14 @@ return [
     'invite_player' => 'Invite Player',
     'pending_invites' => 'Pending Invites',
 
+    'invite_player_confirm_text' => 'Are you sure you want to invite :player ?',
+    'invite_player_success' => ':player invited successfully.',
+    'invite_player_error' => 'Failed to invite player.',
+
+    'cancel_invite' => 'Cancel Invite',
+    'cancel_invite_confirm_text' => 'Are you sure you want to cancel the invite for :player ?',
+    'cancel_invite_success' => ':player invite canceled successfully.',
+
     'search' => 'Search Players',
     'search_placeholder' => 'Search by name, Steam name, Steam ID or email',
 ];

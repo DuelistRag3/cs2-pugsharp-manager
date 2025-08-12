@@ -54,7 +54,7 @@
             <span class="flex items-center py-1 {{ $loop->last ? '' : 'border-b' }} border-gray-200 dark:border-gray-700">
                 <img class="w-8 h-8 rounded-full mr-2" src="{{ $player->profilePicture() }}"
                     alt="{{ $player->name }}" />
-                <span class="text-gray-900 dark:text-white">{{ $player->name }}</span>
+                <span class="text-gray-900 dark:text-white">{{ $player->name }}</span><i wire:click='confirmCancelInvite({{ $player->id }})' class="fa-solid fa-x mr-0 ml-auto cursor-pointer text-red-500"></i>
             </span>
             @endforeach
         </div>
@@ -62,7 +62,9 @@
         @endauth
     </div>
 
-    <!-- Main modal -->
+    @auth
+    @if(Auth::user()->isTeamCaptain($team))
+    <!-- Invite modal -->
     <div id="invite-modal" tabindex="-1" aria-hidden="true" wire:ignore.self
          class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
         <div class="relative p-4 w-full max-w-md max-h-full">
@@ -76,7 +78,7 @@
                     </h3>
                     <button type="button"
                         class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm h-8 w-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                        data-modal-toggle="select-modal">
+                        data-modal-toggle="invite-modal">
                         <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 14 14">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -94,7 +96,7 @@
                             placeholder="{{ __('manager.search_placeholder') }}" required />
                     </div>
                     @foreach($invitablePlayers as $player)
-                    <div
+                    <div wire:click="confirmInvitePlayer({{ $player->id }})"
                         class="flex items-center w-full cursor-pointer mt-2 p-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
 
                         <img src="{{ $player->profilePicture() }}" alt="logo" class="w-10 h-10 rounded-full">
@@ -108,6 +110,8 @@
             </div>
         </div>
     </div>
+    @endif
+    @endauth
 </div>
 
 

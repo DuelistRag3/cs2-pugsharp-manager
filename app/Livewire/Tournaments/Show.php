@@ -3,13 +3,10 @@
 namespace App\Livewire\Tournaments;
 
 use App\Models\Team;
-use App\Models\Player;
 use Livewire\Component;
 use App\Models\Tournament;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Illuminate\Support\Facades\Http;
-use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Show extends Component
 {
