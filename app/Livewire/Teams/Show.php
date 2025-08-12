@@ -26,6 +26,7 @@ class Show extends Component
                 'email'
             ], 'like', "%{$this->search}%")
             ->whereNotIn('id', $this->team->players->pluck('id'))
+            ->where('steam_id', '!=', null)
             ->limit(5)->get();
     }
 
@@ -39,6 +40,7 @@ class Show extends Component
                 'email'
             ], 'like', "%{$this->search}%")
             ->whereNotIn('id', $this->team->players->pluck('id'))
+            ->where('steam_id', '!=', null)
             ->limit(5)->get();
     }
 

@@ -222,6 +222,7 @@ return [
     'no_available_teams' => 'No available teams found.',
 
     'invite_player' => 'Invite Player',
+    'pending_invites' => 'Pending Invites',
 
     'search' => 'Search Players',
     'search_placeholder' => 'Search by name, Steam name, Steam ID or email',

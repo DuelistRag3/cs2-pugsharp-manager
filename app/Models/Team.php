@@ -35,6 +35,11 @@ class Team extends Model
     //     return $this->hasMany(Game::class);
     // }
 
+    public function pendingInvites(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'team_invitations');
+    }
+
     public function captain(): BelongsTo
     {
         return $this->belongsTo(User::class, 'captain_id');
@@ -49,5 +54,10 @@ class Team extends Model
         }
 
         return Storage::temporaryUrl("team_logos/{$this->id}.{$this->logo_extension}", now()->addMinutes(5));
+    }
+
+    public function userIsCaptain(): bool
+    {
+        return auth()->check() && $this->captain_id === auth()->id();
     }
 }

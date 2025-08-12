@@ -1,5 +1,6 @@
 <div class="grid grid-cols-1 xl:grid-cols-8 gap-2 mb-4 max-w-10/12 md:max-w-6/12 mx-auto">
-    @if(auth()->user()->isTeamCaptain($team))
+    @auth
+    @if(Auth::user()->isTeamCaptain($team))
     <div class="col-span-1 xl:col-span-8">
         <div class="inline-flex rounded-md shadow-xs" role="group">
             <button type="button" data-modal-target="invite-modal" data-modal-toggle="invite-modal"
@@ -18,6 +19,7 @@
 
     </div>
     @endif
+    @endauth
     <div class="xl:col-span-3">
         <div
             class="w-full max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
@@ -38,10 +40,26 @@
                 class="flex items-center py-1 {{ $loop->last ? '' : 'border-b' }} border-gray-200 dark:border-gray-700">
                 <img class="w-8 h-8 rounded-full mr-2" src="{{ $player->profilePicture() }}"
                     alt="{{ $player->name }}" />
-                <span class="text-gray-900 dark:text-white">{{ $player->name }}</span>
+                <span class="text-gray-900 dark:text-white">{{ $player->name }} @if($player->isTeamCaptain($team)) <span class="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">Captain</span> @endif</span>
             </a>
             @endforeach
         </div>
+        @auth
+        @if(Auth::user()->isTeamCaptain($team))
+        <div
+            class="block mt-2 py-1 px-3 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ __('manager.pending_invites') }}
+            </h5>
+            @foreach($team->pendingInvites as $player)
+            <span class="flex items-center py-1 {{ $loop->last ? '' : 'border-b' }} border-gray-200 dark:border-gray-700">
+                <img class="w-8 h-8 rounded-full mr-2" src="{{ $player->profilePicture() }}"
+                    alt="{{ $player->name }}" />
+                <span class="text-gray-900 dark:text-white">{{ $player->name }}</span>
+            </span>
+            @endforeach
+        </div>
+        @endif
+        @endauth
     </div>
 
     <!-- Main modal -->
