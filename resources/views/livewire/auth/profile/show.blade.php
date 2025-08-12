@@ -50,6 +50,38 @@
 
             </div>
         </div>
+        @if($user->isThisUser() && $user->getNotificationsCount() > 0)
+        <div
+            class="block mt-2 py-1 px-3 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{
+                __('manager.notifications') }}
+            </h5>
+            @if($user->teamInvitations())
+            <span>{{ __('manager.invites') }}</span>
+            @foreach($user->teamInvitations()->get() as $invite)
+            <div
+                class="flex items-center w-full mt-2 p-2 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-900 dark:border-gray-700">
+
+                <img src="{{ $invite->team->logoUrl() }}" alt="logo" class="w-10 h-10 rounded-full">
+
+                <div class="ml-4">
+                    <h2 class="text-lg font-bold dark:text-gray-300">{{ $invite->team->name }}</h2>
+                    <div class="inline-flex rounded-md shadow-xs" role="group">
+                        <button type="button" wire:click="acceptInvite({{ $invite->id }})"
+                            class="px-3 py-2 cursor-pointer text-xs font-medium rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-green-800 dark:border-green-700 dark:text-white dark:hover:text-white dark:hover:bg-green-700 dark:focus:ring-blue-500 dark:focus:text-white">
+                            {{ __('manager.accept_invite') }}
+                        </button>
+                        <button type="button" wire:click="declineInvite({{ $invite->id }})"
+                            class="px-3 py-2 cursor-pointer text-xs font-medium rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-red-800 dark:border-red-700 dark:text-white dark:hover:text-white dark:hover:bg-red-700 dark:focus:ring-blue-500 dark:focus:text-white">
+                            {{ __('manager.decline_invite') }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+            @endif
+        </div>
+        @endif
         <div
             class="block mt-2 py-1 px-3 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ __('manager.stats') }}
@@ -76,14 +108,12 @@
             @foreach($user->teams as $team)
             <a href="{{ route('profile.show', $team->id) }}" target="_blank"
                 class="flex items-center py-1 {{ $loop->last ? '' : 'border-b' }} border-gray-200 dark:border-gray-700">
-                <img class="w-8 h-8 rounded-full mr-2" src="{{ $team->logoUrl() }}"
-                    alt="{{ $team->name }}" />
+                <img class="w-8 h-8 rounded-full mr-2" src="{{ $team->logoUrl() }}" alt="{{ $team->name }}" />
                 <span class="text-gray-900 dark:text-white">{{ $team->name }}</span>
             </a>
             @endforeach
         </div>
     </div>
-
 
     <div
         class="block xl:col-span-5 p-6 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">

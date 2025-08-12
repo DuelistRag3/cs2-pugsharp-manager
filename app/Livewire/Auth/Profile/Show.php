@@ -112,6 +112,35 @@ class Show extends Component
         }
     }
 
+    public function acceptInvite($inviteId)
+    {
+        $invite = $this->user->teamInvitations()->findOrFail($inviteId);
+        $invite->team->players()->attach($this->user);
+        $invite->delete();
+
+        LivewireAlert::title(__('manager.invite_player_accepted', ['player' => $this->user->name]))
+            ->success()
+            ->position('top-end')
+            ->toast()
+            ->show();
+        
+        $this->render();
+    }
+
+    public function declineInvite($inviteId)
+    {
+        $invite = $this->user->teamInvitations()->findOrFail($inviteId);
+        $invite->delete();
+
+        LivewireAlert::title(__('manager.invite_player_declined', ['player' => $this->user->name]))
+            ->success()
+            ->position('top-end')
+            ->toast()
+            ->show();
+
+        $this->render();
+    }
+
     #[Layout('components.layouts.guest')]
     public function render()
     {

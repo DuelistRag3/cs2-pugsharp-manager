@@ -221,8 +221,17 @@ return [
     'no_teams_found' => 'No teams found.',
     'no_available_teams' => 'No available teams found.',
 
+    'notifications' => 'Notifications',
+    'invites' => 'Invites',
+
+    'accept_invite' => 'Accept',
+    'decline_invite' => 'Decline',
+
     'invite_player' => 'Invite Player',
     'pending_invites' => 'Pending Invites',
+
+    'invite_player_accepted' => 'Invite accepted successfully.',
+    'invite_player_declined' => 'Invite declined successfully.',
 
     'invite_player_confirm_text' => 'Are you sure you want to invite :player ?',
     'invite_player_success' => ':player invited successfully.',
