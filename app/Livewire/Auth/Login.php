@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Livewire\Admin;
+namespace App\Livewire\Auth;
 
 use Livewire\Component;
-use Livewire\Attributes\Layout;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Login extends Component
@@ -27,16 +26,15 @@ class Login extends Component
         // Attempt to log in the user
         if (auth()->attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
             // Redirect to the intended page or dashboard
-            return redirect()->intended('/admin/tournaments/overview');
+            return redirect()->route('landing');
         }
 
         // If login fails, add an error message
         LivewireAlert::title(__('auth.failed'))->error()->toast()->position('top-end')->show();
     }
 
-    #[Layout('components.layouts.guest')]
     public function render()
     {
-        return view('livewire.admin.login');
+        return view('livewire.auth.login');
     }
 }

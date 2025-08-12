@@ -192,4 +192,55 @@ return [
     'upcoming_matches' => 'Upcoming Matches',
     'running_matches' => 'Running Matches',
     'finished_matches' => 'Finished Matches',
+
+    'steam' => [
+        'unlink_confirmation_title' => 'Unlink Steam Account?',
+        'unlink_confirmation_text' => 'Are you sure you want to unlink your Steam account? This action cannot be undone.',
+        'unlink' => 'Unlink'
+    ],
+
+    'matchhistory_title' => 'Match History',
+
+    'stats' => 'Stats',
+    'captain' => 'Captain',
+    'players' => 'Players',
+    'player' => 'Player',
+    'team' => 'Team',
+    'create_team' => 'Create Team',
+    'edit_team' => 'Edit Team',
+    'delete_team' => 'Delete Team',
+    'delete_team_confirmation' => 'Delete Team?',
+    'delete_team_confirmation_text' => 'Are you sure you want to delete this team? This action cannot be undone.',
+    'teamname' => 'Team Name',
+    'teamtag' => 'Team Tag',
+    'teamlogo' => 'Team Logo',
+    'team_created' => 'Team created successfully.',
+    'team_updated' => 'Team updated successfully.',
+    'team_deleted' => 'Team deleted successfully.',
+    'team_not_found' => 'Team not found.',
+    'no_teams_found' => 'No teams found.',
+    'no_available_teams' => 'No available teams found.',
+
+    'notifications' => 'Notifications',
+    'invites' => 'Invites',
+
+    'accept_invite' => 'Accept',
+    'decline_invite' => 'Decline',
+
+    'invite_player' => 'Invite Player',
+    'pending_invites' => 'Pending Invites',
+
+    'invite_player_accepted' => 'Invite accepted successfully.',
+    'invite_player_declined' => 'Invite declined successfully.',
+
+    'invite_player_confirm_text' => 'Are you sure you want to invite :player ?',
+    'invite_player_success' => ':player invited successfully.',
+    'invite_player_error' => 'Failed to invite player.',
+
+    'cancel_invite' => 'Cancel Invite',
+    'cancel_invite_confirm_text' => 'Are you sure you want to cancel the invite for :player ?',
+    'cancel_invite_success' => ':player invite canceled successfully.',
+
+    'search' => 'Search Players',
+    'search_placeholder' => 'Search by name, Steam name, Steam ID or email',
 ];

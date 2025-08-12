@@ -15,13 +15,22 @@
 <body class="dark:bg-gray-900 text-black dark:text-white">
     <x-navigation.navbar />
 
+    @auth
+        @if(Auth::user()->email == null)
+            <div class="bg-yellow-100 text-yellow-800 p-4 text-center">
+                {{ __('auth.no_email') }}
+                <a href="{{ route('profile.show') }}" class="text-blue-600 hover:underline">{{ __('auth.set_email') }}</a>
+            </div>
+        @endif   
+    @endauth
+
     <div class="container mx-auto px-4 py-8 min-h-screen">
         {{ $slot }}
     </div>
 
     <footer class="bg-gray-800 text-white py-4">
         <div class="container mx-auto text-center">
-            &copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.
+            &copy; {{ date('Y') }} {{ config('app.name') }} {{ config('app.version') }} All rights reserved.
         </div>
     </footer>
 

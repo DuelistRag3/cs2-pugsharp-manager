@@ -34,20 +34,20 @@ return new class extends Migration
 
         Schema::table('games', function (Blueprint $table) {
             $table->foreignId('team1_id')
+                ->after('status')
                 ->nullable()
                 ->constrained('teams')
-                ->onDelete('set null')
-                ->after('status');
+                ->onDelete('set null');
             $table->foreignId('team2_id')
+                ->after('team1_id')
                 ->nullable()
                 ->constrained('teams')
-                ->onDelete('set null')
-                ->after('team1_id');
+                ->onDelete('set null');
             $table->foreignId('winner_team_id')
+                ->after('team2_id')
                 ->nullable()
                 ->constrained(table: 'teams', indexName: 'id')
-                ->onDelete('set null')
-                ->after('team2_id');
+                ->onDelete('set null');
         });
     }
 
