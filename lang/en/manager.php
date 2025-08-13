@@ -262,5 +262,7 @@ return [
     'resume_match' => 'Resume Match',
     'abort_match' => 'Abort Match',
 
-    'num_maps_overridden' => 'Number of Maps Overridden'
+    'num_maps_overridden' => 'Number of Maps Overridden',
+
+    'close' => 'Close'
 ];
