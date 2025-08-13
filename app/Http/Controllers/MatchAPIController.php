@@ -44,6 +44,10 @@ class MatchAPIController extends Controller
 
         $gametype = $game->next_game_id ? $game->tournament->maps_each_game : $game->tournament->maps_final_game;
 
+        if ($game->maps_override != 0) {
+            $gametype = $game->maps_override-1;
+        }
+
         switch ($gametype) {
             case 0:
                 $rounds = 1; // BO1

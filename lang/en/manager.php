@@ -247,4 +247,20 @@ return [
     'search_placeholder' => 'Search by name, Steam name, Steam ID or email',
 
     'search_teams' => 'Search Teams',
+
+    'override_num_maps' => 'Override number of maps',
+
+    'tournament_default' => 'Tournament Default',
+    'best_of_1' => 'Best of 1',
+    'best_of_3' => 'Best of 3',
+    'best_of_5' => 'Best of 5',
+
+    'start_match' => 'Start Match',
+    'show_config' => 'Show Config',
+    'view_match' => 'View Match',
+    'pause_match' => 'Pause Match',
+    'resume_match' => 'Resume Match',
+    'abort_match' => 'Abort Match',
+
+    'num_maps_overridden' => 'Number of Maps Overridden'
 ];

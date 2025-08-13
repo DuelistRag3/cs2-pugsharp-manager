@@ -17,6 +17,7 @@ class Show extends Component
     public Tournament $tournament;
     public $availableMaps;
     public $selectedMaps = [];
+    public $maps_override = 0;
 
     public function mount($id)
     {
@@ -292,6 +293,20 @@ class Show extends Component
         $this->tournament->maps = $this->selectedMaps;
         $this->tournament->save(); 
           
+    }
+
+    public function updateMapsOverride($gameId)
+    {
+        // dd($this->maps_override);
+        $game = $this->tournament->games()->findOrFail($gameId);
+        $game->maps_override = $this->maps_override;
+        $game->save();
+
+        LivewireAlert::title(__('manager.num_maps_overridden'))
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
     }
 
     #[Layout('components.layouts.admin')]
