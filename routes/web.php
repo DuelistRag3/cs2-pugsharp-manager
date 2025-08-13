@@ -50,7 +50,7 @@ Route::get('/teams/{team}', \App\Livewire\Teams\Show::class)
 Route::get('/matches', MatchIndex::class)
     ->name('matches.index');
 
-Route::get('/matches/{match}', MatchShow::class)
+Route::get('/matches/{game}', MatchShow::class)
     ->name('matches.show');
 
 Route::name('admin.')->prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {

@@ -26,7 +26,7 @@
             <div class="flex justify-end px-4 pt-4">
             </div>
             <div class="flex flex-col items-center pb-5">
-                <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="{{ $team->logoUrl() }}" alt="Bonnie image" />
+                <img class="w-24 h-24 mb-3 rounded-full shadow-lg" src="{{ $team->logoUrl() }}" alt="Team image" />
                 <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">{{ $team->name }}</h5>
 
             </div>
