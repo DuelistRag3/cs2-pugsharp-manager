@@ -15,4 +15,4 @@
 @plugin "flowbite/plugin";
 
 @custom-variant dark (&:where(.dark, .dark *));
-@source inline("border-{yellow,red,green,blue}-500")
+@source inline("border-{gray,red,green,blue,yellow}-500!")

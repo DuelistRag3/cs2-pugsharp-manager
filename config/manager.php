@@ -23,10 +23,10 @@ return [
     })(),
 
     'status_colors' => [
-        'scheduled' => 'yellow',
+        'scheduled' => 'gray',
         'ongoing' => 'blue',
         'completed' => 'green',
         'cancelled' => 'red',
-        'unknown' => 'gray'
+        'unknown' => 'yellow'
     ]
 ];
