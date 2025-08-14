@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('team_tournament_player', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('team_tournament_id')->constrained()->onDelete('cascade');
+            $table->integer('team_tournament_id')->unsigned();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
+
+            $table->unique(['team_tournament_id', 'user_id'], 'team_tournament_player_unique');
         });
     }
 
