@@ -23,20 +23,6 @@
         <span class="text-blue-500">{{ __('manager.best_of_' . $tournament->maps_final_game) }}</span>
     </p>
     <p><strong>{{ __('manager.status') }}:</strong>
-        @switch($tournament->status)
-        @case('scheduled')
-        <span class="text-yellow-500">{{ __('manager.status_types.scheduled') }}</span>
-        @break
-        @case('ongoing')
-        <span class="text-green-500">{{ __('manager.status_types.ongoing') }}</span>
-        @break
-        @case('completed')
-        <span class="text-gray-500">{{ __('manager.status_types.completed') }}</span>
-        @break
-        @case('cancelled')
-        <span class="text-red-500">{{ __('manager.status_types.cancelled') }}</span>
-        @default
-        <span class="text-red-500">{{ __('manager.status_types.unknown') }}</span>
-        @endswitch
+        <span class="text-{{ config('manager.status_colors.' . $tournament->status) }}-500">{{ __('manager.status_types.' . $tournament->status) }}</span>
     </p>
 </div>

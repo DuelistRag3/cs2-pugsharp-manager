@@ -112,7 +112,7 @@
 
                         @foreach($roundGames as $game)
                         <div id="game{{ $game->id }}" next-game-id="{{ $game->next_game_id }}"
-                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white relative @if($game->status === 'ongoing') border-blue-400! dark:border-blue-700! @elseif($game->status === 'completed') border-green-400! dark:border-green-700! @elseif($game->status === 'canceled') border-red-400! dark:border-red-700! @endif"
+                            class="max-w-48 text-sm font-medium mb-2 text-gray-900 bg-white border rounded-lg dark:bg-gray-700  dark:text-white relative border-{{ config('manager.status_colors.' . $game->status) }}-500!"
                             style="">
                             <x-tournament-game-card :game=$game />
                         </div>

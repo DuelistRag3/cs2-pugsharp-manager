@@ -21,4 +21,12 @@ return [
         }
         return $result;
     })(),
+
+    'status_colors' => [
+        'scheduled' => 'yellow',
+        'ongoing' => 'blue',
+        'completed' => 'green',
+        'cancelled' => 'red',
+        'unknown' => 'gray'
+    ]
 ];

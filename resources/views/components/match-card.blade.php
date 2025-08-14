@@ -1,24 +1,12 @@
 @php
-$rounds = $match->nextGame ? $match->tournament->maps_each_game : $match->tournament->maps_final_game;
+$rounds = $match->maps_override ? $match->maps_override : ($match->nextGame ? $match->tournament->maps_each_game : $match->tournament->maps_final_game);
 @endphp
 <a href="{{ route('matches.show', $match) }}"
     class="grid grid-cols-3 w-full mt-2 p-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
     <h2 class="text-xs dark:text-gray-500 col-span-3">
         {{ $match->tournament->name }} 
         <span class="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2 py-0.1 rounded-sm dark:bg-gray-900 dark:text-gray-300">
-            @switch($rounds)
-                @case(0)
-                    BO1
-                    @break
-                @case(1)
-                    BO3
-                    @break
-                @case(2)
-                    BO5
-                    @break
-                @default
-                    BO1
-            @endswitch
+            {{ __('manager.best_of_' . $rounds) }}
         </span>
     </h2>
     <div class="col-span-3">
