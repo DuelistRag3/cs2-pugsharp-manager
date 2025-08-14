@@ -31,10 +31,10 @@ class Index extends Component
     public $team_size = 5; // Default team size for CS2
     #[Validate('integer|min:2')]
     public $max_teams = 2;
-    #[Validate('integer|min:0|max:2')]
-    public $maps_each_game = 0; // 0: BO1, 1: BO3, 2: BO5
-    #[Validate('integer|min:0|max:2')]
-    public $maps_final_game = 0; // 0: BO1, 1: BO3, 2: BO5
+    #[Validate('integer|min:1')]
+    public $maps_each_game = 1;
+    #[Validate('integer|min:1')]
+    public $maps_final_game = 1;
     #[Validate('integer|min:2')]
     public $map_rounds = 24; // Number of rounds per match, default is 24 for CS2
     #[Validate('integer|min:0')]
