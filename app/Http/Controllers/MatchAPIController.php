@@ -42,26 +42,6 @@ class MatchAPIController extends Controller
         $demoUri = route('api.matches.demo', ['id' => $game->id]);
         $api_token = config('manager.api_bearer_token');
 
-        $gametype = $game->next_game_id ? $game->tournament->maps_each_game : $game->tournament->maps_final_game;
-
-        if ($game->maps_override != 0) {
-            $gametype = $game->maps_override-1;
-        }
-
-        switch ($gametype) {
-            case 0:
-                $rounds = 1; // BO1
-                break;
-            case 1:
-                $rounds = 3; // BO3
-                break;
-            case 2:
-                $rounds = 5; // BO5
-                break;
-            default:
-                $rounds = 1; // Default to BO1 if not set
-        }
-
         $maplist = [];
 
         foreach($game->tournament->maps as $map) {
@@ -85,7 +65,7 @@ class MatchAPIController extends Controller
                 'players' => $players_team2
             ],
             'matchid' => "$game->id",
-            'num_maps' => $rounds,
+            'num_maps' => $game->maps_override ? $game->maps_override : ($game->next_game_id ? $game->tournament->maps_each_game : $game->tournament->maps_final_game),
             'players_per_team' => $game->tournament->team_size,
             'min_players_to_ready' => $game->tournament->team_size,
             'max_rounds' => $game->tournament->map_rounds,

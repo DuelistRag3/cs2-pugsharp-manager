@@ -17,30 +17,10 @@
     <p><strong>{{ __('manager.max_teams') }}:</strong> {{ $tournament->max_teams }}</p>
     <p><strong>{{ __('manager.team_size') }}:</strong> {{ $tournament->team_size }}</p>
     <p><strong>{{ __('manager.gametype') }}:</strong>
-        @switch($tournament->maps_each_game)
-        @case(0)
-        <span class="text-blue-500">Best Of 1</span>
-        @break
-        @case(1)
-        <span class="text-blue-500">Best Of 3</span>
-        @break
-        @case(2)
-        <span class="text-blue-500">Best Of 5</span>
-        @break
-        @endswitch
+        <span class="text-blue-500">{{ __('manager.best_of_' . $tournament->maps_each_game) }}</span>
     </p>
     <p><strong>{{ __('manager.gametype') }} ({{ __('manager.final') }}):</strong>
-        @switch($tournament->maps_final_game)
-        @case(0)
-        <span class="text-blue-500">Best Of 1</span>
-        @break
-        @case(1)
-        <span class="text-blue-500">Best Of 3</span>
-        @break
-        @case(2)
-        <span class="text-blue-500">Best Of 5</span>
-        @break
-        @endswitch
+        <span class="text-blue-500">{{ __('manager.best_of_' . $tournament->maps_final_game) }}</span>
     </p>
     <p><strong>{{ __('manager.status') }}:</strong>
         @switch($tournament->status)

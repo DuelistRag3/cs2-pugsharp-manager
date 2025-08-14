@@ -290,8 +290,8 @@
                                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                                         <option @if($game->maps_override == 0) selected @endif value="0">{{ __('manager.tournament_default') }}</option>
                                         <option @if($game->maps_override == 1) selected @endif value="1">{{ __('manager.best_of_1') }}</option>
-                                        <option @if($game->maps_override == 2) selected @endif value="2">{{ __('manager.best_of_3') }}</option>
-                                        <option @if($game->maps_override == 3) selected @endif value="3">{{ __('manager.best_of_5') }}</option>
+                                        <option @if($game->maps_override == 3) selected @endif value="3">{{ __('manager.best_of_3') }}</option>
+                                        <option @if($game->maps_override == 5) selected @endif value="5">{{ __('manager.best_of_5') }}</option>
                                     </select>
                                 </form>
 
