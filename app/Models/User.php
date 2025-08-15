@@ -75,6 +75,11 @@ class User extends Authenticatable
         return $this->hasMany(TeamInvitation::class);
     }
 
+    public function tournaments(): BelongsToMany
+    {
+        return $this->belongsToMany(TeamTournament::class, 'team_tournament_player');
+    }
+
     public function getNotificationsCount(): int
     {
         $count = 0;
@@ -130,5 +135,22 @@ class User extends Authenticatable
     public function isThisUser(): bool
     {
         return auth()->user()->id === $this->id ? true : false;
+    }
+
+    public function isAvailableForTournament(Tournament $tournament): bool
+    {
+        // Check if the user is already in the tournament
+        foreach($this->tournaments as $userTournament) {
+            if ($userTournament->tournament_id === $tournament->id) {
+                return false;
+            }
+        }
+
+        if(!$this->steam_id)
+        {
+            return false; // User must have a Steam ID to participate
+        }
+
+        return true;
     }
 }

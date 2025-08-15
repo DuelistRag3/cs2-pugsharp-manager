@@ -3,6 +3,7 @@
 namespace App\Livewire\Tournaments;
 
 use App\Models\Team;
+use App\Models\User;
 use Livewire\Component;
 use App\Models\Tournament;
 use App\Models\TeamTournament;
@@ -10,6 +11,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Renderless;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
+use Livewire\Livewire;
 
 class Show extends Component
 {
@@ -53,6 +55,9 @@ class Show extends Component
         $team = Team::findOrFail($teamId);
 
         $players = $team->players->map(function ($player) {
+            if (!$player->isAvailableForTournament($this->tournament)) {
+                return null; // Skip players not available for the tournament
+            }
             return [
                 'id' => $player->id,
                 'name' => $player->name,
@@ -72,7 +77,14 @@ class Show extends Component
             $this->playerSelectionLimitReached($this->tournament->team_size);
             return;
         }
-        
+
+        foreach($players as $player) {
+            $user = User::findOrFail($player);
+
+            if(!$user->isAvailableForTournament($this->tournament)) {
+                return;
+            }
+        }
 
         $team->tournaments()->attach($this->tournament);
 
@@ -100,6 +112,38 @@ class Show extends Component
     {
         LivewireAlert::title(__('manager.num_players_exceeded', ['max' => $maxPlayers]))
             ->error()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
+    public function cancelRegistration($teamID)
+    {
+        LivewireAlert::title(__('manager.cancel_registration'))
+                ->text(__('manager.cancel_registration_text'))
+                ->asConfirm()
+                ->withConfirmButton(__('manager.yes'))
+                ->confirmButtonColor('red')
+                ->withDenyButton(__('manager.no'))
+                ->denyButtonColor('gray')
+                ->onConfirm('cancelRegistrationConfirmed', ['teamID' => $teamID])
+                ->show();
+    }
+
+    public function cancelRegistrationConfirmed($team)
+    {
+        $team = Team::findOrFail($team)->first();
+        $teamTournament = TeamTournament::where('team_id', $team->id)
+            ->where('tournament_id', $this->tournament->id)
+            ->first();
+        $team->tournaments()->detach($this->tournament);
+        $players = $teamTournament->players;
+        foreach($players as $player) {
+            $player->delete();
+        }
+
+        LivewireAlert::title(__('manager.registration_cancelled'))
+            ->success()
             ->toast()
             ->position('top-end')
             ->show();

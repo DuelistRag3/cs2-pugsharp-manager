@@ -269,5 +269,8 @@ return [
     'select_players' => 'Select Players',
     'num_players_exceeded' => 'You can only select up to :max player/s.',
 
-    'team_registered' => 'Team registered successfully.'
+    'team_registered' => 'Team registered successfully.',
+    'cancel_registration' => 'Cancel Registration',
+    'cancel_registration_text' => 'Are you sure you want to cancel the registration for this team?',
+    'registration_cancelled' => 'Registration cancelled successfully.'
 ];
