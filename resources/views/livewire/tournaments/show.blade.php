@@ -133,20 +133,22 @@
                 <!-- Modal body --> --}}
                 <div class="p-4 md:p-5 space-y-4">
                     <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @foreach($team->players as $player)
+                        @foreach(App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                        ->where('team_id', $team->id)
+                                        ->first()->players()->get() as $player)
                         <li class="py-3 sm:py-4">
                             <div class="flex items-center">
                                 <div class="shrink-0">
-                                    <img class="w-8 h-8 rounded-full" src="{{ $player->steam_avatar }}"
-                                        alt="{{ $player->name }}">
+                                    <img class="w-8 h-8 rounded-full" src="{{ $player->user->steam_avatar }}"
+                                        alt="{{ $player->user->name }}">
                                 </div>
                                 <div class="flex-1 min-w-0 ms-4">
                                     <p class="text-sm font-medium text-gray-900 truncate dark:text-blue-400">
-                                        <a href="{{ $player->steam_url }}" target="_blank">{{ $player->steam_name
+                                        <a href="{{ $player->user->steam_url }}" target="_blank">{{ $player->user->steam_name
                                             }}</a>
                                     </p>
                                     <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                                        Steam ID: {{ $player->steam_id }}
+                                        Steam ID: {{ $player->user->steam_id }}
                                     </p>
                                 </div>
                             </div>
