@@ -98,6 +98,8 @@ class Show extends Component
             ]);
         }
 
+        dd($teamTournament->players);
+
         LivewireAlert::title(__('manager.team_registered'))
             ->success()
             ->toast()
@@ -130,9 +132,12 @@ class Show extends Component
                 ->show();
     }
 
-    public function cancelRegistrationConfirmed($team)
+    public function cancelRegistrationConfirmed($data)
     {
-        $team = Team::findOrFail($team)->first();
+        $teamID = $data['teamID'];
+        // dd($teamID);
+        $team = Team::findOrFail($teamID);
+        // dd($team);
         $teamTournament = TeamTournament::where('team_id', $team->id)
             ->where('tournament_id', $this->tournament->id)
             ->first();
