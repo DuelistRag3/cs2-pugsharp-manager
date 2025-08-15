@@ -53,7 +53,6 @@ The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize an
 - Tournaments will not auto conclude after the finale has been played
 - The auto updating in the server overview is not consistent (should refresh server info every 60 seconds... it just don't sometimes)
 - Live validation for steam id´s does not work at all
-- Team register modal does not close at all
 
 ## Server Requirements
 
