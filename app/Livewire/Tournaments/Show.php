@@ -56,7 +56,7 @@ class Show extends Component
 
         $players = $team->players->map(function ($player) {
             if (!$player->isAvailableForTournament($this->tournament)) {
-                return null; // Skip players not available for the tournament
+                return; // Skip players not available for the tournament
             }
             return [
                 'id' => $player->id,

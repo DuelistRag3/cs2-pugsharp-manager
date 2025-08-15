@@ -318,10 +318,12 @@ window.onload = function() {
         regModalTitle.innerHTML = "{{ __('manager.select_players') }}";
         regModalBody.innerHTML = "";
         const data = event[0];
+        console.log(data);
         team = data.team;
         players = data.players;
         selectedTeam = team.id;
         players.forEach(player => {
+            if (player === null) return; // Skip null players until found a better solution
             let playerCard = document.createElement('div');
             playerCard.className = 'flex items-center w-full cursor-pointer mt-2 p-2 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900';
             playerCard.id = 'player-' + player.id;
