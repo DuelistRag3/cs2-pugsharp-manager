@@ -14,7 +14,32 @@
             <a href="{{ route('teams.show', $game->team2->id) }}" class="text-2xl font-bold text-blue-400">{{ $game->team2 ? $game->team2->name : 'TBD' }}</a>
         </div>
     </div>
-    <div class="grid">
+    <div class="grid" id="maps">
         <h4>{{ __('manager.maps') }}</h4>
+    </div>
+    <div class="grid" id="players">
+        <h4 class="text-right">{{ __('manager.players') }}</h4>
+        @if($game->team1)
+            {{ $game->team1->name }}:
+            @foreach(App\Models\TeamTournament::where('tournament_id', $game->tournament->id)
+                                        ->where('team_id', $game->team1->id)
+                                        ->first()->players()->get() as $player)
+                <a href="{{ route('profile.show', $player->user->id) }}" class="flex items-center py-2">
+                    <img class="w-8 h-8 rounded-full" src="{{ $player->user->profilePicture() }}" alt="Player avatar" />
+                    <span class="text-blue-400 ml-2">{{ $player->user->name }}</span>
+                </a>
+            @endforeach
+        @endif
+        @if($game->team2)
+            {{ $game->team2->name }}:
+            @foreach(App\Models\TeamTournament::where('tournament_id', $game->tournament->id)
+                                        ->where('team_id', $game->team2->id)
+                                        ->first()->players()->get() as $player)
+                <a href="{{ route('profile.show', $player->user->id) }}" class="flex items-center py-2">
+                    <img class="w-8 h-8 rounded-full" src="{{ $player->user->profilePicture() }}" alt="Player avatar" />
+                    <span class="text-blue-400 ml-2">{{ $player->user->name }}</span>
+                </a>
+            @endforeach
+        @endif
     </div>
 </div>
