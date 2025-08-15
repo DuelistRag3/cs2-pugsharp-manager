@@ -98,8 +98,6 @@ class Show extends Component
             ]);
         }
 
-        dd($teamTournament->players);
-
         LivewireAlert::title(__('manager.team_registered'))
             ->success()
             ->toast()

@@ -19,7 +19,7 @@ class TeamTournamentPlayer extends Model
         return $this->belongsTo(TeamTournament::class, 'team_tournament_id');
     }
 
-    public function player(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

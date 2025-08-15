@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Models\GameMap;
 use Illuminate\Http\Request;
+use App\Models\TeamTournament;
 use App\Models\GameMapPlayerScore;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,8 +32,21 @@ class MatchAPIController extends Controller
             return response()->json(['error' => 'Teams not assigned'], 400);
         }
 
-        $players_team1 = $team1->players->pluck('steam_name', 'steam_id')->toArray();
-        $players_team2 = $team2->players->pluck('steam_name', 'steam_id')->toArray();
+        $team1Players = TeamTournament::where('tournament_id', $game->tournament->id)
+                                        ->where('team_id', $game->team1->id)
+                                        ->first()->players()->get();
+
+        foreach ($team1Players as $player) {
+            $players_team1[$player->user->steam_id] = $player->user->steam_name;
+        }
+
+        $team2Players = TeamTournament::where('tournament_id', $game->tournament->id)
+                                        ->where('team_id', $game->team2->id)
+                                        ->first()->players()->get();
+
+        foreach ($team2Players as $player) {
+            $players_team2[$player->user->steam_id] = $player->user->steam_name;
+        }
 
         if(count($players_team1) < $game->tournament->team_size || count($players_team2) < $game->tournament->team_size) {
             return response()->json(['error' => 'Not enough players in one of the teams'], 400);

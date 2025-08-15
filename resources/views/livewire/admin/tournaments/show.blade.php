@@ -235,16 +235,21 @@
                             </div>
                             <div>
                                 @if($game->team1)
-                                @foreach($game->team1->players as $player)
+                                @php
+                                    $team1Players = App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                        ->where('team_id', $game->team1->id)
+                                        ->first()->players()->get();
+                                @endphp
+                                @foreach($team1Players as $player)
                                 <div class="flex items-center mt-2">
                                     <div class="shrink-0 mr-2">
-                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}"
+                                        <img class="w-6 h-6 rounded-full" src="{{ $player->user->steam_avatar }}"
                                             alt="avatar">
                                     </div>
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
-                                                $player->steam_name }}</a>
+                                            <a class="text-blue-500" href="{{ $player->user->steam_url }}" target="_blank">{{
+                                                $player->user->steam_name }}</a>
                                         </p>
                                     </div>
                                 </div>
@@ -257,16 +262,21 @@
                             </div>
                             <div class="text-right">
                                 @if($game->team2)
-                                @foreach($game->team2->players as $player)
+                                @php
+                                    $team2Players = App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                        ->where('team_id', $game->team2->id)
+                                        ->first()->players()->get();
+                                @endphp
+                                @foreach($team2Players as $player)
                                 <div class="flex items-center mt-2">
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
-                                                $player->steam_name }}</a>
+                                            <a class="text-blue-500" href="{{ $player->user->steam_url }}" target="_blank">{{
+                                                $player->user->steam_name }}</a>
                                         </p>
                                     </div>
                                     <div class="shrink-0 ml-2">
-                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}"
+                                        <img class="w-6 h-6 rounded-full" src="{{ $player->user->steam_avatar }}"
                                             alt="avatar">
                                     </div>
                                 </div>
