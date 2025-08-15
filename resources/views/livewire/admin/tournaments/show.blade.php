@@ -324,7 +324,7 @@
                                 <a href="{{ route('api.matches.config', $game->id) }}" target="_blank"
                                     class="block text-center cursor-pointer focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-600 dark:hover:bg-gray-800 focus:outline-none dark:focus:ring-gray-800 w-full">{{
                                     __('manager.show_config') }}</a>
-                                <a href="#" target="_blank"
+                                <a href="{{ route('matches.show', $game->id) }}" target="_blank"
                                     class="block text-center text-white cursor-pointer focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full">{{
                                     __('manager.view_match') }}</a>
                             </div>
