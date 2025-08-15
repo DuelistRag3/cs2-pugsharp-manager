@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Admin\Tournaments;
 
-use App\Models\Player;
+use App\Models\User;
 use Livewire\Component;
 
 class PlayerCard extends Component
@@ -14,12 +14,12 @@ class PlayerCard extends Component
 
     public function mount($id = null)
     {
-        $player = Player::findOrFail($id);
+        $user = User::findOrFail($id);
 
-        $this->steamId = $player->steam_id;
-        $this->name = $player->steam_name;
-        $this->avatar = $player->steam_avatar;
-        $this->url = $player->steam_url;
+        $this->steamId = $user->steam_id;
+        $this->name = $user->steam_name;
+        $this->avatar = $user->steam_avatar;
+        $this->url = $user->steam_url;
     }
 
     public function render()

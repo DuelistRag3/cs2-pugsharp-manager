@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class TeamHasPlayer extends Model
+class TeamUser extends Model
 {
+    protected $table = 'team_user';
 
     protected $fillable = [
         'team_id',

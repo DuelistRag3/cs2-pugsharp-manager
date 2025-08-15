@@ -264,5 +264,10 @@ return [
 
     'num_maps_overridden' => 'Number of Maps Overridden',
 
-    'close' => 'Close'
+    'close' => 'Close',
+
+    'select_players' => 'Select Players',
+    'num_players_exceeded' => 'You can only select up to :max player/s.',
+
+    'team_registered' => 'Team registered successfully.'
 ];
