@@ -117,15 +117,23 @@ class MatchAPIController extends Controller
 
         $game->maps()->save($map);
 
-        foreach ($game->team1->players as $player) {
+        $team1Players = TeamTournament::where('tournament_id', $game->tournament->id)
+                                        ->where('team_id', $game->team1->id)
+                                        ->first()->players()->get();
+                                    
+        $team2Players = TeamTournament::where('tournament_id', $game->tournament->id)
+                                        ->where('team_id', $game->team2->id)
+                                        ->first()->players()->get();
+
+        foreach ($team1Players as $player) {
             $score = new GameMapPlayerScore();
-            $score->player_id = $player->id;
+            $score->steam_id = $player->user->steam_id;
             $map->playerScores()->save($score);
         }
 
-        foreach ($game->team2->players as $player) {
+        foreach ($team2Players as $player) {
             $score = new GameMapPlayerScore();
-            $score->player_id = $player->id;
+            $score->steam_id = $player->user->steam_id;
             $map->playerScores()->save($score);
         }
 
