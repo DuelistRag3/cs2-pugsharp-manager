@@ -355,14 +355,16 @@ window.onload = function() {
         let buttonWrapper = document.createElement('div');
         buttonWrapper.className = 'flex justify-between mt-4 gap-2';
         let completeBtn = document.createElement('button');
-        completeBtn.className = 'text-white mt-2 w-1/2 cursor-pointer bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800';
+        completeBtn.className = 'text-white mt-2 w-1/2 cursor-pointer bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 disabled:cursor-not-allowed disabled:bg-blue-700 disabled:hover:bg-blue-700';
         completeBtn.innerHTML = "{{ __('manager.register_team') }}";
         completeBtn.addEventListener('click', () => {
             $wire.registerTeam(selectedTeam, selectedPlayers);
         });
+        completeBtn.id = 'complete-btn';
         let cancelBtn = document.createElement('button');
-        cancelBtn.className = 'text-white mt-2 w-1/2 cursor-pointer bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800';
+        cancelBtn.className = 'text-white mt-2 w-1/2 cursor-pointer bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 focus:outline-none dark:focus:ring-red-800 ';
         cancelBtn.innerHTML = "{{ __('manager.cancel') }}";
+        completeBtn.setAttribute('disabled', true);
         // cancelBtn.addEventListener('click', () => {
             
         // });
@@ -374,6 +376,11 @@ window.onload = function() {
 
     function addRemoveSelection(playerId) {
         const playerCard = document.getElementById('player-' + playerId);
+        if(selectedPlayers.length === maxPlayers) {
+            document.getElementById('complete-btn').setAttribute('disabled', true);
+        } else {
+            document.getElementById('complete-btn').removeAttribute('disabled');
+        }
         if(selectedPlayers.length >= maxPlayers && !selectedPlayers.includes(playerId)) {
             $wire.playerSelectionLimitReached(maxPlayers);
             return;
