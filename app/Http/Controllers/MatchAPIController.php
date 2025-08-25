@@ -97,6 +97,7 @@ class MatchAPIController extends Controller
 
     public function goLive($gameid, $mapcount, Request $request)
     {
+        $mapcount +=1;
         Storage::disk('local')->put("match_{$gameid}_map_{$mapcount}_golive.json", json_encode($request->all()));
 
         $game = Game::find($gameid);
