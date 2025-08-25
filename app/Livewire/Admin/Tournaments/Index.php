@@ -63,7 +63,7 @@ class Index extends Component
             ->position('top-end')
             ->show();
 
-        return redirect(Show::class, ['id' => $tournament->id]);
+        return redirect()->route('admin.tournaments.show', $tournament->id);
     }
 
     public function delete($id)
