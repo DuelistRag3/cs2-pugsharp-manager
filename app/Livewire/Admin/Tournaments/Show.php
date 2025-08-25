@@ -235,6 +235,12 @@ class Show extends Component
         $uri = route('api.matches.config', ['id' => $match->id]);
 
         new RconController()->sendCommand($freeServer->id, 'ps_loadconfig "'.$uri.'"');
+
+        LivewireAlert::title(__('manager.tournament_messages.match_started_on', ['server' => $freeServer->name]))
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
     }
 
     public function pauseMatch($matchId)
