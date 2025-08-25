@@ -153,6 +153,7 @@ class MatchAPIController extends Controller
      */
     public function updateRound($id, $mapcount, Request $request)
     {
+        $mapcount +=1;
         $map = GameMap::where('game_id', $id)->where('map_number', $mapcount)->first();
 
         if (!$map) {
@@ -178,7 +179,7 @@ class MatchAPIController extends Controller
      */
     public function updatePlayer($gameid, $mapcount, $steamId, Request $request)
     {
-
+        $mapcount +=1;
         $game = Game::find($gameid);
         if (!$game) {
             return response()->json("Match not found", 404);
@@ -241,6 +242,7 @@ class MatchAPIController extends Controller
      */
     public function finalizeMap($gameid, $mapcount, Request $request)
     {
+        $mapcount +=1;
         $map = GameMap::where('game_id', $gameid)->where('map_number', $mapcount)->first();
         if (!$map) {
             return response()->json("Match - Map combination not found", 404);
