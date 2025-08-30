@@ -84,21 +84,21 @@ class Show extends Component
             ->show();
     }
 
-    public function cancelTournament($confirmed = false)
+    public function cancelTournament()
     {
-        if (!$confirmed) {
-            LivewireAlert::title(__('manager.tournament_messages.cancel_tournament'))
-                ->text(__('manager.tournament_messages.cancel_tournament_text'))
-                ->asConfirm()
-                ->withConfirmButton(__('manager.yes'))
-                ->confirmButtonColor('red')
-                ->withDenyButton(__('manager.no'))
-                ->denyButtonColor('gray')
-                ->onConfirm('cancelTournamentConfirmed', ['confirmed' => true])
-                ->show();
-            return;
-        }
+        LivewireAlert::title(__('manager.tournament_messages.cancel_tournament'))
+            ->text(__('manager.tournament_messages.cancel_tournament_text'))
+            ->asConfirm()
+            ->withConfirmButton(__('manager.yes'))
+            ->confirmButtonColor('red')
+            ->withDenyButton(__('manager.no'))
+            ->denyButtonColor('gray')
+            ->onConfirm('cancelTournamentConfirmed')
+            ->show();
+    }
 
+    public function cancelTournamentConfirmed()
+    {
         $this->tournament->cancel();
         LivewireAlert::title(__('manager.tournament_messages.tournament_cancelled'))
             ->success()

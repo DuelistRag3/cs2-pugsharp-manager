@@ -94,7 +94,9 @@ class Tournament extends Model
 
             $game->cancel(); // Cancel the game
         });
-        $this->cancel();
+        $this->status = 'cancelled';
+        $this->end_date = now(); // Set the end date to now
+        $this->save();
     }
 
     public function generateMatchPlan($type)
