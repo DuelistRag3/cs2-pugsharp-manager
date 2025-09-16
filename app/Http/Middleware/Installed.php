@@ -26,14 +26,6 @@ class Installed
             return redirect('/');
         }
 
-        // if($request->is('install') || $request->is('install/*') && file_exists(storage_path('installed'))) {
-        //     return redirect('/');
-        // }
-
-        // if($request->is('install') || $request->is('install/*') && !file_exists(storage_path('installed'))) {
-        //     return $next($request);
-        // }
-
         return $next($request);
     }
 }
