@@ -15,6 +15,25 @@ class Installed
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+        // Check if the application is installed
+        if (!file_exists(storage_path('installed')) && !$request->is('install') && !$request->is('install/*')) {
+            return redirect('/install');
+        }
+
+        // Prevent access to the installation routes if the application is already installed
+        if (file_exists(storage_path('installed')) && ($request->is('install') || $request->is('install/*'))) {
+            return redirect('/');
+        }
+
+        // if($request->is('install') || $request->is('install/*') && file_exists(storage_path('installed'))) {
+        //     return redirect('/');
+        // }
+
+        // if($request->is('install') || $request->is('install/*') && !file_exists(storage_path('installed'))) {
+        //     return $next($request);
+        // }
+
         return $next($request);
     }
 }
