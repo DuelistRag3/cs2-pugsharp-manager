@@ -87,3 +87,11 @@ Route::get('logout', function () {
     auth()->logout();
     return redirect()->route('landing');
 })->name('logout');
+
+/* Installation */
+Route::get('/install', \App\Livewire\Installer\Landing::class)
+    ->name('install.landing');
+
+Route::get('/install/general', \App\Livewire\Installer\General::class)
+    ->name('install.general');
+/* End Installation */
