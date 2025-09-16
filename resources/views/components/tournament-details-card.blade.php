@@ -2,17 +2,15 @@
     <h2 class="text-xl font-semibold mb-2">{{ __('manager.details') }}</h2>
     <p><strong>{{ __('manager.registration_deadline') }}:</strong>
         @if ($tournament->registration_deadline)
-        {{ new DateTime($tournament->registration_deadline)->format('d.m.Y H:i') }}
+        {{ new DateTime($tournament->registration_deadline)->format(__('manager.timeformat')) }}
         @else
-        {{ new DateTime($tournament->start_date)->format('d.m.Y H:i') }}
+        {{ new DateTime($tournament->start_date)->format(__('manager.timeformat')) }}
         @endif
     </p>
-    <p><strong>{{ __('manager.start_date') }}:</strong> {{ new DateTime($tournament->start_date)->format('d.m.Y
-        H:i') }}</p>
+    <p><strong>{{ __('manager.start_date') }}:</strong> {{ new DateTime($tournament->start_date)->format(__('manager.timeformat')) }}</p>
     <p><strong>{{ __('manager.end_date') }}:</strong> @if($tournament->status != 'completed' ||
         $tournament->status != 'cancelled')
-        {{ __('manager.tournament_not_finished') }} @else {{ new DateTime($tournament->end_date)->format('d.m.Y
-        H:i') }} @endif
+        {{ __('manager.tournament_not_finished') }} @else {{ new DateTime($tournament->end_date)->format(__('manager.timeformat')) }} @endif
     </p>
     <p><strong>{{ __('manager.max_teams') }}:</strong> {{ $tournament->max_teams }}</p>
     <p><strong>{{ __('manager.team_size') }}:</strong> {{ $tournament->team_size }}</p>

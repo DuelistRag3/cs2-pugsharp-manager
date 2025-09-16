@@ -272,5 +272,12 @@ return [
     'team_registered' => 'Team registered successfully.',
     'cancel_registration' => 'Cancel Registration',
     'cancel_registration_text' => 'Are you sure you want to cancel the registration for this team?',
-    'registration_cancelled' => 'Registration cancelled successfully.'
+    'registration_cancelled' => 'Registration cancelled successfully.',
+
+    'running_tournaments' => 'Running Tournaments',
+    'upcoming_tournaments' => 'Upcoming Tournaments',
+    'finished_tournaments' => 'Finished Tournaments',
+    'timeformat' => 'm/d/Y H:i',
+
+    'no_maps_yet' => 'No maps have been selected yet.'
 ];

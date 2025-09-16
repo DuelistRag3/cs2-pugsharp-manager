@@ -1,4 +1,4 @@
-<div class="grid grid-cols-3 gap-2">
+{{-- <div class="grid grid-cols-3 gap-2">
     @foreach ($tournaments as $tournament)
         <div
             class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
@@ -45,4 +45,19 @@
             </a>
         </div>
     @endforeach
+</div> --}}
+
+<div class="grid auto-rows-auto max-w-10/12 md:max-w-6/12 mx-auto" wire:poll>
+    <div>
+        <h1 class="text-2xl text-bold">{{ __('manager.running_tournaments') }}</h1>
+        @foreach ($runningTournaments as $running)
+            <x-tournament-card :tournament="$running"/>
+        @endforeach
+    </div>
+    <div>
+        <h1 class="text-2xl text-bold">{{ __('manager.upcoming_tournaments') }}</h1>
+        @foreach ($upcomingTournaments as $upcoming)
+            <x-tournament-card :tournament="$upcoming"/>
+        @endforeach
+    </div>
 </div>

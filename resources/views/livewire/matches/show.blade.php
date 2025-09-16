@@ -20,7 +20,7 @@
     <div class="grid grid-rows-[fit-content(100%)_auto]" id="maps" wire:poll>
         <h4 class="">{{ __('manager.maps') }}</h4>
         <div>
-            @foreach ($game->maps as $map)
+            @forelse ($game->maps->all() as $map)
                 @php
                     $amap = App\Models\AvailableMaps::where('map_code', $map->map_name)->first();
                 @endphp
@@ -41,7 +41,23 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                @for ($i = 0; $i < $game->tournament->maps_each_game; $i++)
+                    <div class="relative rounded w-full overflow-hidden">
+                    <!-- Bild -->
+                    <div class="absolute inset-0 bg-center bg-cover"
+                        style="background-image: url('{{ Vite::asset('resources/images/maps.jpg') }}')"></div>
+
+                    <!-- Gradient -->
+                    <div class="absolute inset-0 bg-gradient-to-t from-gray-800 via-gray-800 to-transparent"></div>
+
+                    <!-- Content -->
+                    <div class="relative z-10 p-2 text-white">
+                        <h2 class="text-2xl font-bold">TBD</h2>
+                    </div>
+                </div>
+                @endfor
+            @endforelse
         </div>
     </div>
     <div class="grid" id="players">
