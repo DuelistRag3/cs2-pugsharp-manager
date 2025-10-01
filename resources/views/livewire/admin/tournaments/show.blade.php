@@ -185,6 +185,17 @@
                     <div class="p-4 md:p-5 space-y-4">
                         <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach($team->players()->get() as $player)
+                            @php
+                            // Skip Player if not Registered for this Tournament
+                            if (!$tournament->guest_mode) {
+                                $teamTournament = App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                ->where('team_id', $team->id)
+                                ->first();
+                                if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                    continue;
+                                }
+                            }
+                        @endphp
                             <li class="py-3 sm:py-4">
                                 <div class="flex items-center">
                                     <div class="shrink-0">
@@ -238,6 +249,17 @@
                                     $team1Players = $game->team1->players()->get();
                                 @endphp
                                 @foreach($team1Players as $player)
+                                @php
+                            // Skip Player if not Registered for this Tournament
+                            if (!$tournament->guest_mode) {
+                                $teamTournament = App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                ->where('team_id', $team->id)
+                                ->first();
+                                if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                    continue;
+                                }
+                            }
+                        @endphp
                                 <div class="flex items-center mt-2">
                                     <div class="shrink-0 mr-2">
                                         <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}"
@@ -263,6 +285,17 @@
                                     $team2Players = $game->team2->players()->get();
                                 @endphp
                                 @foreach($team2Players as $player)
+                                @php
+                            // Skip Player if not Registered for this Tournament
+                            if (!$tournament->guest_mode) {
+                                $teamTournament = App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                ->where('team_id', $team->id)
+                                ->first();
+                                if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                    continue;
+                                }
+                            }
+                        @endphp
                                 <div class="flex items-center mt-2">
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-medium text-gray-900 truncate dark:text-white">

@@ -111,9 +111,6 @@ class Show extends Component
 
     public function registerGuestTeam()
     {
-
-
-
         $this->validate();
 
         $response = Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", [

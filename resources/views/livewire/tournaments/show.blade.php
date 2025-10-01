@@ -9,8 +9,11 @@
             @endif
             @if(!$tournament->guest_mode)
             @if($tournament->teams()->where('captain_id', auth()->id())->exists() && $tournament->status === 'scheduled')
-            <button type="button" wire:click='cancelRegistration({{ $tournament->teams()->where('captain_id', auth()->id())->first()->id }})'
-                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800 cursor-pointer">{{
+            <button type="button" wire:click='cancelRegistration({{ $tournament->teams()->where('captain_id',
+                auth()->id())->first()->id }})'
+                class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300
+                font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700
+                dark:focus:ring-red-800 cursor-pointer">{{
                 __('manager.cancel_registration') }}</button>
             @endif
             @endif
@@ -137,19 +140,17 @@
                 <div class="p-4 md:p-5 space-y-4">
                     <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
                         @foreach($team->players()->get() as $player)
-                        {{-- @php
-                            if ($tournament->guest_mode) {
-                                $player = (object)[
-                                    'user' => (object)[
-                                        'name' => $player->name,
-                                        'steam_name' => $player->steam_name,
-                                        'steam_id' => $player->steam_id,
-                                        'steam_avatar' => $player->steam_avatar,
-                                        'steam_url' => $player->steam_url,
-                                    ]
-                                ];
+                        @php
+                            // Skip Player if not Registered for this Tournament
+                            if (!$tournament->guest_mode) {
+                                $teamTournament = App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                ->where('team_id', $team->id)
+                                ->first();
+                                if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                    continue;
+                                }
                             }
-                        @endphp --}}
+                        @endphp
                         <li class="py-3 sm:py-4">
                             <div class="flex items-center">
                                 <div class="shrink-0">
@@ -200,58 +201,79 @@
                             <p>Lineups</p>
                         </div>
                         <div>
-                                @if($game->team1)
-                                @php
-                                    $team1Players = $game->team1->players()->get();
-                                @endphp
-                                @foreach($team1Players as $player)
-                                <div class="flex items-center mt-2">
-                                    <div class="shrink-0 mr-2">
-                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}"
-                                            alt="avatar">
-                                    </div>
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
-                                                $player->steam_name }}</a>
-                                        </p>
-                                    </div>
+                            @if($game->team1)
+                            @php
+                            $team1Players = $game->team1->players()->get();
+                            @endphp
+                            @foreach($team1Players as $player)
+                            @php
+                            // Skip Player if not Registered for this Tournament
+                            if (!$tournament->guest_mode) {
+                                $teamTournament = App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                ->where('team_id', $team->id)
+                                ->first();
+                                if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                    continue;
+                                }
+                            }
+                        @endphp
+                            <div class="flex items-center mt-2">
+                                <div class="shrink-0 mr-2">
+                                    <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}" alt="avatar">
                                 </div>
-                                @endforeach
-                                @else
-                                @for ($i = 0; $i < $tournament->team_size; $i++)
-                                    <p>TBD</p>
-                                    @endfor
-                                    @endif
-                            </div>
-                            <div class="text-right">
-                                @if($game->team2)
-                                @php
-                                    $team2Players = $game->team2->players()->get();
-                                @endphp
-                                @foreach($team2Players as $player)
-                                <div class="flex items-center mt-2">
-                                    <div class="flex-1 min-w-0">
-                                        <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                                            <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
-                                                $player->steam_name }}</a>
-                                        </p>
-                                    </div>
-                                    <div class="shrink-0 ml-2">
-                                        <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}"
-                                            alt="avatar">
-                                    </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                        <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
+                                            $player->steam_name }}</a>
+                                    </p>
                                 </div>
-                                @endforeach
-                                @else
-                                @for ($i = 0; $i < $tournament->team_size; $i++)
-                                    <p>TBD</p>
-                                    @endfor
-                                    @endif
                             </div>
+                            @endforeach
+                            @else
+                            @for ($i = 0; $i < $tournament->team_size; $i++)
+                                <p>TBD</p>
+                                @endfor
+                                @endif
+                        </div>
+                        <div class="text-right">
+                            @if($game->team2)
+                            @php
+                            $team2Players = $game->team2->players()->get();
+                            @endphp
+                            @foreach($team2Players as $player)
+                            @php
+                            // Skip Player if not Registered for this Tournament
+                            if (!$tournament->guest_mode) {
+                                $teamTournament = App\Models\TeamTournament::where('tournament_id', $tournament->id)
+                                ->where('team_id', $team->id)
+                                ->first();
+                                if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                    continue;
+                                }
+                            }
+                            @endphp
+                            <div class="flex items-center mt-2">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                        <a class="text-blue-500" href="{{ $player->steam_url }}" target="_blank">{{
+                                            $player->steam_name }}</a>
+                                    </p>
+                                </div>
+                                <div class="shrink-0 ml-2">
+                                    <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}" alt="avatar">
+                                </div>
+                            </div>
+                            @endforeach
+                            @else
+                            @for ($i = 0; $i < $tournament->team_size; $i++)
+                                <p>TBD</p>
+                                @endfor
+                                @endif
+                        </div>
                         <div class="col-span-2">
                             <a href="{{ route('matches.show', $game->id) }}" target="_blank"
-                                class="block text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full">{{ __('manager.view_match') }}</a>
+                                class="block text-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 w-full">{{
+                                __('manager.view_match') }}</a>
                         </div>
                     </div>
                 </div>
@@ -342,34 +364,40 @@
                 <!-- Modal body -->
                 <div class="p-4 md:p-5" id="register_team_modal_body">
                     <form wire:submit='registerGuestTeam' class="space-y-4" action="#">
+                        <div>
+                            <label for="teamname"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamname') dark:text-red-500! @enderror">{{
+                                __('manager.team_name') }} @error('teamname') ({{ $message }}) @enderror</label>
+                            <input wire:model='teamname' type="text" name="teamname" id="teamname"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                placeholder="{{ __('manager.team_name') }}" required />
+                        </div>
+                        <div>
+                            <label for="teamtag"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamtag') dark:text-red-500! @enderror">{{
+                                __('manager.team_tag') }} @error('teamtag') ({{ $message }}) @enderror</label>
+                            <input wire:model='teamtag' type="text" name="teamtag" id="teamtag"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                placeholder="{{ __('manager.team_tag') }}" required />
+                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ __('manager.steam_ids_help') }}</p>
+                        @for ($i = 1; $i <= $tournament->team_size; $i++)
                             <div>
-                                <label for="teamname"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamname') dark:text-red-500! @enderror">{{ __('manager.team_name') }} @error('teamname') ({{ $message }}) @enderror</label>
-                                <input wire:model='teamname' type="text" name="teamname" id="teamname"
+                                <label for="steam_ids.{{ $i }}"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('steam_ids.{{ $i }}') dark:text-red-500! @enderror">{{
+                                    __('manager.steam_id_player', ['number' => $i]) }} @error('steam_ids.{{ $i }}') ({{
+                                    $message }}) @enderror</label>
+                                <input type="text" name="steam_ids.{{ $i }}" id="steam_ids.{{ $i }}"
+                                    wire:model='steam_ids.{{ $i }}'
+                                    placeholder="{{ __('manager.steam_id_player', ['number' => $i]) }}"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="{{ __('manager.team_name') }}" required />
+                                    required />
                             </div>
-                            <div>
-                                <label for="teamtag"
-                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('teamtag') dark:text-red-500! @enderror">{{ __('manager.team_tag') }} @error('teamtag') ({{ $message }}) @enderror</label>
-                                <input wire:model='teamtag' type="text" name="teamtag" id="teamtag"
-                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                    placeholder="{{ __('manager.team_tag') }}" required />
-                            </div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">{{ __('manager.steam_ids_help') }}</p>
-                            @for ($i = 1; $i <= $tournament->team_size; $i++)
-                                <div>
-                                    <label for="steam_ids.{{ $i }}"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('steam_ids.{{ $i }}') dark:text-red-500! @enderror">{{ __('manager.steam_id_player', ['number' => $i]) }} @error('steam_ids.{{ $i }}') ({{ $message }}) @enderror</label>
-                                    <input type="text" name="steam_ids.{{ $i }}" id="steam_ids.{{ $i }}"
-                                        wire:model='steam_ids.{{ $i }}' placeholder="{{ __('manager.steam_id_player', ['number' => $i]) }}"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        required />
-                                </div>
-                                @endfor
-                                <button type="submit" wire:loading.attr="disabled"
-                                    class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:bg-blue-500 disabled:cursor-not-allowed">Anmelden <i class="fas fa-spinner fa-spin" wire:loading></i></button>
-                        </form>
+                            @endfor
+                            <button type="submit" wire:loading.attr="disabled"
+                                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:bg-blue-500 disabled:cursor-not-allowed">Anmelden
+                                <i class="fas fa-spinner fa-spin" wire:loading></i></button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -380,7 +408,7 @@
 </div>
 @script
 <script>
-window.onload = function() {
+    window.onload = function() {
     const regModalTitle = document.getElementById('register_team_modal_title');
     const regModalBody = document.getElementById('register_team_modal_body');
     const maxPlayers = {{ $tournament->team_size }};
