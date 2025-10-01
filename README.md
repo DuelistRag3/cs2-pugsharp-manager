@@ -20,39 +20,38 @@ The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize an
 - [License](#License)
 
 ## Features
-- Multi-Language support (in development | missing many language strings ^^)
-- Tournament management
-  - Start date, End date
-  - Team size
-  - Max teams
-  - Round and Overtime Length
-  - Match type (Best of 1, etc...)
-  - Define playable maps
-  - start, cancel and pause matches
-  - and more
-- Register and connect with steam
-- Team management
-  - Create, Delete
-  - Invite and Kick players
-  - Register your team for tournaments
-- Tournament overview for guests
-- Matches
-  - Matchoverview for upcoming and running matches
+- Multi-Language support (in development | missing many language strings ^^).
+- Tournament management.
+  - Start date, End date.
+  - Team size.
+  - Max teams.
+  - Round and Overtime Length.
+  - Match type (Best of 1, etc...).
+  - Define playable maps.
+  - start, cancel and pause matches.
+  - Guest mode.
+  - and more.
+- Register and connect with steam.
+- Team management.
+  - Create, Delete.
+  - Invite and Kick players.
+  - Register your team for tournaments.
+- Tournament overview for guests.
+- Matches.
+  - Matchoverview for upcoming and running matches.
 - Automatic team advancement.
 - Adding servers.
 
 ## Planed features
 - On site map voting.
-- Match and map overview for ongoing, upcoming and concluded matches and maps.
 - Player stat overview for each map and overall.
 - Docker container
 - and more.
 
 ## Known bugs:
 - Missing language strings all over the place in both german and englisch.
-- Tournaments will not auto conclude after the finale has been played
-- The auto updating in the server overview is not consistent (should refresh server info every 60 seconds... it just don't sometimes)
-- Live validation for steam id´s does not work at all
+- The auto updating in the server overview is not consistent (should refresh server info every 60 seconds... it just don't sometimes).
+- Live validation for steam id´s does not work at all.
 
 ## Server Requirements
 
