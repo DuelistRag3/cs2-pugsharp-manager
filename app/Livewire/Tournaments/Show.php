@@ -5,13 +5,15 @@ namespace App\Livewire\Tournaments;
 use App\Models\Team;
 use App\Models\User;
 use Livewire\Component;
+use App\Models\GuestTeam;
 use App\Models\Tournament;
 use App\Models\TeamTournament;
+use App\Models\GuestTeamPlayer;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Attributes\Renderless;
+use Illuminate\Support\Facades\Http;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Livewire;
 
 class Show extends Component
 {
@@ -105,6 +107,71 @@ class Show extends Component
             ->show();
 
         $this->dispatch('teamRegistered');
+    }
+
+    public function registerGuestTeam()
+    {
+
+
+
+        $this->validate();
+
+        $response = Http::get("https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/", [
+            'key' => config('manager.steam_api_key'),
+            'steamids' => implode(',', $this->steam_ids),
+        ]);
+
+        if ($response->failed()) {
+            LivewireAlert::error()->toast()->position('top-end')->title($response->status() . ' - ' . $response->json('message'))->show();
+            return;
+        }
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            // dd($data['response']['players'][0]['personaname']);
+
+            foreach($data['response']['players'] as $player) {
+                if (!isset($player['steamid'])) {
+                    LivewireAlert::error()->toast()->position('top-end')->title('One or more Steam IDs are invalid.')->show();
+                    return;
+                }
+
+                if(GuestTeamPlayer::where('steam_id', $player['steamid'])->whereHas('team', function($query) {
+                    $query->where('tournament_id', $this->tournament->id);
+                })->exists()) {
+                    LivewireAlert::error()->toast()->position('top-end')->title("Der Spieler {$player['personaname']} ist bereits in einem Team für dieses Turnier registriert.")->show();
+                    return;
+                }
+            }
+            
+            $team = new GuestTeam;
+
+            $team->name = $this->teamname;
+            $team->tag = $this->teamtag;
+            $team->tournament_id = $this->tournament->id;
+
+            $this->tournament->teams()->save($team);
+
+            foreach ($data['response']['players'] as $steamPlayer) {
+                $player = new GuestTeamPlayer;
+                $player->steam_name = $steamPlayer["personaname"];
+                $player->steam_id = $steamPlayer["steamid"];
+                $player->steam_avatar = $steamPlayer["avatarfull"] ?? null;
+                $player->steam_url = $steamPlayer["profileurl"] ?? null;
+
+                $team->players()->save($player);
+            }
+            LivewireAlert::success()->toast()->position('top-end')->title('Registrierung erfolgreich')->show();
+            return;
+        } else {
+            $error =  $response->json();
+            LivewireAlert::error()->toast()->position('top-end')->title("Fehler {$error['message']}")->show();
+        }
+
+        $this->dispatch('teamRegistered');
+
+        return;
     }
 
     #[Renderless]

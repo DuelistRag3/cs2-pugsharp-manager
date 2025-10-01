@@ -279,5 +279,11 @@ return [
     'finished_tournaments' => 'Finished Tournaments',
     'timeformat' => 'm/d/Y H:i',
 
-    'no_maps_yet' => 'No maps have been selected yet.'
+    'no_maps_yet' => 'No maps have been selected yet.',
+    'guest_mode' => 'Guest Mode',
+    'guest_mode_help' => 'Enable guest mode to allow teams without an account to register for this tournament.',
+    'disabled' => 'Disabled',
+    'enabled' => 'Enabled',
+    'tournament_created' => 'Tournament created successfully.',
+    'winner' => 'Winner',
 ];

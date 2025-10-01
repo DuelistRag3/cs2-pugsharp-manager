@@ -26,11 +26,19 @@ class Game extends Model
 
     public function team1() : BelongsTo
     {
+        if ($this->tournament->guest_mode) {
+            return $this->belongsTo(GuestTeam::class, 'team1_id');
+        }
+
         return $this->belongsTo(Team::class, 'team1_id');
     }
 
     public function team2() : BelongsTo
     {
+        if ($this->tournament->guest_mode) {
+            return $this->belongsTo(GuestTeam::class, 'team2_id');
+        }
+
         return $this->belongsTo(Team::class, 'team2_id');
     }
 
@@ -65,5 +73,13 @@ class Game extends Model
     {
         $this->status = 'cancelled';
         $this->save();
+    }
+
+    public function winnerTeam() : BelongsTo
+    {
+        if($this->tournament->guest_mode) {
+            return $this->belongsTo(GuestTeam::class, 'winner_team_id');
+        }
+        return $this->belongsTo(Team::class, 'winner_team_id');
     }
 }

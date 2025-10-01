@@ -11,6 +11,41 @@ use Illuminate\Support\Facades\Storage;
 
 class MatchAPIController extends Controller
 {
+    protected $stats = [
+                        'kills',
+                        'deaths',
+                        'assists',
+                        'flashbang_assists',
+                        'teamkills',
+                        'suicides',
+                        'damage',
+                        'util_damage',
+                        'enemies_flashed',
+                        'friendlies_flashed',
+                        'knife_kills',
+                        'headshot_kills',
+                        'roundsplayed',
+                        'bomb_plants',
+                        'bomb_defuses',
+                        '1kill_rounds',
+                        '2kill_rounds',
+                        '3kill_rounds',
+                        '4kill_rounds',
+                        '5kill_rounds',
+                        'v1',
+                        'v2',
+                        'v3',
+                        'v4',
+                        'v5',
+                        'firstkill_t',
+                        'firstkill_ct',
+                        'firstdeath_t',
+                        'firstdeath_ct',
+                        'tradekill',
+                        'kast',
+                        'contribution_score',
+                        'mvp'
+                    ];
 
     /**
      * Generate the match configuration for the given match ID.
@@ -32,20 +67,34 @@ class MatchAPIController extends Controller
             return response()->json(['error' => 'Teams not assigned'], 400);
         }
 
-        $team1Players = TeamTournament::where('tournament_id', $game->tournament->id)
-                                        ->where('team_id', $game->team1->id)
-                                        ->first()->players()->get();
+        $players_team1 = [];
+        $players_team2 = [];
 
-        foreach ($team1Players as $player) {
-            $players_team1[$player->user->steam_id] = $player->user->steam_name;
-        }
+        if($game->tournament->guest_mode) {
+            $team1Players = $game->team1->players;
+            foreach ($team1Players as $player) {
+                $players_team1[$player->steam_id] = $player->steam_name;
+            }
+            $team2Players = $game->team2->players;
+            foreach ($team2Players as $player) {
+                $players_team2[$player->steam_id] = $player->steam_name;
+            }
+        } else {
+            $team1Players = TeamTournament::where('tournament_id', $game->tournament->id)
+                                            ->where('team_id', $game->team1->id)
+                                            ->first()->players()->get();
 
-        $team2Players = TeamTournament::where('tournament_id', $game->tournament->id)
-                                        ->where('team_id', $game->team2->id)
-                                        ->first()->players()->get();
+            foreach ($team1Players as $player) {
+                $players_team1[$player->user->steam_id] = $player->user->steam_name;
+            }
 
-        foreach ($team2Players as $player) {
-            $players_team2[$player->user->steam_id] = $player->user->steam_name;
+            $team2Players = TeamTournament::where('tournament_id', $game->tournament->id)
+                                            ->where('team_id', $game->team2->id)
+                                            ->first()->players()->get();
+
+            foreach ($team2Players as $player) {
+                $players_team2[$player->user->steam_id] = $player->user->steam_name;
+            }
         }
 
         if(count($players_team1) < $game->tournament->team_size || count($players_team2) < $game->tournament->team_size) {
@@ -117,24 +166,27 @@ class MatchAPIController extends Controller
 
         $game->maps()->save($map);
 
-        $team1Players = TeamTournament::where('tournament_id', $game->tournament->id)
+
+        if(!$game->tournament->guest_mode){
+            $team1Players = TeamTournament::where('tournament_id', $game->tournament->id)
                                         ->where('team_id', $game->team1->id)
                                         ->first()->players()->get();
                                     
-        $team2Players = TeamTournament::where('tournament_id', $game->tournament->id)
+            $team2Players = TeamTournament::where('tournament_id', $game->tournament->id)
                                         ->where('team_id', $game->team2->id)
                                         ->first()->players()->get();
 
-        foreach ($team1Players as $player) {
-            $score = new GameMapPlayerScore();
-            $score->steam_id = $player->user->steam_id;
-            $map->playerScores()->save($score);
-        }
+            foreach ($team1Players as $player) {
+                $score = new GameMapPlayerScore();
+                $score->steam_id = $player->user->steam_id;
+                $map->playerScores()->save($score);
+            }
 
-        foreach ($team2Players as $player) {
-            $score = new GameMapPlayerScore();
-            $score->steam_id = $player->user->steam_id;
-            $map->playerScores()->save($score);
+            foreach ($team2Players as $player) {
+                $score = new GameMapPlayerScore();
+                $score->steam_id = $player->user->steam_id;
+                $map->playerScores()->save($score);
+            }
         }
 
         $game->status = 'ongoing';
@@ -179,6 +231,7 @@ class MatchAPIController extends Controller
      */
     public function updatePlayer($gameid, $mapcount, $steamId, Request $request)
     {
+        // return response()->json([$gameid, $mapcount, $steamId, $request->all()]);
         $mapcount +=1;
         $game = Game::find($gameid);
         if (!$game) {
@@ -188,46 +241,27 @@ class MatchAPIController extends Controller
         if (!$map) {
             return response()->json("Match - Map combination not found", 404);
         }
+        if($game->tournament->guest_mode){
+            $player = $game->team1->players()->where('steam_id', $steamId)->first();
+            if(!$player){
+                $player = $game->team2->players()->where('steam_id', $steamId)->first();
+            }
 
-        foreach ($map->playerScores()->get() as $score) {
-            if ($score->player->steam_id == $steamId) {
-                $score->update($request->only([
-                    'kills',
-                    'deaths',
-                    'assists',
-                    'flashbang_assists',
-                    'teamkills',
-                    'suicides',
-                    'damage',
-                    'util_damage',
-                    'enemies_flashed',
-                    'friendlies_flashed',
-                    'knife_kills',
-                    'headshot_kills',
-                    'roundsplayed',
-                    'bomb_plants',
-                    'bomb_defuses',
-                    '1kill_rounds',
-                    '2kill_rounds',
-                    '3kill_rounds',
-                    '4kill_rounds',
-                    '5kill_rounds',
-                    'v1',
-                    'v2',
-                    'v3',
-                    'v4',
-                    'v5',
-                    'firstkill_t',
-                    'firstkill_ct',
-                    'firstdeath_t',
-                    'firstdeath_ct',
-                    'tradekill',
-                    'kast',
-                    'contribution_score',
-                    'mvp'
-                ]));
+            if(!$player){
+                return response()->json("Player not found in the teams", 404);
+            }
 
-                return response()->json("Player statistics updated", 200);
+            $player->update($request->only($this->stats));
+                
+
+            return response()->json("Guest player statistics updated", 200);
+        } else {
+            foreach ($map->playerScores()->get() as $score) {
+                if ($score->player->steam_id == $steamId) {
+                    $score->update($request->only($this->stats));
+
+                    return response()->json("Player statistics updated", 200);
+                }
             }
         }
 
@@ -250,18 +284,14 @@ class MatchAPIController extends Controller
 
         $game = $map->game;
 
-        $tournament = $game->tournament;
-
-        $teams = $tournament->teams;
-
         $winner = null;
 
-        foreach($teams as $team)
+        if($request->winner == $game->team1->name)
         {
-            if($team->name == $request->winner)
-            {
-                $winner = $team;
-            }
+            $winner = $game->team1;
+        } elseif($request->winner == $game->team2->name)
+        {
+            $winner = $game->team2;
         }
 
         $map->team1_score = $request->team1score;
@@ -269,10 +299,12 @@ class MatchAPIController extends Controller
 
         $map->winner_team_id = $winner ? $winner->id : null;
 
-        if ($request->team1score > $request->team2score) {
-            $map->game->team1_maps_won += 1;
-        } elseif ($request->team1score < $request->team2score) {
-            $map->game->team2_maps_won += 1;
+        if($winner == $game->team1)
+        {
+            $game->team1_maps_won += 1;
+        } elseif($winner == $game->team2)
+        {
+            $game->team2_maps_won += 1;
         }
 
         $map->game->save();
@@ -302,13 +334,12 @@ class MatchAPIController extends Controller
 
         $winner = null;
 
-        foreach($teams as $team)
+        if($request->winner == $game->team1->name)
         {
-            if($team->name == $request->winner)
-            {
-                $winner = $team;
-            }
-            
+            $winner = $game->team1;
+        } elseif($request->winner == $game->team2->name)
+        {
+            $winner = $game->team2;
         }
 
         if (!$winner) {
@@ -331,16 +362,21 @@ class MatchAPIController extends Controller
 
         $next = $game->nextGame;
 
-        if(!$next)
+        if($next)
         {
             if(!$next->team1_id)
-        {
-            $next->team1_id = $winner->id;
-            $next->save();
+            {
+                $next->team1_id = $winner->id;
+                $next->save();
+            } else {
+                $next->team2_id = $winner->id;
+                $next->save();
+            }
         } else {
-            $next->team2_id = $winner->id;
-            $next->save();
-        }
+            // Tournament Winner
+            $tournament->end_date = now();
+            $tournament->status = 'completed';
+            $tournament->save();
         }
 
         return response()->json("Matchup finalized", 200);

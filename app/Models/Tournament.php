@@ -40,9 +40,13 @@ class Tournament extends Model
         return $this->hasMany(Game::class);
     }
 
-    public function teams(): BelongsToMany
+    public function teams()
     {
-        return $this->belongsToMany(Team::class);
+        if ($this->guest_mode) {
+            return $this->hasMany(GuestTeam::class);
+        } else {
+            return $this->belongsToMany(Team::class);
+        }
     }
 
     public function maps(): BelongsToMany
@@ -64,7 +68,7 @@ class Tournament extends Model
             return false;
         }
 
-        if( auth()->guest() || $this->teams()->where('captain_id', auth()->id())->exists()) {
+        if(!$this->guest_mode && auth()->guest()) {
             return false;
         }
 

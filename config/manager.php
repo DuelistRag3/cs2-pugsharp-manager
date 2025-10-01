@@ -2,7 +2,7 @@
 
 return [
 
-    'steam_api_key' => env("STEAM_API_KEY", ""),
+    'steam_api_key' => env("STEAM_API_KEYS", ""),
 
     'api_bearer_token' => env("API_BEARER_TOKEN", "1"),
 

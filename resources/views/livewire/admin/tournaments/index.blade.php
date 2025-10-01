@@ -143,6 +143,14 @@
                                 placeholder="{{ __('manager.description') }}"></textarea>
                         </div>
                         <div class="mb-5">
+                            <label for="start_date"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('start_date') dark:text-red-500! @enderror">{{ __('manager.start_date') }}
+                                @error('start_date') ({{ $message }}) @enderror</label>
+                            <input wire:model.blur='start_date' type="datetime-local" id="start_date"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="{{ __('manager.start_date') }}" required />
+                        </div>
+                        <div class="mb-5">
                             <label for="registration_deadline"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('registration_deadline') dark:text-red-500! @enderror">{{ __('manager.registration_deadline') }}
                                 ({{ __('manager.optional') }}) @error('registration_deadline') ({{ $message }}) @enderror</label>
@@ -151,14 +159,6 @@
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="{{ __('manager.registration_deadline') }}" />
                             <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ __('manager.registration_deadline_help') }}</p>
-                        </div>
-                        <div class="mb-5">
-                            <label for="start_date"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('start_date') dark:text-red-500! @enderror">{{ __('manager.start_date') }}
-                                @error('start_date') ({{ $message }}) @enderror</label>
-                            <input wire:model.blur='start_date' type="datetime-local" id="start_date"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="{{ __('manager.start_date') }}" required />
                         </div>
                         <div class="mb-5">
                             <label for="team_size"
@@ -220,6 +220,18 @@
                                 placeholder="Overtime-Runden" required />
                             <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
                                 {{ __('manager.overtime_rounds_help') }}</p>
+                        </div>
+                        <div class="mb-5">
+                            <label for="guest_mode"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white @error('guest_mode') dark:text-red-500! @enderror">{{ __('manager.guest_mode') }}
+                                @error('guest_mode') ({{ $message }}) @enderror</label>
+                            <select wire:model.blur='guest_mode' id="guest_mode"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <option value="0">{{ __('manager.disabled') }}</option>
+                                <option value="1">{{ __('manager.enabled') }}</option>
+                            </select>
+                            <p id="helper-text-explanation" class="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                                {{ __('manager.guest_mode_help') }}</p>
                         </div>
                 </div>
                 <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">

@@ -21,9 +21,9 @@ class Index extends Component
     // Form properties
     #[Validate('required|string|max:255|unique:tournaments,name')]
     public $name;
-    #[Validate('required|string|max:255')]
+    #[Validate('string|max:255')]
     public $description;
-    #[Validate('required|date|before:start_date')]
+    #[Validate('date|before:start_date')]
     public $registration_deadline;
     #[Validate('required|date|after:now')]
     public $start_date;
@@ -38,7 +38,9 @@ class Index extends Component
     #[Validate('integer|min:2')]
     public $map_rounds = 24; // Number of rounds per match, default is 24 for CS2
     #[Validate('integer|min:0')]
-    public $map_overtime_rounds = 6; // Number of overtime rounds, default is
+    public $map_overtime_rounds = 6; // Number of overtime rounds, default is 6 for CS2
+    #[Validate('boolean')]
+    public $guest_mode = false;
 
     public function create()
     {
@@ -55,9 +57,10 @@ class Index extends Component
         $tournament->maps_final_game = $this->maps_final_game;
         $tournament->map_rounds = $this->map_rounds;
         $tournament->map_overtime_rounds = $this->map_overtime_rounds;
+        $tournament->guest_mode = $this->guest_mode;
         $tournament->save();
         
-        LivewireAlert::title('Turnier erstellen')
+        LivewireAlert::title(__('manager.tournament_created'))
             ->success()
             ->toast()
             ->position('top-end')

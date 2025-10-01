@@ -84,7 +84,7 @@
                                 ">
                         {{ $map ? $map->team2_score : 0 }}
                     </span> <span class="text-xs
-                                        {{ $game->team2_maps_won > $game->team2_maps_won ? 'text-green-500!' : '' }}
+                                        {{ $game->team2_maps_won > $game->team1_maps_won ? 'text-green-500!' : '' }}
                                         {{ $game->team2_maps_won < $game->team1_maps_won ? 'text-red-500!' : '' }}
                                         {{ $game->team2_maps_won == $game->team1_maps_won ? 'text-gray-500!' : '' }}
                                         ">({{ $game->team2_maps_won ? $game->team2_maps_won : 0 }})</span>
