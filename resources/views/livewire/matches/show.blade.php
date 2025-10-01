@@ -46,7 +46,7 @@
                     </div>
                 </div>
             @empty
-                @for ($i = 0; $i < $game->tournament->maps_each_game; $i++)
+                @for ($i = 0; $i < $game->maps_override ?? $game->tournament->maps_each_game; $i++)
                     <div class="relative rounded w-full overflow-hidden">
                     <!-- Bild -->
                     <div class="absolute inset-0 bg-center bg-cover"
