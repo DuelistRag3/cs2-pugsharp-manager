@@ -250,16 +250,16 @@
                                 @endphp
                                 @foreach($team1Players as $player)
                                 @php
-                            // Skip Player if not Registered for this Tournament
-                            if (!$tournament->guest_mode) {
-                                $teamTournament = App\Models\TeamTournament::where('tournament_id', $tournament->id)
-                                ->where('team_id', $team->id)
-                                ->first();
-                                if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
-                                    continue;
-                                }
-                            }
-                        @endphp
+                                    // Skip Player if not Registered for this Tournament
+                                    if (!$game->tournament->guest_mode) {
+                                        $teamTournament = App\Models\TeamTournament::where('tournament_id', $game->tournament->id)
+                                            ->where('team_id', $game->team1->id)
+                                            ->first();
+                                        if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                            continue;
+                                        }
+                                    }
+                                @endphp
                                 <div class="flex items-center mt-2">
                                     <div class="shrink-0 mr-2">
                                         <img class="w-6 h-6 rounded-full" src="{{ $player->steam_avatar }}"
@@ -286,16 +286,16 @@
                                 @endphp
                                 @foreach($team2Players as $player)
                                 @php
-                            // Skip Player if not Registered for this Tournament
-                            if (!$tournament->guest_mode) {
-                                $teamTournament = App\Models\TeamTournament::where('tournament_id', $tournament->id)
-                                ->where('team_id', $team->id)
-                                ->first();
-                                if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
-                                    continue;
-                                }
-                            }
-                        @endphp
+                                    // Skip Player if not Registered for this Tournament
+                                    if (!$game->tournament->guest_mode) {
+                                        $teamTournament = App\Models\TeamTournament::where('tournament_id', $game->tournament->id)
+                                            ->where('team_id', $game->team2->id)
+                                            ->first();
+                                        if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                            continue;
+                                        }
+                                    }
+                                @endphp
                                 <div class="flex items-center mt-2">
                                     <div class="flex-1 min-w-0">
                                         <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
