@@ -50,7 +50,6 @@ The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize an
 
 ## Known bugs:
 - Missing language strings all over the place in both german and englisch.
-- The auto updating in the server overview is not consistent (should refresh server info every 60 seconds... it just don't sometimes).
 - Live validation for steam id´s does not work at all.
 
 ## Server Requirements
