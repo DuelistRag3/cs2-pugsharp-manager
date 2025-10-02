@@ -48,7 +48,7 @@
                     <td class="px-6 py-4">
                         {{ $server->port }}
                     </td>
-                    <div wire:poll.60s>
+                    <div wire:poll>
                         @php
                             $serverInfo = $this->getServerStatus($server->id);
                         @endphp
@@ -76,11 +76,11 @@
                     </td>
                     </div>
                     <td class="px-6 py-4">
-                        <button wire:click="clear({{ $server->id }})"
+                        <button wire:click="askClear({{ $server->id }})"
                             class="cursor-pointer text-xs text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                             <i class="fa-solid fa-rotate-right"></i>
                             <span class="sr-only">{{ __('manager.reset') }}</span>
-                        <button wire:click="delete({{ $server->id }})"
+                        <button wire:click="askDelete({{ $server->id }})"
                             class="cursor-pointer text-xs text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg p-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
                             <i class="fa-solid fa-trash"></i>
                             <span class="sr-only">{{ __('manager.delete') }}</span>
