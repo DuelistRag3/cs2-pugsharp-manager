@@ -286,4 +286,7 @@ return [
     'enabled' => 'Enabled',
     'tournament_created' => 'Tournament created successfully.',
     'winner' => 'Winner',
+
+    'scoreboard' => 'Scoreboard',
+    'scoreboard_disabled' => 'The Scoreboard is not available in guest mode.'
 ];

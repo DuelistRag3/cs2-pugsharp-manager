@@ -28,13 +28,13 @@
                 @php
                     $amap = App\Models\AvailableMaps::where('map_code', $map->map_name)->first();
                 @endphp
-                <div class="relative rounded w-full overflow-hidden">
+                <div class="relative rounded w-full overflow-hidden bg-gray-700">
                     <!-- Bild -->
-                    <div class="absolute inset-0 bg-center bg-cover"
+                    <div class="absolute inset-0 bg-center bg-cover mask-b-from-20% mask-b-to-80%"
                         style="background-image: url('{{ $amap->image_url }}');"></div>
 
                     <!-- Gradient -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-800 via-gray-800 to-transparent"></div>
+                    {{-- <div class="absolute inset-0 bg-gradient-to-t from-gray-800 via-gray-800 to-transparent"></div> --}}
 
                     <!-- Content -->
                     <div class="relative z-10 p-2 text-white">
@@ -46,14 +46,17 @@
                     </div>
                 </div>
             @empty
-                @for ($i = 0; $i < $game->maps_override ?? $game->tournament->maps_each_game; $i++)
-                    <div class="relative rounded w-full overflow-hidden">
+                @php
+                    $numberOfMaps = $game->maps_override ? $game->maps_override : $game->tournament->maps_each_game;
+                @endphp
+                @for ($i = 0; $i < $numberOfMaps; $i++)
+                    <div class="relative rounded w-full overflow-hidden bg-gray-700">
                     <!-- Bild -->
-                    <div class="absolute inset-0 bg-center bg-cover"
+                    <div class="absolute inset-0 bg-center bg-cover mask-b-from-20% mask-b-to-80%"
                         style="background-image: url('{{ Vite::asset('resources/images/maps.jpg') }}')"></div>
 
                     <!-- Gradient -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-gray-800 via-gray-800 to-transparent"></div>
+                    {{-- <div class="absolute inset-0 bg-gradient-to-t from-gray-800 via-gray-800 to-transparent"></div> --}}
 
                     <!-- Content -->
                     <div class="relative z-10 p-2 text-white">
@@ -107,6 +110,99 @@
                     <span class="text-blue-400 ml-2">{{ $player->steam_name }}</span>
                 </a>
             @endforeach
+        @endif
+    </div>
+    <div class="col-span-1 md:col-span-2">
+        @if($currentMap = $game->maps()->where('status', 'ongoing')->first())
+        <h4 class="">{{ __('manager.scoreboard') }}</h4>
+        @php
+            
+            $amap = App\Models\AvailableMaps::where('map_code', $currentMap->map_name)->first();
+            $currentRound = $currentMap->team1_score + $currentMap->team2_score + 1;
+            $imgurl = $amap->image_url;
+        @endphp
+        <div class="w-full bg-cover bg-center relative overflow-hidden py-2 px-4">
+            <div class="z-10 relative">    
+                {{-- Header --}}
+                <div class="w-full grid grid-cols-3 justify-between mb-2">
+                    <div class="col-span-1">
+                        R: {{ $currentRound }} - {{ $amap->name }}
+                    </div>
+                    <div class="col-span-1 text-center">
+                        <p>{{ $currentMap->team1_score }}:{{ $currentMap->team2_score }}
+                    </div>
+                </div>
+
+                {{-- Scoreboard --}}
+                @if(!$game->tournament->guest_mode)
+                <table class="w-full table-fixed border-separate border-spacing-y-0.5 mb-5">
+                    <thead>
+                        <tr class="bg-gray-800/80">
+                            <th class="pl-2 text-left w-9/12"><p>{{ $game->team1->name }}</p></th>
+                            <th class="w-1/12">K</th>
+                            <th class="w-1/12">A</th>
+                            <th class="w-1/12">D</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($game->team1->players()->get() as $player)
+                        @php
+                            // Skip Player if not Registered for this Tournament
+                            $teamTournament = App\Models\TeamTournament::where('tournament_id', $game->tournament->id)
+                                ->where('team_id', $game->team1->id)
+                                ->first();
+                            if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                continue;
+                            }
+                            $score = $currentMap->playerScores()->where('steam_id', $player->steam_id)->first()
+                        @endphp
+                        <tr class="bg-gray-800/50">
+                            <td class="pl-1">{{ $player->name }}</td>
+                            <td class="text-center">{{ $score->kills }}</td>
+                            <td class="text-center">{{ $score->assists }}</td>
+                            <td class="text-center">{{ $score->deaths }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                <table class="w-full table-fixed border-separate border-spacing-y-0.5">
+                    <thead>
+                        <tr class="bg-gray-800/80">
+                            <th class="pl-2 text-left w-9/12"><p>{{ $game->team2->name }}</p></th>
+                            <th class="w-1/12">K</th>
+                            <th class="w-1/12">A</th>
+                            <th class="w-1/12">D</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($game->team2->players()->get() as $player)
+                        @php
+                            // Skip Player if not Registered for this Tournament
+                            $teamTournament = App\Models\TeamTournament::where('tournament_id', $game->tournament->id)
+                                ->where('team_id', $game->team2->id)
+                                ->first();
+                            if (!$teamTournament->players()->where('user_id', $player->id)->exists()) {
+                                continue;
+                            }
+                            $score = $currentMap->playerScores()->where('steam_id', $player->steam_id)->first()
+                        @endphp
+                        <tr class="bg-gray-800/50">
+                            <td class="pl-1">{{ $player->name }}</td>
+                            <td class="text-center">{{ $score->kills }}</td>
+                            <td class="text-center">{{ $score->assists }}</td>
+                            <td class="text-center">{{ $score->deaths }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @else
+                    {{ __('manager.scoreboard_disabled') }}
+                @endif
+            </div>
+
+            {{-- Background Image --}}
+            <div class="absolute inset-0 bg-center bg-cover opacity-25 z-0" style="background-image: url('{{ $amap->image_url }}')" ></div>
+        </div>
         @endif
     </div>
 </div>

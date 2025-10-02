@@ -45,6 +45,6 @@ class GameMapPlayerScore extends Model
 
     public function player()
     {
-        return $this->belongsTo(Player::class);
+        return $this->belongsTo(User::class, 'steam_id', 'steam_id');
     }
 }
