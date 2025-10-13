@@ -120,7 +120,7 @@ For a detailed guide on how to configure your webserver to support laravel appli
 <img src="https://raw.githubusercontent.com/DuelistRag3/cs2-pugsharp-manager/refs/heads/main/screenshots/bracket_view.png">
 
 ## Support
-To receive proper support, either open a GitHub issue or check out the channel on the [Lan2Play Discord](https://discord.gg/aEGq33zcZK)
+To receive proper support, either open a GitHub issue, check out the channel on the [Lan2Play Discord](https://discord.gg/aEGq33zcZK) or my [Dev Discord](https://discord.gg/UkWEXBDFM8)
 
 ## Contributing
 
