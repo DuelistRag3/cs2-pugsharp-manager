@@ -120,7 +120,11 @@
             $amap = App\Models\AvailableMaps::where('map_code', $currentMap->map_name)->first();
             $currentRound = $currentMap->team1_score + $currentMap->team2_score + 1;
             $imgurl = $amap->image_url;
+            $server = $game->server;
+            $t1side = RconController::sendCommand($server->id, "ps_team1_side");
+            $t2side = RconController::sendCommand($server->id, "ps_team2_side");
         @endphp
+        {{ $t1side }} {{ $t2side }}
         <div class="w-full bg-cover bg-center relative overflow-hidden py-2 px-4">
             <div class="z-10 relative">    
                 {{-- Header --}}
@@ -129,7 +133,7 @@
                         R: {{ $currentRound }} - {{ $amap->name }}
                     </div>
                     <div class="col-span-1 text-center">
-                        <p>{{ $currentMap->team1_score }}:{{ $currentMap->team2_score }}
+                        <p><span>{{ $currentMap->team1_score }}</span>:<span>{{ $currentMap->team2_score }}</span></p>
                     </div>
                 </div>
 

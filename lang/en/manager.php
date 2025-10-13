@@ -288,5 +288,9 @@ return [
     'winner' => 'Winner',
 
     'scoreboard' => 'Scoreboard',
-    'scoreboard_disabled' => 'The Scoreboard is not available in guest mode.'
+    'scoreboard_disabled' => 'The Scoreboard is not available in guest mode.',
+    'clear_server_ask' => 'Are you sure you want to clear this server, this will stop running matches.',
+    'delete_server_ask' => 'Are you sure you want to delete this server, this action is permanent.',
+
+    'no_tournaments' => 'No Tournaments found.'
 ];

@@ -221,7 +221,7 @@ class Show extends Component
 
         $match = $this->tournament->games()->findOrFail($matchId);
 
-        $freeServer = Server::whereDoesntHave('game')->first();
+        $freeServer = Server::where('status', 'free')->first();
 
         if (!isset($freeServer)) {
             LivewireAlert::title(__('manager.tournament_messages.no_free_server'))
@@ -235,6 +235,11 @@ class Show extends Component
         $uri = route('api.matches.config', ['id' => $match->id]);
 
         new RconController()->sendCommand($freeServer->id, 'ps_loadconfig "'.$uri.'"');
+
+        $freeServer->block();
+
+        $match->server_id = $freeServer->id;
+        $match->save();
 
         LivewireAlert::title(__('manager.tournament_messages.match_started_on', ['server' => $freeServer->name]))
             ->success()

@@ -46,8 +46,21 @@ class Index extends Component
         $this->dispatch('serverCreated');
     }
 
-    public function clear($id)
+    public function askClear($id)
     {
+        LivewireAlert::title(__('manager.clear_server_ask'))
+            ->question()
+            ->timer(null)
+            ->withCancelButton(__('manager.cancel'))
+            ->withConfirmButton(__('manager.yes'))
+            ->onConfirm('clear', ['id' => $id])
+            ->show();
+    }
+
+    public function clear($data)
+    {
+        $id = $data['id'];
+
         $server = Server::find($id);
 
         if (!$server) {
@@ -70,8 +83,20 @@ class Index extends Component
             ->show();
     }
 
-    public function delete($id)
+    public function askDelete($id)
     {
+        LivewireAlert::title(__('manager.delete_server_ask'))
+            ->question()
+            ->timer(null)
+            ->withCancelButton(__('manager.cancel'))
+            ->withConfirmButton(__('manager.yes'))
+            ->onConfirm('delete', ['id' => $id])
+            ->show();
+    }
+
+    public function delete($data)
+    {
+        $id = $data['id'];
         $server = Server::find($id);
         if ($server) {
             $server->delete();
