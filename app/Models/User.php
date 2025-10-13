@@ -99,14 +99,20 @@ class User extends Authenticatable
     //     return $matches->sortByDesc('created_at');
     // }
     
-    // public function matchHistory()
-    // {
-    //     $matches = collect();
-    //     foreach($this->teams as $team) {
-    //         $matches = $matches->merge($team->games()->where('status', 'completed')->get());
-    //     }
-    //     return $matches->sortByDesc('created_at');
-    // }
+    public function matchHistory()
+    {
+        $matches = Game::
+        where(function ($query) {
+            $query->whereHas('team1.players', function ($q) {
+                $q->where('users.id', $this->id);
+            })
+            ->orWhereHas('team2.players', function ($q) {
+                $q->where('users.id', $this->id);
+            });
+        });
+
+        return $matches->get();
+    }
 
     public function map_scores(): HasMany
     {

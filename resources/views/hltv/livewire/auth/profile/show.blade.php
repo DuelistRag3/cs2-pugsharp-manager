@@ -129,6 +129,7 @@
                         <th scope="col" class="px-6 py-3">Result</th>
                     </tr>
                 </thead>
+                {{ print_r($user->matchHistory()) }}
                 <tbody>
                     {{-- @foreach($user->ongoingMatches() as $match)
                     <tr
