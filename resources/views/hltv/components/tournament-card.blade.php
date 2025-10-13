@@ -12,6 +12,11 @@
     <p class="dark:text-white col-span-2">
         {{ __('manager.teams') }}: {{ $tournament->teams()->count() }} / {{ $tournament->max_teams }}
     </p>
+    @if($tournament->status == 'completed')
+    <p class="dark:text-white col-span-2">
+        {{ __('manager.winner') }}: {{ $tournament->games()->where('next_game_id', null)->first()->winnerTeam->name }}
+    </p>
+    @endif
     <p class="dark:text-white text-end">
         <span class="text-{{ config('manager.status_colors.' . $tournament->status) }}-500 font-semibold">
             {{ __('manager.status_types.' . $tournament->status) }}

@@ -8,37 +8,25 @@ use Livewire\Attributes\Layout;
 
 class Index extends Component
 {
-    public $upcomingTournaments;
-    public $runningTournaments;
-    public $finishedTournaments;
-
-    public $search = '';
+    public $activeTab = 'scheduled';
+    public $tournaments;
 
     public function mount()
     {
-        $this->upcomingTournaments = Tournament::where('status', 'scheduled')->get();
-        $this->runningTournaments = Tournament::where('status', 'ongoing')->get();
-        $this->finishedTournaments = Tournament::where('status', 'completed')->whereAny([
-            'name',
-            'description',
-            'start_date',
-            'end_date',
-            'max_teams',
-            'guest_mode'
-        ], 'like', "%{$this->search}%")->get();
+        $this->tournaments = Tournament::where('status', $this->activeTab)->get();
     }
 
-    public function updating($property, $value)
+    public function changeTab($newTab)
     {
-        if ($property === 'search') {
-            $this->finishedTournaments = Tournament::where('status', 'completed')->whereAny([
-                'name',
-                'description',
-                'start_date',
-                'end_date',
-                'max_teams',
-                'guest_mode'
-            ], 'like', "%{$value}%")->get();
+        $this->activeTab = $newTab;
+        $this->tournaments = Tournament::where('status', $this->activeTab)->get();
+    }
+
+    public function updating($prop, $val)
+    {
+        if($prop === 'activeTab')
+        {
+            $this->changeTab($val);
         }
     }
 
