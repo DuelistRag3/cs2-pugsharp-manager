@@ -66,6 +66,7 @@ return [
     'delete_all_maps_text' => 'Are you sure you want to delete all maps from the available pool? This action cannot be undone.',
     'map_deleted' => 'Map deleted successfully.',
     'maps_deleted' => 'All maps deleted successfully.',
+    'no_matches' => 'No matches found',
 
     'delete' => 'Delete',
 

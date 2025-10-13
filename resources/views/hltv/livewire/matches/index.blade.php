@@ -1,18 +1,3 @@
-{{-- <div class="grid auto-rows-auto max-w-10/12 md:max-w-6/12 mx-auto" wire:poll>
-    <div>
-        <h1 class="text-2xl text-bold">{{ __('manager.running_matches') }}</h1>
-        @foreach($runningMatches as $match)
-            <x-match-card :match=$match />
-        @endforeach
-    </div>
-    <div>
-        <h1 class="text-2xl text-bold">{{ __('manager.upcoming_matches') }}</h1>
-        @foreach($upcomingMatches as $match)
-            <x-match-card :match=$match />
-        @endforeach
-    </div>
-</div> --}}
-
 <div class="grid grid-cols-1 auto-rows-auto max-w-10/12 md:max-w-6/12 mx-auto" wire:poll>
     <div>
         <div class="sm:hidden">
@@ -43,8 +28,10 @@
         </ul>
     </div>
     <div>
-        @foreach($matches as $match)
+        @forelse($matches as $match)
             <x-match-card :match=$match />
-        @endforeach
+        @empty
+            {{ __('manager.no_matches') }}
+        @endforelse
     </div>
 </div>

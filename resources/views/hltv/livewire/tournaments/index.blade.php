@@ -28,8 +28,10 @@
         </ul>
     </div>
     <div>
-        @foreach($tournaments as $tournament)
+        @forelse($tournaments as $tournament)
         <x-tournament-card :tournament="$tournament" />
-        @endforeach
+        @empty
+            {{ __('manager.no_tournaments') }}
+        @endforelse
     </div>
 </div>
