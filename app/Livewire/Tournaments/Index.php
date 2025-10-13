@@ -8,22 +8,43 @@ use Livewire\Attributes\Layout;
 
 class Index extends Component
 {
-    public $tournaments;
     public $upcomingTournaments;
     public $runningTournaments;
+    public $finishedTournaments;
+
+    public $search = '';
 
     public function mount()
     {
-        $this->tournaments = Tournament::all();
         $this->upcomingTournaments = Tournament::where('status', 'scheduled')->get();
         $this->runningTournaments = Tournament::where('status', 'ongoing')->get();
+        $this->finishedTournaments = Tournament::where('status', 'completed')->whereAny([
+            'name',
+            'description',
+            'start_date',
+            'end_date',
+            'max_teams',
+            'guest_mode'
+        ], 'like', "%{$this->search}%")->get();
     }
+
+    public function updating($property, $value)
+    {
+        if ($property === 'search') {
+            $this->finishedTournaments = Tournament::where('status', 'completed')->whereAny([
+                'name',
+                'description',
+                'start_date',
+                'end_date',
+                'max_teams',
+                'guest_mode'
+            ], 'like', "%{$value}%")->get();
+        }
+    }
+
     #[Layout('components.layouts.guest')]
     public function render()
     {
-        $data = [
-            'tournaments' => $this->tournaments,
-        ];
-        return view('livewire.tournaments.index', $data);
+        return view('livewire.tournaments.index');
     }
 }

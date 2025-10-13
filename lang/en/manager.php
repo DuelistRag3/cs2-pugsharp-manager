@@ -243,7 +243,7 @@ return [
     'cancel_invite_confirm_text' => 'Are you sure you want to cancel the invite for :player ?',
     'cancel_invite_success' => ':player invite canceled successfully.',
 
-    'search' => 'Search Players',
+    'search' => 'Search',
     'search_placeholder' => 'Search by name, Steam name, Steam ID or email',
 
     'search_teams' => 'Search Teams',
