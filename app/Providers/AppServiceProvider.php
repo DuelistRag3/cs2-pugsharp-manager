@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Config::set('livewire.view_path', resource_path('views/'.Setting::where('key', 'theme')->first()->value.'/livewire'));
+        Config::set('view.paths', [resource_path('views/'.Setting::where('key', 'theme')->first()->value)]);
     }
 }

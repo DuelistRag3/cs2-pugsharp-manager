@@ -17,6 +17,9 @@ use App\Livewire\Matches\Index as MatchIndex;
 /* Auth Profile */
 use App\Livewire\Auth\Profile\Show as ProfileShow;
 
+/* Admin Base */
+use App\Livewire\Admin\Settings as AdminSettings;
+
 /* Tournaments Admin */
 use App\Livewire\Admin\Tournaments\Index as AdminTournamentsIndex;
 use App\Livewire\Admin\Tournaments\Show as AdminTournamentsShow;
@@ -55,6 +58,9 @@ Route::get('/matches/{game}', MatchShow::class)
 
 Route::name('admin.')->prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::redirect('/', '/admin/torunaments', 301);
+
+    /* Base routes */
+    Route::get('/settings', AdminSettings::class)->name('settings');
 
     /* Map routes */
     Route::get('/maps', MapIndex::class)->name('maps.index');

@@ -25,6 +25,12 @@ return [
     'menu' => 'Menu',
     'name' => 'Name',
     'view' => 'View',
+    'settings' => [
+        'title' => 'Settings',
+        'theme' => 'Theme',
+
+        'updated' => 'The setting :setting was updated'
+    ],
 
     'create_tournament' => 'Create Tournament',
     'description' => 'Description',

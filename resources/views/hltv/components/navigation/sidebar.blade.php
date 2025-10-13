@@ -16,6 +16,7 @@
          <x-navigation.sidebar-item href="{{ route('admin.tournaments.index') }}" :active="request()->routeIs('admin.tournaments.*')" icon="fa-solid fa-trophy">{{ __('manager.tournaments') }}</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('admin.maps.index') }}" :active="request()->routeIs('admin.maps.index')" icon="fa-solid fa-map">{{ __('manager.maps') }}</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('admin.server.index') }}" :active="request()->routeIs('admin.server.index')" icon="fa-solid fa-server">{{ __('manager.server') }}</x-navigation.sidebar-item>
+         <x-navigation.sidebar-item href="{{ route('admin.settings') }}" :active="request()->routeIs('admin.settings')" icon="fa-solid fa-cog">{{ __('manager.settings.title') }}</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('landing') }}" :active="request()->routeIs('landing')" icon="fa-solid fa-home">{{ __('manager.home') }}</x-navigation.sidebar-item>
          <x-navigation.sidebar-item href="{{ route('logout') }}" :active="request()->routeIs('logout')" icon="fa-solid fa-right-from-bracket">{{ __('auth.logout') }}</x-navigation.sidebar-item>
       </ul>
