@@ -100,19 +100,17 @@ class User extends Authenticatable
     // }
     
     public function matchHistory()
-    {
-        $matches = Game::
-        where(function ($query) {
-            $query->whereHas('team1.players', function ($q) {
-                $q->where('users.id', $this->id);
-            })
-            ->orWhereHas('team2.players', function ($q) {
-                $q->where('users.id', $this->id);
-            });
-        });
-
-        return $matches->get();
-    }
+        {
+            $games = collect();
+            foreach ($this->teams as $team) {
+                if (method_exists($team, 'games')) {
+                    $teamGames = $team->games()->where('status', 'completed')->get();
+                    $games = $games->merge($teamGames);
+                }
+            }
+            $games = $games->unique('id');
+            return $games->sortByDesc('created_at')->values();
+        }
 
     public function map_scores(): HasMany
     {
@@ -140,7 +138,7 @@ class User extends Authenticatable
 
     public function isThisUser(): bool
     {
-        return auth()->user()->id === $this->id ? true : false;
+        return optional(auth()->user())->id === $this->id;
     }
 
     public function isAvailableForTournament(Tournament $tournament): bool

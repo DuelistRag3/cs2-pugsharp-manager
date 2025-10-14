@@ -30,10 +30,15 @@ class Team extends Model
         return $this->belongsToMany(Tournament::class);
     }
 
-    // public function games(): HasMany
-    // {
-    //     return $this->hasMany(Game::class);
-    // }
+    public function games(): HasMany
+    {
+        $games = $this->hasMany(Game::class, 'team1_id');
+        if($games == null)
+        {
+            $games = $this->hasMany(Game::class, 'team2_id');
+        }
+        return $games;
+    }
 
     public function pendingInvites(): BelongsToMany
     {

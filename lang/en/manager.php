@@ -299,5 +299,7 @@ return [
     'clear_server_ask' => 'Are you sure you want to clear this server, this will stop running matches.',
     'delete_server_ask' => 'Are you sure you want to delete this server, this action is permanent.',
 
-    'no_tournaments' => 'No Tournaments found.'
+    'no_tournaments' => 'No Tournaments found.',
+    'date' => 'Date',
+    'result' => 'Result'
 ];
