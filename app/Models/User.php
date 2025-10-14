@@ -101,15 +101,32 @@ class User extends Authenticatable
     
     public function matchHistory()
         {
-            $games = collect();
-            foreach ($this->teams as $team) {
-                if (method_exists($team, 'games')) {
-                    $teamGames = $team->games()->where('status', 'completed')->get();
-                    $games = $games->merge($teamGames);
-                }
-            }
-            $games = $games->unique('id');
-            return $games->sortByDesc('created_at')->values();
+            $pivotEntries = \DB::table('team_tournament_player')
+                ->where('user_id', $this->id)
+                ->get();
+
+            $teamTournamentIds = $pivotEntries->pluck('team_tournament_id')->toArray();
+
+            $teamTournaments = \App\Models\TeamTournament::whereIn('id', $teamTournamentIds)->get();
+
+            $teamIds = $teamTournaments->pluck('team_id')->toArray();
+            $tournamentIds = $teamTournaments->pluck('tournament_id')->toArray();
+
+            $games = \App\Models\Game::where('status', 'completed')
+                ->where(function ($query) use ($teamIds, $tournamentIds) {
+                    $query->where(function ($q) use ($teamIds, $tournamentIds) {
+                        $q->whereIn('team1_id', $teamIds)
+                        ->whereIn('tournament_id', $tournamentIds);
+                    })
+                    ->orWhere(function ($q) use ($teamIds, $tournamentIds) {
+                        $q->whereIn('team2_id', $teamIds)
+                        ->whereIn('tournament_id', $tournamentIds);
+                    });
+                })
+                ->orderByDesc('created_at')
+                ->get();
+
+            return $games;
         }
 
     public function map_scores(): HasMany
