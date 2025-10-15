@@ -106,10 +106,10 @@
             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ __('manager.teams') }}
             </h5>
             @foreach($user->teams as $team)
-            <a href="{{ route('profile.show', $team->id) }}" target="_blank"
+            <a href="{{ route('teams.show', $team->id) }}" target="_blank"
                 class="flex items-center py-1 {{ $loop->last ? '' : 'border-b' }} border-gray-200 dark:border-gray-700">
                 <img class="w-8 h-8 rounded-full mr-2" src="{{ $team->logoUrl() }}" alt="{{ $team->name }}" />
-                <span class="text-gray-900 dark:text-white">{{ $team->name }}</span>
+                <span class="text-blue-500">{{ $team->name }}</span>
             </a>
             @endforeach
         </div>

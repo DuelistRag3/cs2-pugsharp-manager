@@ -1,4 +1,4 @@
-<div class="grid grid-cols-6">
+<div class="grid grid-cols-1 md:grid-cols-6">
     <div>
         <label for="themes" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{
             __('manager.settings.theme') }}</label>
