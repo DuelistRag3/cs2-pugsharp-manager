@@ -62,6 +62,46 @@
         @endauth
     </div>
 
+    <div class="block xl:col-span-5 p-6 max-h-max bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{
+            __('manager.matchhistory_title') }}</h5>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">#</th>
+                        <th scope="col" class="px-6 py-3">{{ __('manager.tournament') }}</th>
+                        <th scope="col" class="px-6 py-3">{{ __('manager.date') }}</th>
+                        <th scope="col" class="px-6 py-3">{{ __('manager.result') }}</th>
+                    </tr>
+                </thead>
+                {{-- {{ print_r($user->matchHistory()) }} --}}
+                <tbody>
+                    @foreach($team->games()->where('status', 'completed')->get() as $match)
+                    <tr
+                        class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                        <td class="px-6 py-4"><a href="{{ route('matches.show', $match->id) }}">{{ $match->id }}</a>
+                        </td>
+                        <td class="px-6 py-4">{{ $match->tournament->name }}</td>
+                        <td class="px-6 py-4">{{ $match->created_at->format(__('manager.timeformat')) }}</td>
+                        <td class="px-6 py-4">
+                            @php
+                            $isTeam1 = $match->team1->id == $team->id;
+                            $isTeam2 = $match->team2->id == $team->id;;
+                            @endphp
+                            @if($isTeam1)
+                            {{ $match->team1_maps_won }} : {{ $match->team2_maps_won }}
+                            @elseif($isTeam2)
+                            {{ $match->team2_maps_won }} : {{ $match->team1_maps_won }}
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     @auth
     @if(Auth::user()->isTeamCaptain($team))
     <!-- Invite modal -->

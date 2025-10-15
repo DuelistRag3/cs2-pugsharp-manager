@@ -1,6 +1,6 @@
 <h1 align="center" id="title">CS2 Pugsharp Manager</h1>
 
-![Version - Beta 1.3.1](https://img.shields.io/badge/Version-Beta_1.3.1-2ea44f?style=for-the-badge)
+![Version - Beta 1.3.3](https://img.shields.io/badge/Version-Beta_1.3.3-2ea44f?style=for-the-badge)
 ![License - CC BY-NC 4.0](https://img.shields.io/badge/License-CC_BY--NC_4.0-42e6f5?style=for-the-badge)
 
 ## About CS2 Pugsharp Manager
