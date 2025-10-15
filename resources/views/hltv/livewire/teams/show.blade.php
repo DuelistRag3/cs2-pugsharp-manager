@@ -75,7 +75,6 @@
                         <th scope="col" class="px-6 py-3">{{ __('manager.result') }}</th>
                     </tr>
                 </thead>
-                {{-- {{ print_r($user->matchHistory()) }} --}}
                 <tbody>
                     @foreach($team->games()->where('status', 'completed')->get() as $match)
                     <tr

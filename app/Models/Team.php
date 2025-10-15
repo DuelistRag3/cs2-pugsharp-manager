@@ -30,16 +30,6 @@ class Team extends Model
         return $this->belongsToMany(Tournament::class);
     }
 
-    public function games(): HasMany
-    {
-        $games = $this->hasMany(Game::class, 'team1_id');
-        if($games == null)
-        {
-            $games = $this->hasMany(Game::class, 'team2_id');
-        }
-        return $games;
-    }
-
     public function pendingInvites(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'team_invitations');
@@ -48,6 +38,11 @@ class Team extends Model
     public function captain(): BelongsTo
     {
         return $this->belongsTo(User::class, 'captain_id');
+    }
+
+    public function games()
+    {
+        return Game::where('team1_id', $this->id)->orWhere('team2_id', $this->id);
     }
 
     public function logoUrl(): string
