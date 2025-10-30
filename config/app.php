@@ -125,6 +125,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    'version' => 'Beta v1.3.6'
+    'version' => 'Beta v1.3.7'
 
 ];
