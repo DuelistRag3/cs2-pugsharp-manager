@@ -5,17 +5,18 @@ namespace App\Livewire\Admin\Tournaments;
 use App\Http\Controllers\RconController;
 use App\Models\AvailableMaps;
 use App\Models\Server;
-use Livewire\Component;
 use App\Models\Tournament;
-use Livewire\Attributes\Layout;
-
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 class Show extends Component
 {
-
     public Tournament $tournament;
+
     public $availableMaps;
+
     public $maps_override = 0;
 
     public function mount($id)
@@ -32,6 +33,7 @@ class Show extends Component
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
 
@@ -41,27 +43,28 @@ class Show extends Component
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
 
-        if (!$this->tournament->maps)
-        {
+        if (! $this->tournament->maps) {
             LivewireAlert::title(__('manager.tournament_messages.no_maps_selected'))
                 ->text(__('manager.tournament_messages.no_maps_selected_text'))
                 ->error()
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
 
-        if (!$full) {
+        if (! $full) {
             if ($this->tournament->teams->count() == $this->tournament->max_teams) {
                 $full = true;
             }
         }
 
-        if (!$full) {
+        if (! $full) {
             LivewireAlert::title(__('manager.tournament_messages.not_full'))
                 ->text(__('manager.tournament_messages.not_full_text'))
                 ->asConfirm()
@@ -71,6 +74,7 @@ class Show extends Component
                 ->denyButtonColor('gray')
                 ->onConfirm('startTournament', ['full' => true])
                 ->show();
+
             return;
         }
 
@@ -124,10 +128,11 @@ class Show extends Component
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
 
-        if($this->tournament->games->first()->team1_id != null && !$alreadyassigned) {
+        if ($this->tournament->games->first()->team1_id != null && ! $alreadyassigned) {
             LivewireAlert::title(__('manager.tournament_messages.teams_already_assigned'))
                 ->text(__('manager.tournament_messages.teams_already_assigned_text'))
                 ->asConfirm()
@@ -137,6 +142,7 @@ class Show extends Component
                 ->denyButtonColor('gray')
                 ->onConfirm('addTeamsToMatchPlan', ['alreadyassigned' => true])
                 ->show();
+
             return;
         }
 
@@ -150,7 +156,7 @@ class Show extends Component
 
     public function removeAllTeamsFromMatchPlan($confirmed = false)
     {
-        if (!$confirmed) {
+        if (! $confirmed) {
             LivewireAlert::title(__('manager.tournament_messages.remove_all_teams'))
                 ->text(__('manager.tournament_messages.remove_all_teams_text'))
                 ->asConfirm()
@@ -160,6 +166,7 @@ class Show extends Component
                 ->denyButtonColor('gray')
                 ->onConfirm('removeAllTeamsFromMatchPlan', ['confirmed' => true])
                 ->show();
+
             return;
         }
         $this->tournament->removeAllTeamsFromMatchPlan();
@@ -182,9 +189,10 @@ class Show extends Component
                 ->denyButtonColor('gray')
                 ->onConfirm('resetMatchPlan', ['confirmed' => true])
                 ->show();
+
             return;
         }
-        
+
         $this->tournament->games()->delete();
         LivewireAlert::title(__('manager.tournament_messages.matchplan_reset'))
             ->success()
@@ -204,6 +212,7 @@ class Show extends Component
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
 
@@ -213,20 +222,21 @@ class Show extends Component
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
-
 
         $match = $this->tournament->games()->findOrFail($matchId);
 
         $freeServer = Server::where('status', 'free')->first();
 
-        if (!isset($freeServer)) {
+        if (! isset($freeServer)) {
             LivewireAlert::title(__('manager.tournament_messages.no_free_server'))
                 ->error()
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
 
@@ -251,12 +261,13 @@ class Show extends Component
         $match = $this->tournament->games()->findOrFail($matchId);
         $map = $match->maps->where('status', 'ongoing')->first();
 
-        if (!$map) {
+        if (! $map) {
             LivewireAlert::title(__('manager.tournament_messages.match_not_running'))
                 ->error()
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
 
@@ -274,18 +285,37 @@ class Show extends Component
     {
         $map = AvailableMaps::findOrFail($mapId);
 
-        if(!$map) {
+        if (! $map) {
             LivewireAlert::title(__('manager.selected_map_not_found'))
                 ->error()
                 ->toast()
                 ->position('top-end')
                 ->show();
+
             return;
         }
 
-        $this->tournament->availableMaps()->toggle($map);
+        $status = $this->tournament->availableMaps()->toggle($map);
         $this->tournament->save();
-          
+
+        Debugbar::info($status);
+
+        if ($status['attached'] ?? false) {
+            LivewireAlert::title(__('manager.tournament_messages.added_map'))
+                ->success()
+                ->toast()
+                ->position('top-end')
+                ->show();
+        } else {
+            LivewireAlert::title(__('manager.tournament_messages.removed_map'))
+                ->success()
+                ->toast()
+                ->position('top-end')
+                ->show();
+
+            return;
+        }
+
     }
 
     public function updateMapsOverride($gameId)
