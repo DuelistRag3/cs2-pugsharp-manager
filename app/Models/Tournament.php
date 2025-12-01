@@ -54,6 +54,11 @@ class Tournament extends Model
         return $this->belongsToMany(TournamentMap::class);
     }
 
+    public function availableMaps(): BelongsToMany
+    {
+        return $this->belongsToMany(AvailableMaps::class, 'map_tournament', 'tournament_id', 'map_id');
+    }
+
     public function registrationAllowed()
     {
         if( $this->status !== 'scheduled') {

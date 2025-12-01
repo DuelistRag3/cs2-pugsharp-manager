@@ -103,7 +103,6 @@ return [
 
     'no_servers_found' => 'No servers found.',
 
-    'maps' => 'Maps',
     'tournament_plan' => 'Tournament Plan',
     'no_teams_registered' => 'No teams registered for this tournament.',
 
@@ -301,5 +300,7 @@ return [
 
     'no_tournaments' => 'No Tournaments found.',
     'date' => 'Date',
-    'result' => 'Result'
+    'result' => 'Result',
+    'available_maps' => 'Available Maps',
+    'selected_map_not_found' => 'The selected map was not found in the available maps.',
 ];

@@ -19,7 +19,19 @@
             @endif
         </div>
 
-        <x-tournament-details-card :tournament=$tournament />
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <x-tournament-details-card :tournament=$tournament />
+
+            <div class="bg-gray-800 text-white p-4 rounded shadow">
+                <h2 class="text-xl font-semibold mb-2">{{ __('manager.available_maps') }}</h2>
+                @foreach($tournament->availableMaps as $map)
+                <div class="flex items-center mb-2">
+                    <img src="{{ $map->getImageUrlAttribute() }}" alt="{{ $map->name }}" class="w-16 h-9 rounded mr-4">
+                    <span class="text-lg font-medium">{{ $map->name }}</span>
+                </div>
+                @endforeach
+            </div>
+        </div>
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
             <h2 class="text-xl font-semibold mb-2">{{ __('manager.teams') }}: ({{ $tournament->teams->count() }}/{{

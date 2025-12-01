@@ -47,7 +47,7 @@
                 @foreach($availableMaps as $map)
                 <div wire:click='changeMapState({{ $map->id }})'
                     wire:loading.class="opacity-50 cursor-not-allowed disabled"
-                    class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 col-span-2 cursor-pointer @if($selectedMaps) @if(in_array($map->map_code, $selectedMaps)) bg-green-100 dark:bg-green-900 @endif @endif">
+                    class="border border-gray-200 rounded-lg shadow-sm bg-gray-800 dark:border-gray-700 col-span-2 cursor-pointer @if($tournament->availableMaps->contains($map)) bg-green-900 @endif">
                     <a>
                         <img class="rounded-t-lg" src="{{ $map->getImageUrlAttribute() }}" alt="{{ $map->name }}" />
                     </a>

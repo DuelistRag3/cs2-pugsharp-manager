@@ -16,14 +16,12 @@ class Show extends Component
 
     public Tournament $tournament;
     public $availableMaps;
-    public $selectedMaps = [];
     public $maps_override = 0;
 
     public function mount($id)
     {
         $this->tournament = Tournament::findOrFail($id);
         $this->availableMaps = AvailableMaps::all();
-        $this->selectedMaps = $this->tournament->maps ?? [];
     }
 
     public function startTournament($full = false)
@@ -276,8 +274,8 @@ class Show extends Component
     {
         $map = AvailableMaps::findOrFail($mapId);
 
-        if (!$map) {
-            LivewireAlert::title(__('manager.tournament_messages.map_not_found'))
+        if(!$map) {
+            LivewireAlert::title(__('manager.selected_map_not_found'))
                 ->error()
                 ->toast()
                 ->position('top-end')
@@ -285,24 +283,8 @@ class Show extends Component
             return;
         }
 
-        if (array_search($map->map_code, $this->selectedMaps) !== false) {
-            $this->selectedMaps = array_diff($this->selectedMaps, [$map->map_code]);
-            LivewireAlert::title(__('manager.tournament_messages.removed_map'))
-                ->success()
-                ->toast()
-                ->position('top-end')
-                ->show();
-        } else {
-            $this->selectedMaps[] = $map->map_code;
-            LivewireAlert::title(__('manager.tournament_messages.added_map'))
-                ->success()
-                ->toast()
-                ->position('top-end')
-                ->show();
-        }
-
-        $this->tournament->maps = $this->selectedMaps;
-        $this->tournament->save(); 
+        $this->tournament->availableMaps()->toggle($map);
+        $this->tournament->save();
           
     }
 
