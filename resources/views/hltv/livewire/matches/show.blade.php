@@ -116,13 +116,18 @@
         @if($currentMap = $game->maps()->where('status', 'ongoing')->first())
         <h4 class="">{{ __('manager.scoreboard') }}</h4>
         @php
+            $rcon = new App\Http\Controllers\RconController();
             
             $amap = App\Models\AvailableMaps::where('map_code', $currentMap->map_name)->first();
             $currentRound = $currentMap->team1_score + $currentMap->team2_score + 1;
             $imgurl = $amap->image_url;
             $server = $game->server;
-            $t1side = RconController::sendCommand($server->id, "ps_team1_side");
-            $t2side = RconController::sendCommand($server->id, "ps_team2_side");
+            $t1side = '';
+            $t2side = '';
+            if($server) {
+                $t1side = $rcon->sendCommand($server->id, "ps_team1_side");
+                $t2side = $rcon->sendCommand($server->id, "ps_team2_side");
+            }
         @endphp
         {{ $t1side }} {{ $t2side }}
         <div class="w-full bg-cover bg-center relative overflow-hidden py-2 px-4">

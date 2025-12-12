@@ -16,22 +16,41 @@ class Settings extends Component
     public function mount()
     {
         $this->themes = Theme::all();
-        $this->theme = DBSettings::where('key', 'theme')->first()->value;
+        $this->theme = env('THEME', 'hltv');
     }
 
     public function updating($prop, $val)
     {
         if ($prop === 'theme')
         {
-            $t = DBSettings::where('key', 'theme')->first();
-            $t->value = $val;
-            $t->save();
+            // Update .env file
+            $this->updateEnvFile('THEME', $val);
 
             LivewireAlert::text(__('manager.settings.updated', ['setting' => 'Theme']))
             ->toast()
             ->position('top-end')
             ->success()
             ->show();
+        }
+    }
+
+    private function updateEnvFile($key, $value)
+    {
+        $path = base_path('.env');
+        
+        if (file_exists($path)) {
+            $content = file_get_contents($path);
+            
+            // Check if key exists
+            if (preg_match("/^{$key}=.*/m", $content)) {
+                // Update existing key
+                $content = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $content);
+            } else {
+                // Add new key
+                $content .= "\n{$key}={$value}\n";
+            }
+            
+            file_put_contents($path, $content);
         }
     }
 

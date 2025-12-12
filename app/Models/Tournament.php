@@ -117,9 +117,8 @@ class Tournament extends Model
             return;
         }
 
-        if ($type === 0) { // Bracket style
+        if ($type === 0) { // Playofs / Bracket
             $this->type = 0; // Set tournament type to Bracket
-            $this->save(); // Save the tournament type
 
             // Create matches with correct round numbering for any number of teams
             $totalRounds = (int) ceil(log($numTeams, 2));
@@ -165,30 +164,32 @@ class Tournament extends Model
             $this->assignNextGameIds();
         }
 
-        if ($type === 1) { // Round Robin style
-            $this->type = 1; // Set the tournament type to Round Robin
-            $this->save();
-            if ($numTeams < 2) {
-                Debugbar::warning('Not enough teams to generate match plan.');
-                return;
-            }
+        if ($type === 1) { // Group stages (Swiss System with eliminations (only half the teams advance after group stage))
+            $this->type = 1; // Set the tournament type to Group Stage
 
-            $numMatches = $numTeams * ($numTeams - 1) / 2; // Total matches in a round-robin tournament
-
-            $matchNumber = 1; // Initialize match number
-            for ($i = 0; $i < $numTeams; $i++) {
-                for ($j = $i + 1; $j < $numTeams; $j++) {
+            // Swiss System: Hardcoded for 16 teams, 3 wins to advance, 3 losses to eliminate
+            // Expected structure: 8+8+8+6+3 = 33 games across 5 rounds
+            
+            $matchIndex = 0;
+            $gamesPerRound = [8, 8, 8, 6, 3]; // Hardcoded for 16 teams
+            
+            // Create matches for each round
+            for ($round = 1; $round <= count($gamesPerRound); $round++) {
+                $matchesInRound = $gamesPerRound[$round - 1];
+                
+                for ($matchInRound = 0; $matchInRound < $matchesInRound; $matchInRound++) {
                     $match = new Game();
                     $match->tournament_id = $this->id;
-                    $match->match_number = $matchNumber++;
-                    $match->team1_id = null; // Initially set team1_id to null
-                    $match->team2_id = null; // Initially set team2_id to null
-                    $match->round = 1; // In round-robin, all matches are in the first round
-                    $match->status = 'scheduled'; // Set the status to scheduled
+                    $match->match_number = $matchIndex + 1;
+                    $match->round = $round;
+                    $match->status = 'scheduled';
                     $match->save();
+                    $matchIndex++;
                 }
             }
         }
+
+        $this->save();
 
         return;
     }

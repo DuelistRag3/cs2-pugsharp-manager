@@ -16,19 +16,20 @@ class TournTestSeeder extends Seeder
     public function run(): void
     {
         $tourn = Tournament::create([
-            'name' => ' Test Tournament',
-            'description' => 'This is a test tournament for seeding purposes.',
+            'name' => ' Test Tournament For Round Robin',
+            'description' => 'This is a test tournament.',
             'start_date' => now()->addDays(7),
             'team_size' => 5, // 0: BO1, 1: BO3, 2: BO5
             'max_teams' => 16, // 0: BO1, 1: BO3, 2: BO5
-            'maps_each_game' => 0, // Best of
-            'maps_final_game' => 0, // Best of
+            'maps_each_game' => 1, // Best of
+            'maps_final_game' => 1, // Best of
             'map_rounds' => 24, // Number of rounds per match, default is 24 for CS2
             'map_overtime_rounds' => 6, // Number of overtime rounds, default
-            'status' => 'ongoing', // e.g., scheduled, ongoing, completed
+            'status' => 'scheduled', // e.g., scheduled, ongoing, completed
+            'guest_mode' => 1, // Allow guest players
         ]);
 
-        // Create 16 teams with random names and tags
+        // Create 16 teams with incrementing names and tags
         for ($i = 1; $i <= 16; $i++) {
             $team = $tourn->teams()->create([
                 'name' => 'Team ' . $i,
@@ -48,13 +49,5 @@ class TournTestSeeder extends Seeder
                 ]);
             }
         };
-
-        $server = Server::create([
-            'ip_address' => '127.0.0.1',
-            'port' => 27015,
-            'rcon_password' => 'test',
-        ]);
-
-        $tourn->generateMatchPlan(0);
     }
 }

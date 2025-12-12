@@ -22,23 +22,23 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $contype = config('database.default');
-        $installed = false;
-        if ($contype == "sqlite") {
-            if(file_exists(database_path('database.sqlite'))) {
-                $installed = true;
-            }
-        } else if ($contype == "mysql" || $contype == "pgsql") {
-            try {
-                DB::connection()->getPdo();
-                $installed = true;
-            } catch (\Exception $e) {
-                print($e);
-            }
-        }
-        if ($installed) {
-            Config::set('livewire.view_path', resource_path('views/'.Setting::where('key', 'theme')->first()->value.'/livewire'));
-            Config::set('view.paths', [resource_path('views/'.Setting::where('key', 'theme')->first()->value)]);
-        }
+        // $contype = config('database.default');
+        // $installed = false;
+        // if ($contype == "sqlite") {
+        //     if(file_exists(database_path('database.sqlite'))) {
+        //         $installed = true;
+        //     }
+        // } else if ($contype == "mysql" || $contype == "pgsql") {
+        //     try {
+        //         DB::connection()->getPdo();
+        //         $installed = true;
+        //     } catch (\Exception $e) {
+        //         print($e);
+        //     }
+        // }
+        // if ($installed) {
+        Config::set('livewire.view_path', resource_path('views/'.env('THEME', 'hltv').'/livewire'));
+        Config::set('view.paths', [resource_path('views/'.env('THEME', 'hltv'))]);
+        // }
     }
 }

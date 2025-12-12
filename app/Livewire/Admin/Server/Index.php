@@ -19,6 +19,7 @@ class Index extends Component
     public $sortDirection = 'asc';
     public $perPage = 10;
 
+    public $id;
     public $ip;
     public $port;
     public $rcon_password;
@@ -117,6 +118,47 @@ class Index extends Component
     public function getServerStatus($id)
     {
         return new RconController()->getServerInfo($id);
+    }
+
+    public function editServerModal($id)
+    {
+        $server = Server::find($id);
+        if ($server) {
+            $this->id = $server->id;
+            $this->ip = $server->ip_address;
+            $this->port = $server->port;
+            $this->rcon_password = $server->rcon_password;
+        } else {
+            LivewireAlert::title(__('manager.server_not_found'))
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+        }
+    }
+
+    public function updateServer()
+    {
+        $server = Server::find($this->id);
+        if ($server) {
+            $server->ip_address = $this->ip;
+            $server->port = $this->port;
+            $server->rcon_password = $this->rcon_password ?? null;
+            $server->save();
+
+            LivewireAlert::title(__('manager.server_updated'))
+                ->success()
+                ->toast()
+                ->position('top-end')
+                ->show();
+            $this->dispatch('serverUpdated');
+        } else {
+            LivewireAlert::title(__('manager.server_not_found'))
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+        }
     }
 
     #[Layout('components.layouts.admin')]

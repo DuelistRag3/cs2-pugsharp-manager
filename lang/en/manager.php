@@ -31,6 +31,7 @@ return [
 
         'updated' => 'The setting :setting was updated'
     ],
+    'save' => 'Save',
 
     'create_tournament' => 'Create Tournament',
     'description' => 'Description',
@@ -303,4 +304,5 @@ return [
     'result' => 'Result',
     'available_maps' => 'Available Maps',
     'selected_map_not_found' => 'The selected map was not found in the available maps.',
+    'server_updated' => 'Server updated successfully.',
 ];

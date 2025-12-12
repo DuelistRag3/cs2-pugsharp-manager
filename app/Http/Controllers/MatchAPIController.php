@@ -107,7 +107,7 @@ class MatchAPIController extends Controller
 
         $maplist = [];
 
-        foreach($game->tournament->maps as $map) {
+        foreach($game->tournament->availableMaps as $map) {
             $maplist[] = $map;
         }
         
@@ -364,25 +364,309 @@ class MatchAPIController extends Controller
             $game->server->free();
         }
 
-        $next = $game->nextGame;
+        // Handle bracket (type 0) vs Swiss (type 1) differently
+        if ($tournament->type === 0) {
+            // Bracket tournament - use next_game_id
+            $next = $game->nextGame;
 
-        if($next)
-        {
-            if(!$next->team1_id)
+            if($next)
             {
-                $next->team1_id = $winner->id;
-                $next->save();
+                if(!$next->team1_id)
+                {
+                    $next->team1_id = $winner->id;
+                    $next->save();
+                } else {
+                    $next->team2_id = $winner->id;
+                    $next->save();
+                }
             } else {
-                $next->team2_id = $winner->id;
-                $next->save();
+                // Tournament Winner
+                $tournament->end_date = now();
+                $tournament->status = 'completed';
+                $tournament->save();
             }
-        } else {
-            // Tournament Winner
-            $tournament->end_date = now();
-            $tournament->status = 'completed';
-            $tournament->save();
+        } else if ($tournament->type === 1) {
+            // Swiss tournament - check if winner/loser should advance/eliminate
+            // Hardcoded for 16 teams: 3 wins to advance, 3 losses to eliminate
+            $totalTeams = $tournament->teams()->count();
+            $winsNeeded = 3;
+            
+            // Calculate current record for winner and loser
+            $winnerWins = 1; // This game
+            $winnerLosses = 0;
+            $loser = $winner->id === $game->team1_id ? $game->team2 : $game->team1;
+            $loserWins = 0;
+            $loserLosses = 1; // This game
+            
+            // Count previous games
+            $completedGames = $tournament->games()->where('status', 'completed')->where('id', '!=', $game->id)->get();
+            foreach ($completedGames as $completedGame) {
+                // Winner's record
+                if ($completedGame->team1_id === $winner->id) {
+                    $completedGame->winner_team_id === $winner->id ? $winnerWins++ : $winnerLosses++;
+                } elseif ($completedGame->team2_id === $winner->id) {
+                    $completedGame->winner_team_id === $winner->id ? $winnerWins++ : $winnerLosses++;
+                }
+                
+                // Loser's record
+                if ($completedGame->team1_id === $loser->id) {
+                    $completedGame->winner_team_id === $loser->id ? $loserWins++ : $loserLosses++;
+                } elseif ($completedGame->team2_id === $loser->id) {
+                    $completedGame->winner_team_id === $loser->id ? $loserWins++ : $loserLosses++;
+                }
+            }
+            
+            // Assign teams to next round games if they haven't finished
+            $nextRound = $game->round + 1;
+            
+            // Assign winner to next game if not finished
+            if ($winnerWins < $winsNeeded && $winnerLosses < $winsNeeded) {
+                $this->assignTeamToNextGame($tournament, $nextRound, $winner->id, $winnerWins, $winnerLosses);
+            }
+            
+            // Assign loser to next game if not finished
+            if ($loserWins < $winsNeeded && $loserLosses < $winsNeeded) {
+                $this->assignTeamToNextGame($tournament, $nextRound, $loser->id, $loserWins, $loserLosses);
+            }
+            
+            // Check if tournament is complete (all teams finished)
+            $allTeams = $tournament->teams;
+            $allFinished = true;
+            
+            foreach ($allTeams as $team) {
+                $teamWins = 0;
+                $teamLosses = 0;
+                
+                $teamGames = $tournament->games()->where('status', 'completed')->get();
+                foreach ($teamGames as $teamGame) {
+                    if ($teamGame->team1_id === $team->id) {
+                        $teamGame->winner_team_id === $team->id ? $teamWins++ : $teamLosses++;
+                    } elseif ($teamGame->team2_id === $team->id) {
+                        $teamGame->winner_team_id === $team->id ? $teamWins++ : $teamLosses++;
+                    }
+                }
+                
+                // If any team hasn't reached threshold wins or losses, tournament is not finished
+                if ($teamWins < $winsNeeded && $teamLosses < $winsNeeded) {
+                    $allFinished = false;
+                    break;
+                }
+            }
+            
+            // Mark tournament as complete if all teams are finished
+            if ($allFinished) {
+                $tournament->end_date = now();
+                $tournament->status = 'completed';
+                $tournament->save();
+            }
         }
 
         return response()->json("Matchup finalized", 200);
+    }
+
+    /**
+     * Assign a team to the next available game in the specified round.
+     *
+     * @param  \App\Models\Tournament  $tournament
+     * @param  int  $nextRound
+     * @param  int  $teamId
+     * @param  int  $wins
+     * @param  int  $losses
+     * @return void
+     */
+    private function assignTeamToNextGame($tournament, $nextRound, $teamId, $wins, $losses)
+    {
+        // Get games in the next round
+        $nextRoundGames = $tournament->games()
+            ->where('round', $nextRound)
+            ->orderBy('match_number')
+            ->get();
+
+        if ($nextRoundGames->isEmpty()) {
+            // No more rounds
+            return;
+        }
+
+        // Calculate which score bracket this team belongs to
+        $targetScore = "$wins-$losses";
+        $gamesPlayed = $wins + $losses;
+        
+        // Get total number of teams in tournament to calculate bracket sizes
+        $totalTeams = $tournament->teams()->count();
+        
+        if ($totalTeams == 0) {
+            return;
+        }
+        
+        // Hardcoded threshold for 16 teams
+        $winsNeeded = 3;
+        
+        // Generate all possible scores for this round in order (highest wins first)
+        // Only include brackets where teams are still playing (< threshold wins AND < threshold losses)
+        $scoreGroups = [];
+        for ($w = $gamesPlayed; $w >= 0; $w--) {
+            $l = $gamesPlayed - $w;
+            
+            // Skip brackets where teams are finished (threshold+ wins or threshold+ losses)
+            if ($w >= $winsNeeded || $l >= $winsNeeded) {
+                continue;
+            }
+            
+            $score = "$w-$l";
+            
+            // Calculate binomial coefficient C(gamesPlayed, w) - number of teams with this score
+            $binomialCoeff = 1;
+            for ($i = 0; $i < $w; $i++) {
+                $binomialCoeff *= ($gamesPlayed - $i);
+                $binomialCoeff /= ($i + 1);
+            }
+            
+            // Number of teams with this score in the tournament
+            $teamsInBracket = $binomialCoeff * ($totalTeams / pow(2, $gamesPlayed));
+            // Number of games needed for these teams
+            $gamesInBracket = ceil($teamsInBracket / 2);
+            
+            $scoreGroups[$score] = [
+                'games_count' => (int)$gamesInBracket,
+            ];
+        }
+        
+        // Calculate start index for each bracket
+        $currentIndex = 0;
+        foreach ($scoreGroups as $score => &$group) {
+            $group['start_index'] = $currentIndex;
+            $currentIndex += $group['games_count'];
+        }
+        
+        // Find the bracket for our target score
+        if (!isset($scoreGroups[$targetScore])) {
+            // Score bracket doesn't exist, skip
+            return;
+        }
+        
+        $bracket = $scoreGroups[$targetScore];
+        $startIndex = (int)$bracket['start_index'];
+        $gamesInBracket = (int)$bracket['games_count'];
+        
+        // Find first available slot in the target bracket
+        for ($i = 0; $i < $gamesInBracket; $i++) {
+            $gameIndex = $startIndex + $i;
+            
+            if ($gameIndex >= $nextRoundGames->count()) {
+                break;
+            }
+            
+            $nextGame = $nextRoundGames[$gameIndex];
+            
+            // Skip if team is already assigned to this game
+            if ($nextGame->team1_id === $teamId || $nextGame->team2_id === $teamId) {
+                continue;
+            }
+            
+            if (!$nextGame->team1_id) {
+                $nextGame->team1_id = $teamId;
+                $nextGame->save();
+                return;
+            } elseif (!$nextGame->team2_id) {
+                $nextGame->team2_id = $teamId;
+                $nextGame->save();
+                return;
+            }
+        }
+    }
+
+    /**
+     * Pair teams for the next round in a Swiss tournament based on current records.
+     *
+     * @param  \App\Models\Tournament  $tournament
+     * @param  int  $currentRound
+     * @return void
+     */
+    private function pairSwissRound($tournament, $currentRound)
+    {
+        // Check if all games in current round are completed
+        $currentRoundGames = $tournament->games()->where('round', $currentRound)->get();
+        $allCompleted = $currentRoundGames->every(function($game) {
+            return $game->status === 'completed';
+        });
+
+        if (!$allCompleted) {
+            // Not all games in this round are finished yet
+            return;
+        }
+
+        // Get all teams
+        $allTeams = $tournament->guest_mode 
+            ? $tournament->guestTeams 
+            : $tournament->teams;
+
+        // Calculate dynamic threshold
+        $winsNeeded = (int)ceil(log($allTeams->count(), 2));
+
+        // Calculate team records
+        $teamRecords = [];
+        foreach ($allTeams as $team) {
+            $wins = 0;
+            $losses = 0;
+
+            $completedGames = $tournament->games()->where('status', 'completed')->get();
+            foreach ($completedGames as $completedGame) {
+                if ($completedGame->team1_id === $team->id) {
+                    $completedGame->winner_team_id === $team->id ? $wins++ : $losses++;
+                } elseif ($completedGame->team2_id === $team->id) {
+                    $completedGame->winner_team_id === $team->id ? $wins++ : $losses++;
+                }
+            }
+
+            // Only include teams that haven't finished
+            if ($wins < $winsNeeded && $losses < $winsNeeded) {
+                $teamRecords[] = [
+                    'team_id' => $team->id,
+                    'wins' => $wins,
+                    'losses' => $losses,
+                    'score' => "$wins-$losses",
+                ];
+            }
+        }
+
+        // Group teams by score
+        $scoreGroups = [];
+        foreach ($teamRecords as $record) {
+            $score = $record['score'];
+            if (!isset($scoreGroups[$score])) {
+                $scoreGroups[$score] = [];
+            }
+            $scoreGroups[$score][] = $record['team_id'];
+        }
+
+        // Get next round games
+        $nextRound = $currentRound + 1;
+        $nextRoundGames = $tournament->games()
+            ->where('round', $nextRound)
+            ->orderBy('match_number')
+            ->get();
+
+        if ($nextRoundGames->isEmpty()) {
+            // No more rounds - tournament is complete
+            $tournament->end_date = now();
+            $tournament->status = 'completed';
+            $tournament->save();
+            return;
+        }
+
+        // Assign teams to next round games based on score brackets
+        $gameIndex = 0;
+        foreach ($scoreGroups as $score => $teamIds) {
+            shuffle($teamIds); // Randomize pairings within same score group
+            
+            for ($i = 0; $i < count($teamIds); $i += 2) {
+                if (isset($teamIds[$i + 1]) && $gameIndex < $nextRoundGames->count()) {
+                    $nextRoundGames[$gameIndex]->team1_id = $teamIds[$i];
+                    $nextRoundGames[$gameIndex]->team2_id = $teamIds[$i + 1];
+                    $nextRoundGames[$gameIndex]->save();
+                    $gameIndex++;
+                }
+            }
+        }
     }
 }

@@ -47,7 +47,7 @@ class Show extends Component
             return;
         }
 
-        if (! $this->tournament->maps) {
+        if ($this->tournament->availableMaps()->count() == 0) {
             LivewireAlert::title(__('manager.tournament_messages.no_maps_selected'))
                 ->text(__('manager.tournament_messages.no_maps_selected_text'))
                 ->error()
