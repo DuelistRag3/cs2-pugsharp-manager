@@ -81,7 +81,7 @@
                         @if($server->status == 'free')
                         <span class="text-green-500">{{ __('manager.free') }}</span>
                         @else
-                        {{ __('manager.used_by') }}: {{ $server->game->tournament->name ?? __('manager.nobody') }}
+                        {{ __('manager.used_by') }}: <a href="{{ route('admin.tournaments.show', $server->game->tournament->id ?? 0) }}" class="text-blue-500">{{ $server->game->tournament->name ?? 'unknown' }}</a>
                         @endif
                     </td>
                     </div>

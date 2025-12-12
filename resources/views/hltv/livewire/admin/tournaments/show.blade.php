@@ -785,7 +785,8 @@
                                         <option @if($game->maps_override == 5) selected @endif value="5">{{ __('manager.best_of_5') }}</option>
                                     </select>
                                 </form>
-
+                                @elseif($game->status === 'awaiting_start')
+                                <p class="text-gray-400">{{ __('manager.match_awaiting_start') }}</p>
                                 @elseif($game->status === 'ongoing')
                                 @if($game->maps->where('status', 'ongoing')->isNotEmpty())
                                 <a wire:click='pauseMatch({{ $game->id }})'

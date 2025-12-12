@@ -24,6 +24,8 @@ return [
 
     'status_colors' => [
         'scheduled' => 'gray',
+        'awaiting_start' => 'purple',
+        'paused' => 'orange',
         'ongoing' => 'blue',
         'completed' => 'green',
         'cancelled' => 'red',

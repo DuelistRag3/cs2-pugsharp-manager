@@ -242,6 +242,7 @@ class Show extends Component
         $freeServer->block();
 
         $match->server_id = $freeServer->id;
+        $match->status = 'awaiting_start';
         $match->save();
 
         LivewireAlert::title(__('manager.tournament_messages.match_started_on', ['server' => $freeServer->ip_address . ':' . $freeServer->port]))
