@@ -211,7 +211,7 @@ class Show extends Component
             return;
         }
 
-        if ($this->tournament->maps == null || count($this->tournament->maps) == 0) {
+        if ($this->tournament->availableMaps == null || count($this->tournament->availableMaps) == 0) {
             LivewireAlert::title(__('manager.tournament_messages.no_maps_selected'))
                 ->error()
                 ->toast()
@@ -244,7 +244,7 @@ class Show extends Component
         $match->server_id = $freeServer->id;
         $match->save();
 
-        LivewireAlert::title(__('manager.tournament_messages.match_started_on', ['server' => $freeServer->name]))
+        LivewireAlert::title(__('manager.tournament_messages.match_started_on', ['server' => $freeServer->ip_address . ':' . $freeServer->port]))
             ->success()
             ->toast()
             ->position('top-end')

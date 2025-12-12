@@ -152,6 +152,7 @@ return [
         'added_map' => 'Map added successfully.',
         'removed_map' => 'Map removed successfully.',
         'all_maps_added' => 'All maps added successfully.',
+        'match_started_on' => 'Match started on :server',
     ],
 
     'status_types' => [
@@ -307,4 +308,8 @@ return [
     'available_maps' => 'Available Maps',
     'selected_map_not_found' => 'The selected map was not found in the available maps.',
     'server_updated' => 'Server updated successfully.',
+
+    'occupation' => 'Occupation',
+    'free' => 'Free',
+    'used_by' => 'Used by',
 ];

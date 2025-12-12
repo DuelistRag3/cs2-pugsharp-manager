@@ -25,6 +25,9 @@
                         {{ __('manager.player') }} / {{ __('manager.max_player') }}
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        {{ __('manager.occupation') }}
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         {{ __('manager.actions') }}
                     </th>
                 </tr>
@@ -72,6 +75,13 @@
                         {{ $serverInfo['players'] }} / {{ $serverInfo['max_players'] }}
                         @else
                         N/A
+                        @endif
+                    </td>
+                    <td class="px-6 py-4">
+                        @if($server->status == 'free')
+                        <span class="text-green-500">{{ __('manager.free') }}</span>
+                        @else
+                        {{ __('manager.used_by') }}: {{ $server->game->tournament->name ?? __('manager.nobody') }}
                         @endif
                     </td>
                     </div>

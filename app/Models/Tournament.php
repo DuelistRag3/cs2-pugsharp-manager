@@ -115,7 +115,6 @@ class Tournament extends Model
         $numTeams = $this->teams()->count();
 
         if ($numTeams < 2) {
-            Debugbar::warning('Not enough teams to generate match plan.');
             LivewireAlert::title('Not enough teams to generate match plan.')
             ->warning()
             ->toast()
