@@ -12,15 +12,28 @@ class Settings extends Component
 {
     public $themes;
     public $theme;
+    public $pageTitle;
 
     public function mount()
     {
         $this->themes = Theme::all();
         $this->theme = env('THEME', 'hltv');
+        $this->pageTitle = env('APP_NAME', 'PugSharp Manager');
     }
 
     public function updating($prop, $val)
     {
+        if ($prop === 'pageTitle')
+        {
+            // Update .env file
+            $this->updateEnvFile('APP_NAME', $val);
+
+            LivewireAlert::text(__('manager.settings.updated', ['setting' => 'Page Title']))
+            ->toast()
+            ->position('top-end')
+            ->success()
+            ->show();
+        }
         if ($prop === 'theme')
         {
             // Update .env file
@@ -44,7 +57,7 @@ class Settings extends Component
             // Check if key exists
             if (preg_match("/^{$key}=.*/m", $content)) {
                 // Update existing key
-                $content = preg_replace("/^{$key}=.*/m", "{$key}={$value}", $content);
+                $content = preg_replace("/^{$key}=.*/m", "{$key}='{$value}'", $content);
             } else {
                 // Add new key
                 $content .= "\n{$key}={$value}\n";
