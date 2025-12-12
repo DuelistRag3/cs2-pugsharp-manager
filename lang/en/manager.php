@@ -38,7 +38,7 @@ return [
     'cancel_tournament' => 'Cancel Tournament',
     'optional' => 'Optional',
     'generate_bracket_matchplan' => 'Generate Bracket Matchplan',
-    'generate_round_robin_matchplan' => 'Generate Round Robin Matchplan',
+    'generate_swiss_matchplan' => 'Generate Swiss Matchplan (16 Teams Only)',
     'reset_matchplan' => 'Reset Matchplan',
     'start_tournament' => 'Start Tournament',
     'scramble_teams' => 'Scramble Teams',
