@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use App\Http\Controllers\RconController;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Http\Controllers\RconController;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Symfony\Component\ErrorHandler\Debug;
 
 class Tournament extends Model
 {
@@ -114,6 +116,11 @@ class Tournament extends Model
 
         if ($numTeams < 2) {
             Debugbar::warning('Not enough teams to generate match plan.');
+            LivewireAlert::title('Not enough teams to generate match plan.')
+            ->warning()
+            ->toast()
+            ->position('top-end')
+            ->show();
             return;
         }
 
@@ -165,6 +172,14 @@ class Tournament extends Model
         }
 
         if ($type === 1) { // Group stages (Swiss System with eliminations (only half the teams advance after group stage))
+            if($numTeams !== 16) {
+                LivewireAlert::title('Swiss System match plan generation is only supported for 16 teams.')
+                ->warning()
+                ->toast()
+                ->position('top-end')
+                ->show();
+                return;
+            }
             $this->type = 1; // Set the tournament type to Group Stage
 
             // Swiss System: Hardcoded for 16 teams, 3 wins to advance, 3 losses to eliminate
@@ -190,6 +205,12 @@ class Tournament extends Model
         }
 
         $this->save();
+
+        LivewireAlert::title(__('manager.tournament_messages.matchplan_generated'))
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
 
         return;
     }

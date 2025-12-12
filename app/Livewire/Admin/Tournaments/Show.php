@@ -112,11 +112,6 @@ class Show extends Component
     public function generateMatchPlan($type)
     {
         $this->tournament->generateMatchPlan($type);
-        LivewireAlert::title(__('manager.tournament_messages.matchplan_generated'))
-            ->success()
-            ->toast()
-            ->position('top-end')
-            ->show();
     }
 
     public function addTeamsToMatchPlan($alreadyassigned = false)
