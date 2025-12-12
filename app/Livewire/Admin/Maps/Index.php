@@ -107,15 +107,6 @@ class Index extends Component
     {
         $map->delete();
 
-        $tournaments = Tournament::all();
-
-        $tournaments->each(function ($tournament) use ($map) {
-            if (array_search($map->map_code, $tournament->maps) !== false) {
-                $tournament->maps = array_diff($tournament->maps, [$map->map_code]);
-                $tournament->save();
-            }
-        });
-
         // Reload maps
         $this->maps = AvailableMaps::all();
 
@@ -142,17 +133,10 @@ class Index extends Component
 
     public function deleteAll()
     {
-        AvailableMaps::truncate();
+        AvailableMaps::query()->delete();
 
         // Reload maps
         $this->maps = AvailableMaps::all();
-
-        $tournaments = Tournament::all();
-
-        $tournaments->each(function ($tournament) {
-            $tournament->maps = [];
-            $tournament->save();
-        });
 
         LivewireAlert::title(__('manager.maps_deleted'))
             ->success()

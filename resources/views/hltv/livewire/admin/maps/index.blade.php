@@ -11,10 +11,9 @@
             </button>
     @endif
     @if ($maps->count() > 0)
-        <button type="button" wire:click='confirmDeleteAll' wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed!" id="deleteAllButton"
+        <button type="button" wire:click='confirmDeleteAll' wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed!" id="deleteAllButton" wire:target="deleteAll"
             class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer col-span-2"><i
-                class="fa-solid fa-trash"></i> {{ __('manager.remove_all_maps') }}
-            <i class="fa-solid fa-spinner fa-spin" wire:loading.delay.longest></i>
+                class="fa-solid fa-trash" wire:target="deleteAll" wire:loading.class="fa-spinner fa-spin" wire:loading.class.remove="fa-trash"></i> {{ __('manager.remove_all_maps') }}
         </button>
     @endif
     <div class="grid grid-cols-1 sm:grid-cols-12 gap-4">
@@ -41,7 +40,7 @@
                     <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">{{ $map->map_code }}</p>
                     <button type="button" wire:click='confirmDelete({{ $map->id }})'
                         class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900 cursor-pointer"><i
-                            class="fa-solid fa-trash"></i> {{ __('manager.remove') }}</button>
+                            class="fa-solid fa-trash" wire:target="delete({{ $map->id }})" wire:loading.class="fa-spinner fa-spin" wire:loading.class.remove="fa-trash"></i> {{ __('manager.remove') }}</button>
 
                 </div>
             </div>
