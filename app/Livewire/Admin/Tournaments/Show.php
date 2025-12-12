@@ -315,7 +315,19 @@ class Show extends Component
 
             return;
         }
+    }
 
+    public function addAllAvailableMaps()
+    {
+        $allMaps = AvailableMaps::all()->pluck('id')->toArray();
+        $this->tournament->availableMaps()->sync($allMaps);
+        $this->tournament->save();
+
+        LivewireAlert::title(__('manager.tournament_messages.all_maps_added'))
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
     }
 
     public function updateMapsOverride($gameId)

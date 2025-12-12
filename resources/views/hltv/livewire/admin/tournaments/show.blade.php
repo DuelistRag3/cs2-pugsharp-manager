@@ -42,7 +42,11 @@
         <x-tournament-details-card :tournament=$tournament />
 
         <div class="bg-gray-800 text-white p-4 rounded shadow">
-            <h2 class="text-xl font-semibold mb-2">{{ __('manager.maps') }}</h2>
+            <h2 class="text-xl font-semibold mb-2">{{ __('manager.maps') }} 
+                <button type="button" wire:click='addAllAvailableMaps' wire:target='addAllAvailableMaps' wire:loading.attr="disabled" wire:loading.class="opacity-50 cursor-not-allowed! disabled"
+                    class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"><i
+                        class="fa-solid fa-plus" wire:target='addAllAvailableMaps' wire:loading.class.remove='fa-plus' wire:loading.class="fa-spinner fa-spin"></i> {{ __('manager.add_all_maps') }}</button>
+            </h2>
             <div class="grid grid-cols-12 gap-4">
                 @foreach($availableMaps as $map)
                 <div wire:click='changeMapState({{ $map->id }})'

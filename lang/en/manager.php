@@ -106,6 +106,7 @@ return [
 
     'tournament_plan' => 'Tournament Plan',
     'no_teams_registered' => 'No teams registered for this tournament.',
+    'add_all_maps' => 'Add All Maps',
 
     'tournament_messages' => [
         'not_found' => 'Tournament not found.',
@@ -150,6 +151,7 @@ return [
 
         'added_map' => 'Map added successfully.',
         'removed_map' => 'Map removed successfully.',
+        'all_maps_added' => 'All maps added successfully.',
     ],
 
     'status_types' => [
