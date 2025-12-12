@@ -52,6 +52,7 @@ The CS2 Pugsharp Manager is a webbased tool using laravel as base to organize an
 - Missing language strings all over the place in both german and englisch.
 - Live validation for steam id´s does not work at all.
 - Sometimes in Matchhistory for teams, scheduled games are shown.
+- Flowbite modals loosing backgrop on live pageupdates.
 
 ## Server Requirements
 
