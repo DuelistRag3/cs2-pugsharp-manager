@@ -27,6 +27,9 @@ return [
     'view' => 'View',
     'settings' => [
         'title' => 'Settings',
+        'headings' => [
+            'general' => 'General Settings',
+        ],
         'theme' => 'Theme',
 
         'updated' => 'The setting :setting was updated'
@@ -34,8 +37,10 @@ return [
     'save' => 'Save',
 
     'create_tournament' => 'Create Tournament',
+    'update_tournament' => 'Update Tournament',
     'description' => 'Description',
     'cancel_tournament' => 'Cancel Tournament',
+    'tournament_updated' => 'Tournament updated successfully.',
     'optional' => 'Optional',
     'generate_bracket_matchplan' => 'Generate Bracket Matchplan',
     'generate_swiss_matchplan' => 'Generate Swiss Matchplan (16 Teams Only)',
@@ -294,6 +299,7 @@ return [
     'no_maps_yet' => 'No maps have been selected yet.',
     'guest_mode' => 'Guest Mode',
     'guest_mode_help' => 'Enable guest mode to allow teams without an account to register for this tournament.',
+    'guest_mode_not_editable' => 'Guest mode cannot be changed after the tournament has been created.',
     'disabled' => 'Disabled',
     'enabled' => 'Enabled',
     'tournament_created' => 'Tournament created successfully.',

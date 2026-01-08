@@ -2,14 +2,15 @@
 
 namespace App\Livewire\Admin\Tournaments;
 
-use App\Http\Controllers\RconController;
-use App\Models\AvailableMaps;
 use App\Models\Server;
-use App\Models\Tournament;
-use Barryvdh\Debugbar\Facades\Debugbar;
-use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
-use Livewire\Attributes\Layout;
 use Livewire\Component;
+use App\Models\Tournament;
+use App\Models\AvailableMaps;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use App\Http\Controllers\RconController;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Show extends Component
 {
@@ -19,10 +20,47 @@ class Show extends Component
 
     public $maps_override = 0;
 
+    // Form properties
+    #[Validate('required|string|max:255|unique:tournaments,name')]
+    public $name;
+    #[Validate('string|max:255')]
+    public $description;
+    #[Validate('date|before:start_date')]
+    public $registration_deadline;
+    #[Validate('required|date|after:now')]
+    public $start_date;
+    #[Validate('integer|min:1|max:10')]
+    public $team_size = 5; // Default team size for CS2
+    #[Validate('integer|min:2')]
+    public $max_teams = 2;
+    #[Validate('integer|min:1')]
+    public $maps_each_game = 1;
+    #[Validate('integer|min:1')]
+    public $maps_final_game = 1;
+    #[Validate('integer|min:2')]
+    public $map_rounds = 24; // Number of rounds per match, default is 24 for CS2
+    #[Validate('integer|min:0')]
+    public $map_overtime_rounds = 6; // Number of overtime rounds, default is 6 for CS2
+    #[Validate('boolean')]
+    public $guest_mode = false;
+
     public function mount($id)
     {
         $this->tournament = Tournament::findOrFail($id);
         $this->availableMaps = AvailableMaps::all();
+
+        // Initialize form properties
+        $this->name = $this->tournament->name;
+        $this->description = $this->tournament->description;
+        $this->registration_deadline = $this->tournament->registration_deadline->format(__('manager.timeformat'));
+        $this->start_date = $this->tournament->start_date->format(__('manager.timeformat'));
+        $this->team_size = $this->tournament->team_size;
+        $this->max_teams = $this->tournament->max_teams;
+        $this->maps_each_game = $this->tournament->maps_each_game;
+        $this->maps_final_game = $this->tournament->maps_final_game;
+        $this->map_rounds = $this->tournament->map_rounds;
+        $this->map_overtime_rounds = $this->tournament->map_overtime_rounds;
+        $this->guest_mode = $this->tournament->guest_mode;
     }
 
     public function startTournament($full = false)
@@ -334,6 +372,29 @@ class Show extends Component
         $game->save();
 
         LivewireAlert::title(__('manager.num_maps_overridden'))
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+    }
+
+    public function update()
+    {
+        $this->validate();
+
+        $this->tournament->name = $this->name;
+        $this->tournament->description = $this->description;
+        $this->tournament->registration_deadline = $this->registration_deadline;
+        $this->tournament->start_date = $this->start_date;
+        $this->tournament->team_size = $this->team_size;
+        $this->tournament->max_teams = $this->max_teams;
+        $this->tournament->maps_each_game = $this->maps_each_game;
+        $this->tournament->maps_final_game = $this->maps_final_game;
+        $this->tournament->map_rounds = $this->map_rounds;
+        $this->tournament->map_overtime_rounds = $this->map_overtime_rounds;
+        $this->tournament->save();
+
+        LivewireAlert::title(__('manager.tournament_updated'))
             ->success()
             ->toast()
             ->position('top-end')
