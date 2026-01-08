@@ -35,7 +35,7 @@
             <tbody>
                 @if ($servers->isEmpty())
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
-                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                         {{ __('manager.no_servers_found') }}
                     </td>
                 </tr>

@@ -27,10 +27,15 @@ return [
     'view' => 'View',
     'settings' => [
         'title' => 'Settings',
+
         'headings' => [
             'general' => 'General Settings',
         ],
-        'theme' => 'Theme',
+
+        'options' => [
+            'page_title' => 'Page Title',
+            'theme' => 'Select Theme',
+        ],
 
         'updated' => 'The setting :setting was updated'
     ],

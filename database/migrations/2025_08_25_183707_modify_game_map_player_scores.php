@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('steam_id')->nullable()->unique()->change();
         });
         Schema::table('game_map_player_scores', function (Blueprint $table) {
-            $table->dropForeign(['steam_id']);
+            $table->dropForeign('steam_id');
 
             $table->foreign('steam_id')->references('steam_id')->on('users')->nullOnDelete();
         });
