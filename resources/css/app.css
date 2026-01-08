@@ -1,8 +1,12 @@
 @import 'tailwindcss';
 @import "flowbite/src/themes/default";
 
+@plugin "flowbite/plugin";
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source "../app/Livewire/**/*.php";  /* Livewire 3 Views */
+@source "../storage/framework/views/*.php";  /* Cached Views */
 @source '../**/*.blade.php';
 @source '../**/*.js';
 @source "../node_modules/flowbite";
@@ -12,8 +16,6 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
-
-@plugin "flowbite/plugin";
 
 @custom-variant dark (&:where(.dark, .dark *));
 @source inline("{border,text,bg}-{gray,red,orange,purple,green,blue,yellow}-500!")

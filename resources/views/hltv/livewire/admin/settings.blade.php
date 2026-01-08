@@ -1,6 +1,4 @@
 <div class="grid grid-cols-1 md:grid-cols-6">
-
-
     <div class="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 col-span-2">
         <div class="p-5">
                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
@@ -25,5 +23,4 @@
                 </div>
         </div>
     </div>
-
 </div>
