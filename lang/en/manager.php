@@ -70,7 +70,7 @@ return [
     'map_code_placeholder' => 'e.g. de_dust2',
     'map_code_help' => 'The map code is used to identify the map in the game. It should be the same as the map folder name in on the server.',
     'map_thumbnail' => 'Map Thumbnail',
-    'map_thumbnail_help' => 'The map thumbnail is used to display the map in the manager. If empty, the mapcode is used to find it in this',
+    'map_thumbnail_help' => 'The map thumbnail is used to display the map in the manager. If empty, the mapcode is used to find it in this <a href="https://github.com/ghostcap-gaming/cs2-map-images/tree/main/cs2" target="_blank" class="text-blue-500 hover:underline">repo</a>',
     'delete_map' => 'Delete Map?',
     'delete_map_text' => 'Are you sure you want to delete this map from the available pool? This action cannot be undone.',
     'delete_all_maps' => 'Delete All Maps?',
