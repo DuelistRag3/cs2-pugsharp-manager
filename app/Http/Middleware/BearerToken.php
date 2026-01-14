@@ -3,7 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class BearerToken
@@ -26,6 +28,8 @@ class BearerToken
         //         return response()->json(['error' => 'Unauthorized'], 401);
         //     }
         // }
+        $mytime = Carbon::now();
+        Storage::disk('local')->put("request_on_{$request->url()}_{$mytime->toDateTimeString()}.json", json_encode($request->all()));
         return $next($request);
     }
 }
