@@ -3,7 +3,7 @@
     <button data-modal-target="create-team-modal" data-modal-toggle="create-team-modal"
         class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 cursor-pointer font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 mb-1 sm:mb-0 w-full sm:w-fit"
         type="button">
-        Create Team
+        {{ __('manager.create_team') }}
     </button>
     @endauth
     <div>
