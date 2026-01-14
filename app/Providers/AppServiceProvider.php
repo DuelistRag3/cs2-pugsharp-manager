@@ -39,6 +39,10 @@ class AppServiceProvider extends ServiceProvider
         // if ($installed) {
         Config::set('livewire.view_path', resource_path('views/'.env('THEME', 'hltv').'/livewire'));
         Config::set('view.paths', [resource_path('views/'.env('THEME', 'hltv'))]);
+
+        if($this->app->environment('production')) {
+            \URL::forceScheme('https');
+        }
         // }
     }
 }
