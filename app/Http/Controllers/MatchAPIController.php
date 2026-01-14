@@ -108,7 +108,7 @@ class MatchAPIController extends Controller
         $maplist = [];
 
         foreach($game->tournament->availableMaps as $map) {
-            $maplist[] = $map;
+            $maplist[] = $map->map_code;
         }
         
         $json = [
