@@ -146,6 +146,7 @@ class MatchAPIController extends Controller
 
     public function goLive($gameid, $mapcount, Request $request)
     {
+        $mapcount++;
         $game = Game::find($gameid);
         if (!$game) {
             return response()->json("Match not found", 404);
@@ -202,6 +203,7 @@ class MatchAPIController extends Controller
      */
     public function updateRound($id, $mapcount, Request $request)
     {
+        $mapcount++;
         $map = GameMap::where('game_id', $id)->where('map_number', $mapcount)->first();
 
         if (!$map) {
@@ -227,6 +229,7 @@ class MatchAPIController extends Controller
      */
     public function updatePlayer($gameid, $mapcount, $steamId, Request $request)
     {
+        $mapcount++;
         $game = Game::find($gameid);
         if (!$game) {
             return response()->json("Match not found", 404);
@@ -270,6 +273,7 @@ class MatchAPIController extends Controller
      */
     public function finalizeMap($gameid, $mapcount, Request $request)
     {
+        $mapcount++;
         $map = GameMap::where('game_id', $gameid)->where('map_number', $mapcount)->first();
         if (!$map) {
             return response()->json("Match - Map combination not found", 404);
@@ -292,12 +296,14 @@ class MatchAPIController extends Controller
 
         $map->winner_team_id = $winner ? $winner->id : null;
 
-        if($winner == $game->team1)
+        if($map->team1_score > $map->team2_score)
         {
-            $game->team1_maps_won += 1;
-        } elseif($winner == $game->team2)
+            $winner = $game->team1;
+            $game->team1_maps_won++;
+        } elseif($map->team2_score > $map->team1_score)
         {
-            $game->team2_maps_won += 1;
+            $winner = $game->team2;
+            $game->team2_maps_won++;
         }
 
         $map->game->save();
@@ -327,10 +333,10 @@ class MatchAPIController extends Controller
 
         $winner = null;
 
-        if($request->winner == $game->team1->name)
+        if($game->team1_maps_won > $game->team2_maps_won)
         {
             $winner = $game->team1;
-        } elseif($request->winner == $game->team2->name)
+        } elseif($game->team2_maps_won > $game->team1_maps_won)
         {
             $winner = $game->team2;
         }
@@ -341,7 +347,7 @@ class MatchAPIController extends Controller
 
         if($request->forfeit == 1)
         {
-            $game->forfeit = true;
+            $game->forfeit = false;
         }
 
         $game->winner_team_id = $winner->id;
