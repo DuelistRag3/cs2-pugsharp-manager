@@ -10,4 +10,6 @@ class ApiLogging extends Model
         'type',
         'payload',
     ];
+
+    protected $table = 'api_logging';
 }
