@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApiLogging;
 use App\Models\Game;
 use App\Models\GameMap;
 use Illuminate\Http\Request;
@@ -141,6 +142,11 @@ class MatchAPIController extends Controller
             'server_locale' => 'de'
         ];
 
+        ApiLogging::create([
+            'type' => 'config_request',
+            'payload' => json_encode(['match_id' => $game->id]),
+        ]);
+
         return response()->json($json);
     }
 
@@ -190,6 +196,11 @@ class MatchAPIController extends Controller
         $game->status = 'ongoing';
         $game->save();
 
+        ApiLogging::create([
+            'type' => 'golive',
+            'payload' => json_encode($request->all()),
+        ]);
+
         return response()->json("Map is now live", 200);
     }
 
@@ -214,6 +225,11 @@ class MatchAPIController extends Controller
         $map->team2_score = $request->team2score;
 
         $map->save();
+
+        ApiLogging::create([
+            'type' => 'updateRound',
+            'payload' => json_encode($request->all()),
+        ]);
 
         return response()->json("Score Updated", 200);
     }
@@ -261,6 +277,11 @@ class MatchAPIController extends Controller
                 }
             }
         }
+
+        ApiLogging::create([
+            'type' => 'updatePlayer',
+            'payload' => json_encode($request->all()),
+        ]);
 
         return response()->json("Player not found in the map", 404);
     }
@@ -310,6 +331,11 @@ class MatchAPIController extends Controller
 
         $map->status = 'completed';
         $map->save();
+
+        ApiLogging::create([
+            'type' => 'finalizeMap',
+            'payload' => json_encode($request->all()),
+        ]);
 
         return response()->json("Map finalized", 200);
     }
@@ -455,6 +481,11 @@ class MatchAPIController extends Controller
                 $tournament->save();
             }
         }
+
+        ApiLogging::create([
+            'type' => 'finalizeMatchup',
+            'payload' => json_encode($request->all()),
+        ]);
 
         return response()->json("Matchup finalized", 200);
     }
