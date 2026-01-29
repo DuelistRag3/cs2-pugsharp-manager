@@ -127,7 +127,7 @@ class MatchAPIController extends Controller
                 'flag' => 'DE',
                 'players' => $players_team2
             ],
-            'matchid' => "$game->id",
+            'matchid' => $game->id,
             'num_maps' => $game->maps_override ? $game->maps_override : ($game->next_game_id ? $game->tournament->maps_each_game : $game->tournament->maps_final_game),
             'players_per_team' => $game->tournament->team_size,
             'min_players_to_ready' => $game->tournament->team_size,
