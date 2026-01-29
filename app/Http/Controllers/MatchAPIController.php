@@ -54,7 +54,7 @@ class MatchAPIController extends Controller
      * @param  int  $matchid
      * @return \Illuminate\Http\JsonResponse
      */
-    public function generateMatchConfig($gameid)
+    public function generateMatchConfig($gameid, Request $request)
     {
         $game = Game::find($gameid);
         if (!$game) {
@@ -144,8 +144,8 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'config_request',
-            'url' => request()->url(),
-            'payload' => json_encode(['match_id' => $game->id]),
+            'url' => $request->url(),
+            'payload' => json_encode($request->all()),
         ]);
 
         return response()->json($json);
@@ -199,7 +199,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'golive',
-            'url' => request()->url(),
+            'url' => $request->url(),
             'payload' => json_encode($request->all()),
         ]);
 
@@ -230,7 +230,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'updateRound',
-            'url' => request()->url(),
+            'url' => $request->url(),
             'payload' => json_encode($request->all()),
         ]);
 
@@ -250,6 +250,11 @@ class MatchAPIController extends Controller
     {
         $mapcount++;
         $game = Game::find($gameid);
+        ApiLogging::create([
+            'type' => 'updatePlayer',
+            'url' => $request->url(),
+            'payload' => json_encode($request->all()),
+        ]);
         if (!$game) {
             return response()->json("Match not found", 404);
         }
@@ -280,12 +285,6 @@ class MatchAPIController extends Controller
                 }
             }
         }
-
-        ApiLogging::create([
-            'type' => 'updatePlayer',
-            'url' => request()->url(),
-            'payload' => json_encode($request->all()),
-        ]);
 
         return response()->json("Player not found in the map", 404);
     }
@@ -338,7 +337,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'finalizeMap',
-            'url' => request()->url(),
+            'url' => $request->url(),
             'payload' => json_encode($request->all()),
         ]);
 
@@ -489,7 +488,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'finalizeMatchup',
-            'url' => request()->url(),
+            'url' => $request->url(),
             'payload' => json_encode($request->all()),
         ]);
 
