@@ -75,6 +75,9 @@ Route::name('admin.')->prefix('admin')->middleware(['auth', 'role:admin'])->grou
     /* Match Routes */
     Route::get('/matches', AdminMatchIndex::class)->name('matches.index');
     Route::get('/matches/{id}', AdminMatchShow::class)->name('matches.show');
+
+    /* API Logging */
+    Route::get('/api/logging', \App\Livewire\Admin\Api\Logging::class)->name('api.logging');
 });
 
 Route::name('profile.')->prefix('profile')->group(function () {
