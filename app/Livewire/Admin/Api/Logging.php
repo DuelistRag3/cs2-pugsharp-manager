@@ -17,6 +17,6 @@ class Logging extends Component
 
     public function render()
     {
-        return view('hltv.livewire.admin.api.logging');
+        return view('livewire.admin.api.logging');
     }
 }
