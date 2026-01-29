@@ -144,6 +144,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'config_request',
+            'url' => request()->url(),
             'payload' => json_encode(['match_id' => $game->id]),
         ]);
 
@@ -198,6 +199,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'golive',
+            'url' => request()->url(),
             'payload' => json_encode($request->all()),
         ]);
 
@@ -228,6 +230,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'updateRound',
+            'url' => request()->url(),
             'payload' => json_encode($request->all()),
         ]);
 
@@ -280,6 +283,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'updatePlayer',
+            'url' => request()->url(),
             'payload' => json_encode($request->all()),
         ]);
 
@@ -334,6 +338,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'finalizeMap',
+            'url' => request()->url(),
             'payload' => json_encode($request->all()),
         ]);
 
@@ -484,6 +489,7 @@ class MatchAPIController extends Controller
 
         ApiLogging::create([
             'type' => 'finalizeMatchup',
+            'url' => request()->url(),
             'payload' => json_encode($request->all()),
         ]);
 

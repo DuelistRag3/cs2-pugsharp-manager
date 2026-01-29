@@ -7,7 +7,7 @@
                     class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-body rounded-t-base border border-t-0 border-x-0 border-b-default hover:text-heading hover:bg-neutral-secondary-medium gap-3"
                     data-accordion-target="#accordion-collapse-body-{{ $log->id }}" aria-expanded="true"
                     aria-controls="accordion-collapse-body-{{ $log->id }}">
-                    <span>{{ $log->type }} - {{ $log->created_at }}</span>
+                    <span>{{ $log->type }} - {{ $log->created_at }} - {{ $log->url }}</span>
                     <svg data-accordion-icon class="w-5 h-5 rotate-180 shrink-0" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
