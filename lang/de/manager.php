@@ -327,4 +327,6 @@ return [
     'used_by' => 'Verwendet durch',
 
     'match_awaiting_start' => 'Spiel status ist Wartend auf Start. Das Spiel startet automatisch, sobald der Server bereit ist.',
+
+    'api.logging' => 'API Protokollierung',
 ];

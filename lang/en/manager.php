@@ -327,4 +327,6 @@ return [
     'used_by' => 'Used by',
 
     'match_awaiting_start' => 'Game Status is Awaiting Start, status will automatically switch to ongoing, when the server reports the voting phase is over.',
+
+    'api.logging' => 'API Logging',
 ];
