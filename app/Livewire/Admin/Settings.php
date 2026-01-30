@@ -5,7 +5,6 @@ namespace App\Livewire\Admin;
 use App\Models\Theme;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
-use App\Models\Setting as DBSettings;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Settings extends Component

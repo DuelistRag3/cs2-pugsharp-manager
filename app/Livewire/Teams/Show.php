@@ -5,9 +5,7 @@ namespace App\Livewire\Teams;
 use App\Models\Team;
 use App\Models\User;
 use Livewire\Component;
-use Livewire\Attributes\On;
 use Livewire\Attributes\Layout;
-use Illuminate\Database\Eloquent\Builder;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Show extends Component

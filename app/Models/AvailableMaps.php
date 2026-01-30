@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;

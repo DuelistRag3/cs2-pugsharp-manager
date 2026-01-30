@@ -2,13 +2,11 @@
 
 namespace App\Models;
 
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use App\Http\Controllers\RconController;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Symfony\Component\ErrorHandler\Debug;
 
 class Tournament extends Model
 {

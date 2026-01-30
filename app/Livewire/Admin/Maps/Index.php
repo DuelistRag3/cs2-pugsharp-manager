@@ -3,12 +3,10 @@
 namespace App\Livewire\Admin\Maps;
 
 use Livewire\Component;
-use App\Models\Tournament;
 use App\Models\AvailableMaps;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 
 class Index extends Component

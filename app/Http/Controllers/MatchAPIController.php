@@ -8,7 +8,6 @@ use App\Models\GameMap;
 use Illuminate\Http\Request;
 use App\Models\TeamTournament;
 use App\Models\GameMapPlayerScore;
-use Illuminate\Support\Facades\Storage;
 
 class MatchAPIController extends Controller
 {

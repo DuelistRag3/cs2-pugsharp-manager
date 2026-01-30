@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Server;
-use Illuminate\Http\Request;
 use xPaw\SourceQuery\SourceQuery;
 use Barryvdh\Debugbar\Facades\Debugbar;
 

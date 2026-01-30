@@ -6,7 +6,6 @@ use App\Models\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
 use GuzzleHttp\Psr7\Uri;
-use Illuminate\Auth\AuthManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;

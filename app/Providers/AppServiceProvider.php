@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Models\Setting;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 
