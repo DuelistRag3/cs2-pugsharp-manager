@@ -72,7 +72,7 @@ class Index extends Component
             ['name' => 'Nuke', 'map_code' => 'de_nuke'],
             ['name' => 'Overpass', 'map_code' => 'de_overpass'],
             ['name' => 'Ancient', 'map_code' => 'de_ancient'],
-            ['name' => 'Train', 'map_code' => 'de_train'],
+            ['name' => 'Anubis', 'map_code' => 'de_anubis'],
         ];
 
         foreach ($defaultMaps as $defaultMap) {
